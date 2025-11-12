@@ -10,3 +10,5 @@ How to install:
 lua-filesystem requires to use luarocks to install
 
 `sudo luarocks install <package-name>.rock`
+
+Mirror and containing large packages (soon): https://archive.org/details/linuxppc64compiled
