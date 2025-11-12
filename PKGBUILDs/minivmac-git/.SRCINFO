@@ -1,0 +1,20 @@
+pkgbase = minivmac
+	pkgdesc = A miniature early Macintosh emulator
+	pkgver = 37.03.r33.gfa6dda8
+	pkgrel = 1
+	url = https://www.gryphel.com/c/minivmac/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL2
+	depends = libx11
+	depends = sdl3
+	options = !debug
+	options = strip
+	source = git+https://github.com/minivmac/minivmac
+	source = minivmac.desktop
+	sha256sums = SKIP
+	sha256sums = d734657c498539efe0f41b92242b42a3144492cbfb9ae75bac8f896a9245d91d
+
+pkgname = minivmac-git

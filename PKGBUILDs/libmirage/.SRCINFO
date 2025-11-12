@@ -1,0 +1,31 @@
+pkgbase = libmirage
+	pkgdesc = CD-ROM image (B6T/C2D/CCD/CDI/CIF/CUE/ISO/MDS/MDX/NRG/TOC) access library
+	pkgver = 3.2.10
+	pkgrel = 1
+	url = https://cdemu.sourceforge.io/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-2.0-or-later
+	options = !debug
+	options = strip
+	makedepends = cmake
+	makedepends = git
+	makedepends = gobject-introspection
+	makedepends = gtk-doc
+	makedepends = intltool
+	makedepends = ninja
+	makedepends = vala
+	depends = bzip2
+	depends = glib2
+	depends = glibc
+	depends = libsamplerate
+	depends = libsndfile
+	depends = shared-mime-info
+	depends = xz
+	depends = zlib
+	source = cdemu-code::git+https://git.code.sf.net/p/cdemu/code#tag=libmirage-3.2.10
+	b2sums = 14276567e02f0d832fbf7fa5d337a74ece381812b11f89fb72346bb33a8ad19b463142fc7495f3485cd65490a5b42c8dcadce3c21e0f1f07259fb2a1f917604c
+
+pkgname = libmirage

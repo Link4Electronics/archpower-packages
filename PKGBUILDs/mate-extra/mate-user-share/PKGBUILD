@@ -1,0 +1,40 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mate-user-share
+pkgver=1.28.0
+pkgrel=2
+pkgdesc="User level public file sharing via WebDAV for MATE"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later')
+depends=('gtk3' 'mod_dnssd' 'gettext')
+makedepends=('autoconf-archive' 'caja' 'dbus-glib' 'glib2-devel' 'itstool' 'libcanberra' 'libnotify' 'mate-common' 'yelp-tools')
+optdepends=('caja: File sharing extension')
+groups=('mate-extra')
+conflicts=('mate-user-share-gtk3')
+replaces=('mate-user-share-gtk3')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/mate-user-share/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('02fc1d5c245222776d18882884e886f9d9504e3a499023936a10b96c24986524')
+
+prepare() {
+	cd "${pkgname}-${pkgver}"
+	./autogen.sh
+}
+
+build() {
+	cd "${pkgname}-${pkgver}"
+	./configure \
+		--prefix=/usr \
+            	--libexec="/usr/lib/${pkgname}" \
+            	--sysconfdir=/etc \
+	        --disable-bluetooth
+	make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}"
+	make  DESTDIR="${pkgdir}" install
+}

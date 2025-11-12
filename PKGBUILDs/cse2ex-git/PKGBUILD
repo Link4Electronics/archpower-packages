@@ -1,0 +1,103 @@
+# Maintainer: David Hummel <hummeltech@sherpaguru.com>
+# ArchPOWER Edited and Maintained: Link4Electronics
+
+pkgbase='cse2ex-git'
+pkgname=('cse2ex-english-git' 'cse2ex-japanese-git')
+pkgver=2.2.portable.r42.22c4a0e1
+pkgrel=1
+pkgdesc="Decompilation of Cave Story"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://github.com/ewancg/CSE2EX'
+license=('MIT')
+options=('!debug' 'strip')
+makedepends=(
+  'cmake'
+  'git'
+)
+depends=(
+  'freetype2'
+  'glfw'
+  'hicolor-icon-theme'
+  'sdl2'
+)
+source=("${pkgbase}::git+https://github.com/ewancg/CSE2EX.git#branch=big-endian-fix"
+        'cse2ex-english.desktop'
+        'cse2ex-japanese.desktop'
+)
+sha256sums=('SKIP'
+            '03592faf0033025c98bdb68102d53994472e26e8c04c1fe51096e6a1948d4878'
+            '1c762948636e4836253a552e85bcb77316d820d74826edd242646a592e94c009'
+)
+
+build() {
+  export LDFLAGS
+
+  # English
+  cmake -B build -S "${pkgbase}" \
+    -DCMAKE_CXX_FLAGS:STRING="${CXXFLAGS} -Wno-error=format-security" \
+    -DCMAKE_C_FLAGS:STRING="${CFLAGS}" \
+    -DFIX_BUGS:BOOLEAN=ON \
+    -DFREETYPE_FONTS:BOOLEAN=ON \
+    -DLANCZOS_RESAMPLER:BOOLEAN=ON \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -Wno-dev
+  cmake --build build
+
+  # Japanese
+  cmake -B build -S "${pkgbase}" \
+    -DCMAKE_CXX_FLAGS:STRING="${CXXFLAGS} -Wno-error=format-security" \
+    -DCMAKE_C_FLAGS:STRING="${CFLAGS}" \
+    -DFIX_BUGS:BOOLEAN=ON \
+    -DFREETYPE_FONTS:BOOLEAN=ON \
+    -DJAPANESE:BOOLEAN=ON \
+    -DLANCZOS_RESAMPLER:BOOLEAN=ON \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -Wno-dev
+  cmake --build build
+}
+
+package_cse2ex-english-git() {
+  conflicts=('cse2-english')
+  provides=('cse2ex-english')
+
+  pushd "${srcdir}"/"${pkgbase}"/game_english || return
+  find data -type f -exec install -Dm644 {} "${pkgdir}"/usr/share/cse2/english/{} \;
+
+  install -Dm755 "${srcdir}"/"${pkgbase}"/game_english/CSE2 "${pkgdir}"/usr/share/cse2/english/CSE2
+  mkdir ${pkgdir}/usr/bin
+  #Symbolic link in /usr/bin because exeutable needs to sit by data folder
+  ln -s "${pkgdir}"/usr/share/cse2/english/CSE2 "${pkgdir}"/usr/bin/cse2ex-english
+
+  # Desktop files
+  install -Dm755 "${srcdir}"/cse2ex-english.desktop "${pkgdir}"/usr/share/applications/cse2ex-english.desktop
+
+  # Icon
+  install -Dm644 "${srcdir}"/"${pkgbase}"/assets/resources/ICON/ICON_MINI.png "${pkgdir}"/usr/share/icons/hicolor/64x64/apps/cse2-english.png
+
+  # License
+  install -Dm644 "${srcdir}"/"${pkgbase}"/LICENCE.txt "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}
+
+package_cse2ex-japanese-git() {
+  conflicts=('cse2-japanese')
+  provides=('cse2ex-japanese')
+
+  pushd "${srcdir}"/"${pkgbase}"/game_japanese || return
+  find data -type f -exec install -Dm644 {} "${pkgdir}"/usr/share/cse2/japanese/{} \;
+
+  install -Dm755 "${srcdir}"/"${pkgbase}"/game_japanese/CSE2 "${pkgdir}"/usr/share/cse2/japanese/CSE2
+  mkdir ${pkgdir}/usr/bin
+  #Symbolic link in /usr/bin because exeutable needs to sit by data folder
+  ln -s "${pkgdir}"/usr/share/cse2/japanese/CSE2 "${pkgdir}"/usr/bin/cse2ex-japanese
+
+  # Desktop files
+  install -Dm755 "${srcdir}"/cse2ex-japanese.desktop "${pkgdir}"/usr/share/applications/cse2ex-japanese.desktop
+
+  # Icon
+  install -Dm644 "${srcdir}"/"${pkgbase}"/assets/resources/ICON/ICON_MINI.png "${pkgdir}"/usr/share/icons/hicolor/64x64/apps/cse2-japanese.png
+
+  # License
+  install -Dm644 "${srcdir}"/"${pkgbase}"/LICENCE.txt "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+}

@@ -1,0 +1,18 @@
+post_install () {
+  modprobe vhba || :
+}
+
+post_upgrade () {
+  if (( $(vercmp $2 3.2.5) < 0)); then
+    cat <<MSG
+  > The system daemon has been removed. The session daemon must now be used.
+
+  > The daemon now uses a configuration file at ~/.config/cdemu-daemon . It
+    uses a different format from the old ~/.cdemu-daemon file. If you have
+    customized the configuration before, you need to port your old settings.
+    See /usr/share/doc/cdemu-daemon/README for details.
+MSG
+  fi
+}
+
+# vim:set ts=2 sw=2 et:

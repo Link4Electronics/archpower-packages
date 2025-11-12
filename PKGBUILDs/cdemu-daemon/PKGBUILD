@@ -1,0 +1,66 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Ray Rashif <schiv@archlinux.org>
+# Contributor: Mateusz Herych <heniekk@gmail.com>
+# Contributor: Charles Lindsay <charles@chaoslizard.org>
+
+pkgname=cdemu-daemon
+pkgver=3.2.7
+pkgrel=2
+pkgdesc="CD/DVD-ROM device emulator daemon"
+url="https://cdemu.sourceforge.io/"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL-2.0-or-later)
+options=('!debug' 'strip')
+depends=(
+  VHBA-MODULE
+  dbus
+  glib2
+  glibc
+  libao
+  libmirage
+)
+makedepends=(
+  cmake
+  git
+  intltool
+  ninja
+)
+optdepends=(
+  'alsa-lib: to enable the ALSA audio driver'
+  'pulse-native-provider: to enable the PA audio driver'
+)
+install=cdemu-daemon.install
+source=("cdemu-code::git+https://git.code.sf.net/p/cdemu/code#tag=$pkgname-$pkgver")
+b2sums=('abbf18c8a03fe09b1896194d1f10ddd7c9a6c75145e390efea2c9b8cdcfd01bf19b4ffaeb0dc618ed597f8fbd33bfc33e50b375bcef12c4c781dc28bcd75df73')
+
+prepare() {
+  cd cdemu-code/$pkgname
+}
+
+build() {
+  local cmake_options=(
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_PREFIX=/usr
+  )
+
+  cmake -S cdemu-code/$pkgname -B build -G Ninja "${cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dt "$pkgdir/usr/share/doc/$pkgname" -m644 cdemu-code/$pkgname/README
+  install -Dt "$pkgdir/usr/lib/systemd/user" -m644 \
+    cdemu-code/$pkgname/service-example/cdemu-daemon.service
+  install -Dt "$pkgdir/usr/share/dbus-1/services" -m644 \
+    cdemu-code/$pkgname/service-example/net.sf.cdemu.CDEmuDaemon.service
+
+  echo vhba | install -Dm644 /dev/stdin "$pkgdir/usr/lib/modules-load.d/cdemu.conf"
+  echo 'g cdemu - -' | install -Dm644 /dev/stdin "$pkgdir/usr/lib/sysusers.d/cdemu.conf"
+  install -Dm644 /dev/stdin "$pkgdir/usr/lib/udev/rules.d/60-cdemu.rules" <<END
+ACTION!="remove", KERNEL=="vhba_ctl", MODE="0660", OWNER="root", GROUP="cdemu", TAG+="uaccess"
+END
+}
+
+# vim:set sw=2 sts=-1 et:

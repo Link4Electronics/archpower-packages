@@ -1,0 +1,27 @@
+pkgbase = fpc
+	pkgdesc = Free Pascal Compiler, Turbo Pascal 7.0 and Delphi compatible.
+	pkgver = 3.2.3
+	pkgrel = 1
+	url = http://www.freepascal.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	license = LGPL
+	license = custom
+	depends = ncurses
+	depends = zlib
+	depends = expat
+	depends = binutils
+	depends = make
+	options = zipman
+	options = libtool
+	options = staticlibs
+	options = !debug
+	options = strip
+	backup = etc/fpc.cfg
+	source = git+https://gitlab.com/freepascal.org/fpc/source.git#branch=fixes_3_2
+	sha512sums = SKIP
+
+pkgname = fpc

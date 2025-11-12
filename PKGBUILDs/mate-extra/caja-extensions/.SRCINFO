@@ -1,0 +1,86 @@
+pkgbase = caja-extensions
+	pkgdesc = Set of extensions for Caja, the MATE file manager
+	pkgver = 1.28.0
+	pkgrel = 2
+	url = https://mate-desktop.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-2.0-or-later
+	makedepends = autoconf-archive
+	makedepends = glib2-devel
+	makedepends = mate-common
+	makedepends = python
+	makedepends = gst-plugins-base
+	depends = caja
+	depends = gettext
+	depends = dbus-glib
+	depends = imagemagick
+	depends = samba
+	options = !debug
+	options = strip
+	source = caja-extensions-common-1.28.0.tar.gz::https://github.com/mate-desktop/caja-extensions/archive/refs/tags/v1.28.0.tar.gz
+	sha256sums = 4c63786d5c9f995a3e1f9bf89dd0532993aa964afab2a1a3c6370b8a32382f1a
+
+pkgname = caja-extensions-common
+	pkgdesc = Caja extensions (common files)
+	depends = 
+
+pkgname = caja-image-converter
+	pkgdesc = A Caja extension for simple image conversions
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+	depends = imagemagick
+	conflicts = caja-image-converter-gtk3
+	replaces = caja-image-converter-gtk3
+
+pkgname = caja-open-terminal
+	pkgdesc = A Caja extension for opening terminals in arbitrary local paths
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+	conflicts = caja-open-terminal-gtk3
+	replaces = caja-open-terminal-gtk3
+
+pkgname = caja-sendto
+	pkgdesc = A Caja extension for sending files
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+	depends = dbus-glib
+	optdepends = pidgin: Support for sending to instant messaging networks.
+	optdepends = gajim: Support for sending to XMPP.
+	conflicts = caja-sendto-gtk3
+	replaces = caja-sendto-gtk3
+
+pkgname = caja-share
+	pkgdesc = A Caja extension to quickly share a folder
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+	depends = samba
+	conflicts = caja-share-gtk3
+	replaces = caja-share-gtk3
+
+pkgname = caja-wallpaper
+	pkgdesc = A Caja extension to quickly set wallpaper
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+	conflicts = caja-wallpaper-gtk3
+	replaces = caja-wallpaper-gtk3
+
+pkgname = caja-xattr-tags
+	pkgdesc = A Caja extension to see tags stored on xattrs
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+
+pkgname = caja-audio-video-properties
+	pkgdesc = A Caja extension to see information about audio or video files
+	groups = mate-extra
+	depends = caja
+	depends = caja-extensions-common
+	depends = gst-plugins-base

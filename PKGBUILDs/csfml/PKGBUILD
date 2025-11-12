@@ -1,0 +1,35 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@archlinux.org>
+pkgname=csfml
+pkgver=3.0.0.rc2
+_gittag=3.0.0-rc.2
+pkgrel=1
+pkgdesc='C bindings for sfml'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://www.sfml-dev.org/'
+license=('Zlib')
+depends=('glibc' 'gcc-libs' 'sfml')
+makedepends=('cmake' 'doxygen' 'ninja')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/SFML/CSFML/archive/refs/tags/${_gittag}.tar.gz")
+sha512sums=('c3f17104a4e1b84ef623c06e6006f73efdd93712577e791bb27de5810e04dcbe6a92371550b6f645a7446b62fb7ecb8588c1469c18dd068d9d4acbe50703b256')
+
+build() {
+  cd CSFML-*
+
+  cmake \
+      -Bbuild \
+      -GNinja 3.0.0-\
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCSFML_BUILD_DOC=true
+  ninja -C build
+  ninja -C build doc
+}
+
+package() {
+  cd CSFML-*
+
+  DESTDIR="$pkgdir/" ninja -C build install
+
+  install -Dm644 license.md ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+

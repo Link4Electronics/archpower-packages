@@ -1,0 +1,39 @@
+# Maintainer:
+# Contributor: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Gabriel Souza Franco
+# Contributor: Florian Pritz
+# Contributor: Christian Hesse <mail@eworm.de>
+# Contributor: Thomas Dziedzic <gostrc@gmail.com>
+# Contributor: Mickele
+# Contributor: Marcus Fritzsch <fritschy@googlemail.com>
+
+pkgname=soqt
+pkgver=1.6.1
+pkgrel=2
+pkgdesc='The glue between Coin and Qt'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://github.com/coin3d/soqt'
+license=(GPL)
+depends=(coin qt6-base)
+makedepends=(cmake mesa doxygen)
+options=('!debug' 'strip')
+source=(https://github.com/coin3d/soqt/releases/download/v$pkgver/$pkgname-$pkgver-src.tar.gz)
+sha256sums=('80289d9bd49ffe709ab85778c952573f43f1c725ea958c6d5969b2e9c77bb3ba')
+
+prepare() {
+  # Skip cpack
+  mkdir -p soqt/cpack.d
+  touch soqt/cpack.d/CMakeLists.txt
+}
+
+build() {
+  cmake -B build -S soqt \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSOQT_BUILD_DOC_MAN=ON \
+    -DSOQT_BUILD_DOC_CHM=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}

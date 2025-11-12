@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Maximiliano Sandoval <msandova@gnome.org>
+Date: Wed, 6 Mar 2024 18:31:15 +0100
+Subject: [PATCH] main: Set prgname to application id
+
+This will set the xdg-shell app_id correctly. See [1].
+
+It also sets wmclass correctly to the APPLICATION_ID rather than gnome-boxes.
+
+[1] https://docs.gtk.org/gtk4/migrating-3to4.html#set-a-proper-application-id
+---
+ editor/dconf-editor.vala | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/editor/dconf-editor.vala b/editor/dconf-editor.vala
+index d9dd475397fc..a899e5f13b0c 100644
+--- a/editor/dconf-editor.vala
++++ b/editor/dconf-editor.vala
+@@ -345,6 +345,7 @@ private class ConfigurationEditor : Gtk.Application, BaseApplication
+         Hdy.init ();
+ 
+         Environment.set_application_name (PROGRAM_NAME);
++        Environment.set_prgname ("ca.desrt.dconf-editor");
+         Gtk.Window.set_default_icon_name ("ca.desrt.dconf-editor");
+ 
+         Hdy.StyleManager.get_default ().set_color_scheme (PREFER_LIGHT);

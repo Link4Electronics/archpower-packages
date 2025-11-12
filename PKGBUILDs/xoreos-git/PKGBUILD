@@ -1,0 +1,39 @@
+# Maintainer: Sven Hesse <drmccoy@drmccoy.de>
+
+pkgname=xoreos-git
+_pkgname=xoreos
+pkgver=0.0.6.r235.gf36b681b2
+pkgrel=1
+pkgdesc="A reimplementation of BioWare's Aurora engine"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://xoreos.org/"
+license=('GPL3')
+depends=('zlib' 'xz' 'libxml2' 'boost' 'boost-libs' 'sdl2' 'freetype2' 'openal' 'libmad' 'libogg' 'libvorbis' 'faad2' 'xvidcore' 'libvpx')
+makedepends=('git' 'cmake')
+options=('!debug' 'strip')
+source=('git+https://github.com/xoreos/xoreos'
+		'cmakeboost1.89-fix.patch')
+sha256sums=('SKIP'
+			'8cb073cc1c5e88f46ec9c2fd164d71e533df7de426dc5f0d5d3e6a6b73ae32ba')
+
+pkgver() {
+	cd "$srcdir/$_pkgname"
+
+	git describe --long --match desc/\* | cut -d '/' -f 2- | sed -e 's/\(.*\)-\([^-]*\)-\([^-]*\)/\1.r\2.\3/'
+}
+
+build() {
+	cd "$srcdir/$_pkgname"
+	patch -Np1 -i "${srcdir}/cmakeboost1.89-fix.patch"
+	cmake -B build \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+      -DCMAKE_INSTALL_PREFIX="/usr"
+	cmake --build build
+}
+
+package() {
+	cd "$srcdir/$_pkgname"
+	install -Dm755 build/xoreos "$pkgdir"/usr/bin
+	install -Dm644 dists/win32/xoreos.ico "$pkgdir"/usr/share/pixmaps/xoreos.ico
+}

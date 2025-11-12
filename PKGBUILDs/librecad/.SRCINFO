@@ -1,0 +1,29 @@
+pkgbase = librecad
+	pkgdesc = A 2D CAD drawing tool based on the community edition of QCad
+	pkgver = 2.2.1.3
+	pkgrel = 2
+	url = https://www.librecad.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	makedepends = git
+	makedepends = qt5-tools
+	makedepends = boost
+	makedepends = imagemagick
+	makedepends = librsvg
+	depends = qt5-base
+	depends = qt5-svg
+	depends = libxcb
+	depends = muparser
+	conflicts = librecad-git
+	replaces = librecad-svn
+	replaces = caduntu
+	replaces = caduntu-svn
+	options = !debug
+	options = strip
+	source = git+https://github.com/LibreCAD/LibreCAD.git#tag=v2.2.1.3
+	sha256sums = 3f2d9a77cdf99186b3410aeba3b83662d9dab56e5268fd62f72e79833bd6eb14
+
+pkgname = librecad

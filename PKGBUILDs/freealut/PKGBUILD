@@ -1,0 +1,41 @@
+# Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+# Contributor: Arkamririon <Arkamririon@gmx.net>
+
+pkgname=freealut
+pkgver=1.1.0
+pkgrel=10
+pkgdesc="OpenAL Utility Toolkit (ALUT)"
+url="https://www.openal.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(LGPL-2.0-only)
+depends=(
+  bash
+  glibc
+  openal
+)
+makedepends=(
+  autoconf-archive
+  git
+)
+options=('!debug' 'strip')
+source=("git+https://github.com/vancegroup/freealut#tag=freealut_${pkgver//./_}")
+b2sums=('195e06a6368194e64e65b30eb1db3d0225a492146b074935bd319c574e3c2b149235a88ae262954d222a2230088bb5e094407e2ffb4c8641ea3046f12c31cd27')
+
+prepare() {
+  cd freealut
+  autoreconf -fvi
+}
+
+build() {
+  cd freealut
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+    --disable-static
+  make
+}
+
+package() {
+  cd freealut
+  make DESTDIR="$pkgdir" install
+}
+
+# vim:set sw=2 sts=-1 et:

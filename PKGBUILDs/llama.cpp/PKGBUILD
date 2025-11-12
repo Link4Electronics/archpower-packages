@@ -1,0 +1,117 @@
+# Maintainer: fabse
+# Contributor: txtsd <aur.archlinux@ihavea.quest>
+# Contributor: envolution
+
+pkgname=llama.cpp
+pkgver=b9689 # renovate: datasource=github-releases depName=ggml-org/llama.cpp
+pkgrel=1
+pkgdesc="Port of Facebook's LLaMA model in C/C++"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://github.com/ggml-org/llama.cpp'
+license=('MIT')
+depends=(
+  curl
+  gcc-libs
+  glibc
+  python
+  blas-openblas
+)
+makedepends=(
+  cmake
+  git
+  shaderc
+  ninja
+  spirv-headers
+)
+optdepends=(
+  'python-numpy: needed for convert_hf_to_gguf.py'
+  'python-safetensors: needed for convert_hf_to_gguf.py'
+  'python-sentencepiece: needed for convert_hf_to_gguf.py'
+  'python-pytorch: needed for convert_hf_to_gguf.py'
+  'python-transformers: needed for convert_hf_to_gguf.py'
+  'python-gguf: needed for convert_hf_to_gguf.py'
+)
+provides=(${pkgname})
+conflicts=(${pkgname} libggml ggml)
+options=('lto' '!debug' 'strip')
+backup=("etc/conf.d/llama.cpp")
+install='llama.cpp.install'
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/ggml-org/llama.cpp/archive/refs/tags/${pkgver}.tar.gz"
+  'llama.cpp.conf'
+  'llama.cpp.service'
+  'llama.cpp.install'
+  'sysusers.conf'
+  'tmpfiles.conf'
+  'power8-vsx.patch'
+)
+sha256sums=('6720aceb6a478e35d00182ec22beb215e44c30a63ff93ec5c1358dae056d4880'
+            '53fa70cfe40cb8a3ca432590e4f76561df0f129a31b121c9b4b34af0da7c4d87'
+            '48d6b261315c9175b4b4cea4900bd4d76f2f27112804934db656537485510cd2'
+            'c534b4c37ff8ac9174a2f6f410daa96d991e8c638f338383ffb07613c771724b'
+            'e687106ee9f6a5f0de4f286015f85a60e68d884e8100c67810b709960c354148'
+            '402a44f609785fbabc7afca6e8a486ff517933661e9e7f4955fed6574eac9875'
+            '842666b0a331af46dece872634d2c8656bf255d8ab9599576db9137927c061ea')
+
+prepare() {
+  ln -sf "${pkgname}-${pkgver}" llama.cpp
+  mkdir -p "${pkgname}/.git"
+  # POWER8: un-gate the VSX quant kernels (otherwise they fall back to scalar).
+  patch -Np1 -d "${pkgname}-${pkgver}" < "${srcdir}/power8-vsx.patch"
+}
+build() {
+  export CFLAGS="-mcpu=power8 -mvsx -maltivec"
+  export CXXFLAGS="-mcpu=power8 -mvsx -maltivec"
+
+  local _cmake_options=(
+    -G Ninja
+    -B build
+    -S "${pkgname}"
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DBUILD_SHARED_LIBS=ON
+    -DLLAMA_BUILD_TESTS=OFF
+    -DLLAMA_USE_SYSTEM_GGML=OFF
+    -DLLAMA_BUILD_UI=OFF
+    -DGGML_ALL_WARNINGS=OFF
+    -DGGML_ALL_WARNINGS_3RD_PARTY=OFF
+    -DGGML_BUILD_EXAMPLES=OFF
+    -DGGML_BUILD_TESTS=OFF
+    -DGGML_LTO=ON
+    -DGGML_RPC=ON
+    -DGGML_VULKAN=ON
+    -DGGML_BLAS=ON
+    -DGGML_BLAS_VENDOR=OpenBLAS
+    -DLLAMA_BUILD_NUMBER="${pkgver#b}"
+    -Wno-dev
+  )
+  if [ -n "$CI" ] && [ "$CI" != 0 ]; then
+    echo "CI = $CI detected, building universal package"
+    _cmake_options+=(
+      -DGGML_BACKEND_DL=ON
+      -DGGML_CPU_ALL_VARIANTS=ON
+      -DGGML_NATIVE=OFF
+    )
+  else
+    _cmake_options+=(
+      -DGGML_NATIVE=ON
+    )
+  fi
+  # Allow user-specified additional flags
+  if [[ -n "$LLAMA_BUILD_EXTRA_ARGS" ]]; then
+    echo "Applied custom CMake build args: $LLAMA_BUILD_EXTRA_ARGS"
+    _cmake_options+=($LLAMA_BUILD_EXTRA_ARGS)
+  fi
+  cmake "${_cmake_options[@]}"
+  cmake --build build -- -j60
+}
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+
+  install -Dm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "llama.cpp.conf" "${pkgdir}/etc/conf.d/llama.cpp"
+  install -Dm644 "llama.cpp.service" "${pkgdir}/usr/lib/systemd/system/llama.cpp.service"
+  install -Dm644 "sysusers.conf" "${pkgdir}/usr/lib/sysusers.d/llama-cpp.conf"
+  install -Dm644 "tmpfiles.conf" "${pkgdir}/usr/lib/tmpfiles.d/llama-cpp.conf"
+}
+# vim:set ts=2 sw=2 et:

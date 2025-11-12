@@ -1,0 +1,40 @@
+diff --git a/files/endianio.h b/files/endianio.h
+index 91126fc..bf36ce8 100644
+--- a/files/endianio.h
++++ b/files/endianio.h
+@@ -205,6 +205,26 @@ namespace endian_internal { namespace detail {
+ 	}
+ #endif
+ 
++	template <size_t Size>
++	constexpr auto select_unsigned_impl() {
++		if constexpr (Size == sizeof(uint8_t)) {
++			return uint8_t{};
++		} else if constexpr (Size == sizeof(uint16_t)) {
++			return uint16_t{};
++		} else if constexpr (Size == sizeof(uint32_t)) {
++			return uint32_t{};
++		} else if constexpr (Size == sizeof(uint64_t)) {
++			return uint64_t{};
++		} else {
++				static_assert(
++								Size == sizeof(uint8_t) || Size == sizeof(uint16_t)
++								|| Size == sizeof(uint32_t) || Size == sizeof(uint64_t));
++		}
++	}
++
++	template <size_t Size>
++	using select_unsigned_t = decltype(select_unsigned_impl<Size>());
++
+ 	template <class... Ts>
+ 	struct overloaded : public Ts... {
+ 		using Ts::operator()...;
+@@ -291,7 +311,7 @@ namespace endian_internal { namespace detail {
+ 			typename Int,
+ 			std::enable_if_t<std::is_integral_v<Int>, bool> = true>
+ 	ENDIANIO_CONST_CONSTEXPR Int byteswap(Int value) noexcept {
+-		using UInt = std::make_unsigned_t<std::remove_cv_t<Int>>;
++		using UInt = select_unsigned_t<sizeof(Int)>;
+ 		if constexpr (std::is_same_v<UInt, std::remove_cv_t<Int>>) {
+ 			return byteswap_impl(value);
+ 		}

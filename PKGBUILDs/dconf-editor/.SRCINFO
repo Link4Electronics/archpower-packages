@@ -1,0 +1,28 @@
+pkgbase = dconf-editor
+	pkgdesc = GSettings editor for GNOME
+	pkgver = 49.0
+	pkgrel = 1
+	url = https://apps.gnome.org/DconfEditor/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	groups = gnome-extra
+	license = GPL-3.0-or-later
+	makedepends = git
+	makedepends = meson
+	makedepends = vala
+	depends = dconf
+	depends = glib2
+	depends = glibc
+	depends = gtk3
+	depends = hicolor-icon-theme
+	depends = libhandy
+	options = !debug
+	options = strip
+	source = git+https://gitlab.gnome.org/GNOME/dconf-editor.git#tag=49.0
+	source = dconf-editor-prgname.patch
+	b2sums = d504e593070c593e4ad545170a220712020e2b9c21e5ea2a1b77c8a78fd79a20498ea17129ad7f5909e182b5747e9ede126517a4e8f72b87b602d671eb96e13d
+	b2sums = a6fef3b6723d0dc2d6295acf7882b1d06fc9d7f2e56e69b9cd41fdaf8b898bfd92ceaca977e972c71026a31afc1e64c8fe3975d0a59fb12b2f30bde61b049239
+
+pkgname = dconf-editor

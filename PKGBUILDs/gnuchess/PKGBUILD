@@ -1,0 +1,40 @@
+# Maintainer: Jonathan Steel <jsteel at archlinux.org>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+
+pkgname=gnuchess
+pkgver=6.3.0
+pkgrel=1
+pkgdesc="Play chess against the computer on a terminal and an engine for graphical chess frontends"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://www.gnu.org/software/chess/chess.html"
+license=('GPL3')
+depends=('bash')
+optdepends=('xboard: graphical frontend')
+options=('!debug' 'strip')
+source=(https://ftp.gnu.org/pub/gnu/chess/$pkgname-$pkgver.tar.gz
+        https://ftp.gnu.org/pub/gnu/chess/$pkgname-$pkgver.tar.gz.sig)
+validpgpkeys=('34319C9B50B8D2176F5556C543AC7FF93CED5A6B')
+md5sums=('2d0710b0f817c7689bf1764101c32ef4'
+         'SKIP')
+sha256sums=('0b37bec2098c2ad695b7443e5d7944dc6dc8284f8d01fcc30bdb94dd033ca23a'
+            'SKIP')
+
+prepare() {
+  cd $pkgname-$pkgver
+  autoreconf -fiv
+}
+
+build() {
+  cd $pkgname-$pkgver
+
+  ./configure --prefix=/usr
+
+  make  
+}
+
+package() {
+  cd $pkgname-$pkgver
+
+  make prefix="$pkgdir"/usr install
+}

@@ -1,0 +1,231 @@
+diff --git a/src/3rdparty/imgui/imconfig.h b/src/3rdparty/imgui/imconfigp.h
+index 4c36e11..cb787e9 100644
+--- a/src/3rdparty/imgui/imconfig.h
++++ b/src/3rdparty/imgui/imconfig.h
+@@ -135,3 +135,8 @@ namespace ImGui
+     void MyFunction(const char* name, MyMatrix44* mtx);
+ }
+ */
++#define IM_COL32_R_SHIFT    24
++#define IM_COL32_G_SHIFT    16
++#define IM_COL32_B_SHIFT    8
++#define IM_COL32_A_SHIFT    0
++#define IM_COL32_A_MASK     0x000000FF
+diff --git a/src/video/GLSnow.cc b/src/video/GLSnow.cc
+index fb189ad..343e59c 100644
+--- a/src/video/GLSnow.cc
++++ b/src/video/GLSnow.cc
+@@ -25,11 +25,11 @@ GLSnow::GLSnow(Display& display_)
+ 	std::ranges::generate(buf, [&] { return distribution(generator); });
+ #if OPENGL_VERSION < OPENGL_3_3
+ 	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 128, 128, 0,
+-	             GL_LUMINANCE, GL_UNSIGNED_BYTE, buf.data());
++	             GL_LUMINANCE, GL_UNSIGNED_INT_8_8_8_8_REV, buf.data());
+ #else
+ 	// GL_LUMINANCE no longer supported in newer versions
+ 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 128, 128, 0,
+-	             GL_RED, GL_UNSIGNED_BYTE, buf.data());
++	             GL_RED, GL_UNSIGNED_INT_8_8_8_8_REV, buf.data());
+ 	GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_ONE};
+ 	glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+ #endif
+diff --git a/src/video/GLImage.cc b/src/video/GLImage.cc
+index 504a640..0f5887d 100644
+--- a/src/video/GLImage.cc
++++ b/src/video/GLImage.cc
+@@ -56,7 +56,7 @@ static gl::Texture loadTexture(
+ 
+ 	gl::Texture texture(true); // enable interpolation
+ 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0,
+-	             GL_RGBA, GL_UNSIGNED_BYTE, image2->pixels);
++	             GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, image2->pixels);
+ 	return texture;
+ }
+
+diff --git a/src/imgui/ImGuiBitmapViewer.cc b/src/imgui/ImGuiBitmapViewer.cc
+index d561a73..fca3ed1 100644
+--- a/src/imgui/ImGuiBitmapViewer.cc
++++ b/src/imgui/ImGuiBitmapViewer.cc
+@@ -527,7 +527,7 @@ void ImGuiBitmapViewer::paint(MSXMotherBoard* motherBoard)
+ 		}
+ 		bitmapTex->bind();
+ 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+-				GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++				GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 		int zx = (1 + bitmapZoom) * divX;
+ 		int zy = (1 + bitmapZoom) * 2;
+ 		auto zm = gl::vec2(float(zx), float(zy));
+@@ -555,7 +555,7 @@ void ImGuiBitmapViewer::paint(MSXMotherBoard* motherBoard)
+ 				}
+ 				bitmapGridTex->bind();
+ 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, zx, zy, 0,
+-						GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++						GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 				ImGui::SetCursorPos(pos);
+ 				ImGui::Image(bitmapGridTex->getImGui(), size, gl::vec2{}, msxSize);
+ 			}
+diff --git a/src/imgui/ImGuiCharacter.cc b/src/imgui/ImGuiCharacter.cc
+index d4be87c..c97f183 100644
+--- a/src/imgui/ImGuiCharacter.cc
++++ b/src/imgui/ImGuiCharacter.cc
+@@ -72,7 +72,7 @@ void ImGuiCharacter::initHexDigits()
+ 	// and upload as a texture
+ 	smallHexDigits.bind();
+ 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, totalWidth, charHeight, 0,
+-	             GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++	             GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ }
+ 
+ void ImGuiCharacter::paint(MSXMotherBoard* motherBoard)
+@@ -364,7 +364,7 @@ void ImGuiCharacter::paint(MSXMotherBoard* motherBoard)
+ 		}
+ 		patternTex.bind();
+ 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, patternTexSize.x, patternTexSize.y, 0,
+-			GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++			GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 
+ 		// create grid texture
+ 		auto charWidth = mode == one_of(TEXT40, TEXT80) ? 6 : 8;
+@@ -386,7 +386,7 @@ void ImGuiCharacter::paint(MSXMotherBoard* motherBoard)
+ 			}
+ 			gridTex.bind();
+ 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, gridWidth, gridHeight, 0,
+-				GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++				GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 		}
+ 		if (nameTableOverlay && !smallHexDigits.get()) {
+ 			initHexDigits();
+diff --git a/src/video/scalers/GLHQScaler.cc b/src/video/scalers/GLHQScaler.cc
+index 18a595a..c9dec0a 100644
+--- a/src/video/scalers/GLHQScaler.cc
++++ b/src/video/scalers/GLHQScaler.cc
+@@ -40,7 +40,7 @@ GLHQScaler::GLHQScaler(GLScaler& fallback_, unsigned maxWidth_, unsigned maxHeig
+ 	             maxHeight,        // height
+ 	             0,                // border
+ 	             format,           // format
+-	             GL_UNSIGNED_BYTE, // type
++	             GL_UNSIGNED_INT_8_8_8_8_REV, // type
+ 	             nullptr);         // data
+ #if OPENGL_VERSION >= OPENGL_3_3
+ 	GLint swizzleMask[] = {GL_RED, GL_RED, GL_RED, GL_ONE};
+@@ -64,7 +64,7 @@ GLHQScaler::GLHQScaler(GLScaler& fallback_, unsigned maxWidth_, unsigned maxHeig
+ 		             n * 64,              // height
+ 		             0,                   // border
+ 		             GL_RGBA,             // format
+-		             GL_UNSIGNED_BYTE,    // type
++		             GL_UNSIGNED_INT_8_8_8_8_REV,    // type
+ 		             offsetsFile.mmap().data());// data
+ 
+ 		weightsName[10] = narrow<char>('0' + n);
+@@ -77,7 +77,7 @@ GLHQScaler::GLHQScaler(GLScaler& fallback_, unsigned maxWidth_, unsigned maxHeig
+ 		             n * 64,              // height
+ 		             0,                   // border
+ 		             GL_RGB,              // format
+-		             GL_UNSIGNED_BYTE,    // type
++		             GL_UNSIGNED_INT_8_8_8_8_REV,    // type
+ 		             weightsFile.mmap().data());// data
+ 	}
+ 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // restore to default
+@@ -163,7 +163,7 @@ void GLHQScaler::uploadBlock(
+ 			narrow<GLint>(lineWidth), // width
+ 			narrow<GLint>(numLines),  // height
+ 			format,                   // format
+-			GL_UNSIGNED_BYTE,         // type
++			GL_UNSIGNED_INT_8_8_8_8_REV,         // type
+ 			mapped.data());           // data
+ 	edgeBuffer.unbind();
+ }
+diff --git a/src/imgui/ImGuiSpriteViewer.cc b/src/imgui/ImGuiSpriteViewer.cc
+index 416364e..030e945 100644
+--- a/src/imgui/ImGuiSpriteViewer.cc
++++ b/src/imgui/ImGuiSpriteViewer.cc
+@@ -371,11 +371,11 @@ void ImGuiSpriteViewer::paint(MSXMotherBoard* motherBoard)
+ 				renderPatterns16(patTable, pixels);
+ 			}
+ 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 64, 0,
+-			             GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++			             GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 		} else {
+ 			pixels[0] = getColor(imColor::GRAY);
+ 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0,
+-			             GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++			             GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 		}
+ 
+ 		// create grid texture
+@@ -395,7 +395,7 @@ void ImGuiSpriteViewer::paint(MSXMotherBoard* motherBoard)
+ 			gridTex.bind();
+ 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+ 			             narrow<int>(gridSize), narrow<int>(gridSize),
+-			             0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++			             0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 		}
+ 
+ 		// create checker board texture
+@@ -407,7 +407,7 @@ void ImGuiSpriteViewer::paint(MSXMotherBoard* motherBoard)
+ 			}
+ 			checkerTex.bind();
+ 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0,
+-			             GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++			             GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 		}
+ 		im::TreeNode("Sprite patterns", ImGuiTreeNodeFlags_DefaultOpen, [&]{
+ 			auto fullSize = gl::vec2(256, 64) * float(zm);
+@@ -452,7 +452,7 @@ void ImGuiSpriteViewer::paint(MSXMotherBoard* motherBoard)
+ 							}
+ 							zoomGridTex.bind();
+ 							glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, s, s, 0,
+-								GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
++								GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels.data());
+ 							ImGui::SetCursorPos(pos2);
+ 							ImGui::Image(zoomGridTex.getImGui(),
+ 							             float(z) * zoomPatSize, {}, gl::vec2{float(size)});
+@@ -714,7 +714,7 @@ void ImGuiSpriteViewer::paint(MSXMotherBoard* motherBoard)
+ 			}
+ 			renderTex.bind();
+ 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, lines, 0,
+-			             GL_RGBA, GL_UNSIGNED_BYTE, screen.data());
++			             GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, screen.data());
+ 
+ 			std::array<SpriteBox, 2 * 32> clippedBoxes;
+ 			int nrClippedBoxes = 0;
+diff --git a/src/video/PostProcessor.cc b/src/video/PostProcessor.cc
+index 2cfd287..b6e600c 100644
+--- a/src/video/PostProcessor.cc
++++ b/src/video/PostProcessor.cc
+@@ -512,7 +512,7 @@ void PostProcessor::uploadFrame()
+ 			w,                 // width
+ 			h,                 // height
+ 			GL_RGBA,           // format
+-			GL_UNSIGNED_BYTE,  // type
++			GL_UNSIGNED_INT_8_8_8_8_REV,  // type
+ 			superImposeVideoFrame->getLineDirect(0).data()); // data
+ 	}
+ }
+@@ -562,7 +562,7 @@ void PostProcessor::uploadBlock(
+ 		narrow<GLint>(lineWidth), // width
+ 		narrow<GLint>(numLines),  // height
+ 		GL_RGBA,                  // format
+-		GL_UNSIGNED_BYTE,         // type
++		GL_UNSIGNED_INT_8_8_8_8_REV,         // type
+ 		mapped.data());           // data
+ 	pbo.unbind();
+ 
+@@ -628,7 +628,7 @@ void PostProcessor::preCalcNoise(float factor)
+ 		256,              // height
+ 		0,                // border
+ 		format,           // format
+-		GL_UNSIGNED_BYTE, // type
++		GL_UNSIGNED_INT_8_8_8_8_REV, // type
+ 		buf1.data());     // data
+ #if OPENGL_VERSION >= OPENGL_3_3
+ 	GLint swizzleMask1[] = {GL_RED, GL_RED, GL_RED, GL_ONE};
+@@ -644,7 +644,7 @@ void PostProcessor::preCalcNoise(float factor)
+ 		256,              // height
+ 		0,                // border
+ 		format,           // format
+-		GL_UNSIGNED_BYTE, // type
++		GL_UNSIGNED_INT_8_8_8_8_REV, // type
+ 		buf2.data());     // data
+ #if OPENGL_VERSION >= OPENGL_3_3
+ 	GLint swizzleMask2[] = {GL_RED, GL_RED, GL_RED, GL_ONE};

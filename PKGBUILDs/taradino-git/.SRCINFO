@@ -1,0 +1,23 @@
+pkgbase = taradino-git
+	pkgdesc = SDL2 port of Rise of the Triad
+	pkgver = 20251222
+	pkgrel = 1
+	url = https://github.com/fabiangreffrath/taradino
+	install = taradino.install
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL2
+	makedepends = cmake
+	makedepends = git
+	depends = sdl2
+	depends = sdl2_mixer
+	provides = taradino
+	conflicts = taradino
+	options = !debug
+	options = strip
+	source = git+https://github.com/fabiangreffrath/taradino.git
+	md5sums = SKIP
+
+pkgname = taradino-git

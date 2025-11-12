@@ -1,0 +1,21 @@
+pkgbase = mod_dnssd
+	pkgdesc = Zeroconf module for Apache
+	pkgver = 0.6
+	pkgrel = 9
+	url = https://0pointer.de/lennart/projects/mod_dnssd/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = Apache-2.0
+	makedepends = git
+	depends = apache
+	depends = apr
+	depends = avahi
+	depends = glibc
+	options = !debug
+	options = strip
+	source = git+https://git.0pointer.net/clone/mod_dnssd.git#tag=v0.6
+	b2sums = c8c941091acdb9c514f687bca614209a9650d9a0e5b62d0073e5a8c827249a89efaba5817b81d626c44820db12ab3a2ee0bc4c552c660cefe3309672cd293d54
+
+pkgname = mod_dnssd

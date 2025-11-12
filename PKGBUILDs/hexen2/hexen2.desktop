@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Hexen 2
+Comment=Hexen II: Hammer of Thyrion
+Exec=hexen2
+Icon=hexen2
+Terminal=false
+Categories=Game;

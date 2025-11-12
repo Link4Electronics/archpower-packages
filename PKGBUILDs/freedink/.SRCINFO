@@ -1,0 +1,47 @@
+pkgbase = freedink
+	pkgdesc = Humorous top-down adventure and role-playing game
+	pkgver = 109.6
+	pkgrel = 2
+	url = https://www.gnu.org/software/freedink
+	install = freedink.install
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL3
+	options = !debug
+	options = strip
+	makedepends = help2man
+	makedepends = rsync
+	makedepends = cxxtest
+	makedepends = glm
+	makedepends = intltool
+	makedepends = git
+	depends = sdl2_image
+	depends = sdl2_mixer
+	depends = sdl2_ttf
+	depends = sdl2_gfx
+	depends = fontconfig
+	depends = wxwidgets-gtk3
+	depends = fluidsynth
+	depends = soundfont-fluid
+	source = https://ftp.gnu.org/gnu/freedink/freedink-109.6.tar.gz
+	source = https://sources.debian.org/data/main/f/freedink/109.6-3/debian/patches/sdl2-2.0.10.patch
+	source = sound.patch
+	source = backport.patch::https://git.savannah.gnu.org/cgit/freedink.git/patch/?id=ced987af0574b7fdb11a85ccdcb32f7a6748ef09
+	source = backport-translations.patch::https://git.savannah.gnu.org/cgit/freedink/freedink-data.git/patch/?id=c80d04ba1eb1b0e42525378f617972432968d872
+	source = https://ftp.gnu.org/gnu/freedink/freedink-data-1.08.20190120.tar.gz
+	source = https://ftp.gnu.org/gnu/freedink/dfarc-3.14.tar.gz
+	source = gfxfonts-fix.patch
+	source = config.h.patch
+	sha256sums = 5e0b35ac8f46d7bb87e656efd5f9c7c2ac1a6c519a908fc5b581e52657981002
+	sha256sums = 9e26cd4179fd4cb3dd5ea347e6a66f5f8b3a7a5fb574dd728592c0b52bdf5442
+	sha256sums = 59cdf6e96b5ee3e8d6a44750222590be6cb013c436682dfb223367c895540ba4
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = 715f44773b05b73a9ec9b62b0e152f3f281be1a1512fbaaa386176da94cffb9d
+	sha256sums = a51124ecd11eeca0f1d16732ef58ee690e2fa2db06cc0ec2a5b61b41f8b0e8fa
+	sha256sums = 8488f2185ad3e2582e940cd6e129806da2beb66cc56f94aee95808091841a70e
+	sha256sums = fabfe76b927cea8b8e70ea3ca28cccdb936ac325421bd534597fa7642a132d5a
+
+pkgname = freedink

@@ -1,0 +1,22 @@
+pkgbase = libmatekbd
+	pkgdesc = MATE keyboard library
+	pkgver = 1.28.0
+	pkgrel = 1
+	url = https://mate-desktop.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = LGPL
+	makedepends = python
+	depends = gtk3
+	depends = gettext
+	depends = libxklavier
+	conflicts = libmatekbd-gtk3
+	replaces = libmatekbd-gtk3
+	options = !debug
+	options = strip
+	source = https://pub.mate-desktop.org/releases/1.28/libmatekbd-1.28.0.tar.xz
+	sha256sums = 5d2e58483c2b23d33503d24c88f8b90a28cc0189d7e4001b3e273a604f6fe80e
+
+pkgname = libmatekbd

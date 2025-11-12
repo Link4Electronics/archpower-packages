@@ -1,0 +1,53 @@
+# Maintainer : Daniel Bermond <dbermond@archlinux.org>
+# Contributor: Jonathan Steel <jsteel at aur.archlinux.org>
+# Contributor: Sebastian Wolf < fatmike303 at gmail dot com >
+# Contributor: Guilherme Calé <gui@cabritacale.eu>
+
+pkgname=fs-uae
+pkgver=3.2.35
+pkgrel=1
+pkgdesc='An Amiga emulator based on UAE/WinUAE with a focus on emulating games'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://fs-uae.net/'
+license=('GPL-2.0-only')
+depends=(
+    'gcc-libs'
+    'glib2'
+    'glibc'
+    'hicolor-icon-theme'
+    'libmpeg2'
+    'libpng'
+    'libx11'
+    'openal'
+    'sdl2'
+    'zlib')
+optdepends=(
+    'fs-uae-launcher: for the graphical user interface')
+makedepends=(
+    'libxi'
+    'strip-nondeterminism'
+    'zip')
+options=('!debug' 'strip')
+source=("https://github.com/FrodeSolheim/fs-uae/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('eac8f86ad092ff3474011357b63d21df13232f6d7448eec7fc2fc60540711d18')
+
+prepare() {
+    autoreconf -fi "${pkgname}-${pkgver}"
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    
+    # need to disable the jit compiler to add PIE to binaries
+    ./configure --prefix='/usr' --disable-jit
+    
+    make 
+
+    # Strip non-deterministic information from .dat file (e.g. timestamps)
+    # This is required for reproducible builds
+    find . -name "${pkgname}.dat" -exec strip-nondeterminism -t zip {} +
+}
+
+package() {
+    make -C "${pkgname}-${pkgver}" DESTDIR="$pkgdir" install
+}

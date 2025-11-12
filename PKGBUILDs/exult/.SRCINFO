@@ -1,0 +1,26 @@
+pkgbase = exult
+	pkgdesc = A project to recreate Ultima 7 for modern operating systems, using the game's original plot, data, and graphics files
+	pkgver = 1.12.1
+	pkgrel = 1
+	url = https://exult.sourceforge.io
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-2.0-only
+	makedepends = autoconf-archive
+	depends = fluidsynth
+	depends = libogg
+	depends = libvorbis
+	depends = munt
+	depends = sdl2_image
+	options = !debug
+	options = strip
+	source = https://github.com/exult/exult/archive/refs/tags/v1.12.1.tar.gz
+	source = http://prdownloads.sourceforge.net/exult/exult_audio.zip
+	source = ppc32fix.patch
+	b2sums = a1b36226cc76155b790aad3a47aaa30717edb048ab4bc19f3a7ebb01cd47d42b71113d2d677e91c5e29fc599a6e133f25f493f6833dcd9d328a2f612248edc3c
+	b2sums = ad8a230d9ba92cef94b22b669644a10ae6fcfe92c4dbfc5c3f89535534b4bddfe7d9b69dbf05220033df92b6d172e83340e6571920f42b5e63e66a5417ffa8f4
+	b2sums = 5cdcaa8add58f84478dd4977616342aff4a6de92f326fbb0b631de25cbef992433ec66b810b6dcd20e6caf8e9570038a842e437f6094d6118498e2d549c7a369
+
+pkgname = exult

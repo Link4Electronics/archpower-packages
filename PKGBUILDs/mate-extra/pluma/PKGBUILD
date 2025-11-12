@@ -1,0 +1,45 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=pluma
+pkgver=1.28.0
+pkgrel=6
+pkgdesc="A powerful text editor for MATE"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later')
+depends=('iso-codes' 'mate-desktop' 'zenity' 'gtksourceview4' 'libpeas' 'python' 'gettext' 'enchant' 'libsm')
+makedepends=('itstool' 'git' 'glib2-devel' 'gobject-introspection' 'python' 'mate-common' 'yelp-tools' 'autoconf-archive')
+optdepends=('python-gobject: to use the python plugins')
+groups=('mate-extra')
+conflicts=('pluma-gtk3')
+replaces=('pluma-gtk3')
+options=('!debug' 'strip')
+source=("git+https://github.com/mate-desktop/pluma.git#tag=v${pkgver}"
+        git+https://github.com/mate-desktop/mate-submodules.git)
+sha512sums=('df72dcd262802d2dbeaf925466fb5aa6d45f04d6db771154804da52351712b8f3f120ed0438a64c1025c3ede69e4fd2228ea55b93402c1b41aa9890f1bf6618a'
+            'SKIP')
+
+prepare() {
+	cd "${pkgname}"
+	git submodule init
+	git config submodule.mate-submodules.url "${srcdir}/mate-submodules"
+	git -c protocol.file.allow=always submodule update
+	NOCONFIGURE=1 ./autogen.sh
+}
+
+build() {
+	cd "${pkgname}"
+	./configure \
+	            --prefix=/usr \
+	            --libexecdir="/usr/lib/${pkgname}" \
+	            --enable-gtk-doc=no \
+	            --enable-python
+	make
+}
+
+package() {
+	cd "${pkgname}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,291 @@
+--- a/ggml/src/ggml-cpu/arch/powerpc/quants.c
++++ b/ggml/src/ggml-cpu/arch/powerpc/quants.c
+@@ -13,6 +13,16 @@
+ #include <assert.h>
+ #include <float.h>
+ #include <stdlib.h> // for qsort
++
++#if defined(__VSX__)
++// POWER8 replacement for the POWER9-only vec_xl_len (lxvl). Length is in bytes;
++// zero-padded partial load through a stack buffer, no over-read past a block.
++static inline vector unsigned char ggml_p8_xl_len(const void * p, size_t n) {
++    uint8_t tmp[16] = {0};
++    memcpy(tmp, p, n);
++    return vec_xl(0, tmp);
++}
++#endif
+ #include <stdio.h>  // for GGML_ASSERT
+ 
+ #define GROUP_MAX_EPS 1e-15f
+@@ -23,7 +33,7 @@
+ 
+ #define UNUSED GGML_UNUSED
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+ #define B1(c,s,n)  0x ## n ## c ,  0x ## n ## s
+ #define B2(c,s,n) B1(c,s,n ## c), B1(c,s,n ## s)
+ #define B3(c,s,n) B2(c,s,n ## c), B2(c,s,n ## s)
+@@ -45,7 +55,7 @@
+ 
+     block_q8_0 * GGML_RESTRICT y = vy;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     for (int i = 0; i < nb; i++) {
+         vector float srcv [8];
+         vector float asrcv[8];
+@@ -90,7 +100,7 @@
+ 
+     block_q8_1 * GGML_RESTRICT y = vy;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     for (int i = 0; i < nb; i++) {
+         vector float srcv [8];
+         vector float asrcv[8];
+@@ -158,7 +168,7 @@
+     int ib = 0;
+     float sumf = 0;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector signed int v0 = vec_splats((int32_t)0);
+     const vector unsigned char v4 = vec_splats((unsigned char)0x4);
+@@ -228,7 +238,7 @@
+     int ib = 0;
+     float sumf = 0;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector signed int v0 = vec_splats((int32_t)0);
+     const vector unsigned char v4 = vec_splats((unsigned char)0x4);
+@@ -295,7 +305,7 @@
+     int ib = 0;
+     float sumf = 0;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector unsigned char vshift4 = vec_splats((unsigned char)4);
+     vector float vsumf0 = vec_splats(0.0f);
+@@ -362,7 +372,7 @@
+     const block_q5_0 * GGML_RESTRICT x = vx;
+     const block_q8_0 * GGML_RESTRICT y = vy;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector unsigned char v4 = vec_splats((unsigned char)4);
+ 
+@@ -434,7 +444,7 @@
+     const block_q5_1 * GGML_RESTRICT x = vx;
+     const block_q8_1 * GGML_RESTRICT y = vy;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector signed int v0 = vec_splats((int32_t)0);
+     const vector unsigned char v4 = vec_splats((unsigned char)0x4);
+@@ -509,7 +519,7 @@
+     int ib = 0;
+     float sumf = 0;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed int v0 = vec_splats((int32_t)0);
+     vector float vsumf0 = vec_splats(0.0f);
+ 
+@@ -573,7 +583,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0x3);
+     const vector signed char lowScaleMask = vec_splats((signed char)0xF);
+     const vector int v0 = vec_splats((int32_t)0);
+@@ -730,7 +740,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0x3);
+     const vector signed char lowMask1 = vec_splats((int8_t)0xf);
+     const vector signed char lowMask2 = vec_splats((int8_t)0x30);
+@@ -755,9 +765,9 @@
+         UNUSED(kmask1);
+         UNUSED(kmask2);
+ 
+-        vector signed char u0 = (vector signed char)vec_xl_len(x[i].scales, 8);
++        vector signed char u0 = (vector signed char)ggml_p8_xl_len(x[i].scales, 8);
+         vector signed char u1 = vec_and(u0, lowMask1);
+-        vector signed char u2 = (vector signed char)vec_xl_len(x[i].scales + 8, 4);
++        vector signed char u2 = (vector signed char)ggml_p8_xl_len(x[i].scales + 8, 4);
+         vector signed char u3 = (vector signed char)vec_mergeh((vector signed int)u2, (vector signed int)vec_sr(u2, v2));
+         vector signed char u30 = vec_sl(vec_and(u3, lowMask), v4);
+         vector signed char u31 = vec_and(u3, lowMask2);
+@@ -912,7 +922,7 @@
+ 
+     uint32_t utmp[4];
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector signed char lowMask1 = vec_splats((int8_t)0x3f);
+     const vector signed char lowMask2 = vec_splats((int8_t)0x30);
+@@ -941,9 +951,9 @@
+         UNUSED(kmask3);
+         UNUSED(utmp);
+ 
+-        vector signed char u0 = (vector signed char)vec_xl_len(x[i].scales, 8);
++        vector signed char u0 = (vector signed char)ggml_p8_xl_len(x[i].scales, 8);
+         vector signed char u1 = vec_and(vec_sr(u0, v2), lowMask2);
+-        vector signed char u2 = (vector signed char)vec_xl_len(x[i].scales + 8, 4);
++        vector signed char u2 = (vector signed char)ggml_p8_xl_len(x[i].scales + 8, 4);
+         vector signed char u3 = vec_sr(u2, v4);
+ 
+         vector signed char u30 = u1;
+@@ -1080,7 +1090,7 @@
+ 
+     uint32_t utmp[4];
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector signed char lowMask1 = vec_splats((int8_t)0x3f);
+     const vector signed char lowMask2 = vec_splats((int8_t)0x30);
+@@ -1108,9 +1118,9 @@
+         UNUSED(kmask3);
+         UNUSED(utmp);
+ 
+-        vector signed char u0 = (vector signed char)vec_xl_len(x[i].scales, 8);
++        vector signed char u0 = (vector signed char)ggml_p8_xl_len(x[i].scales, 8);
+         vector signed char u1 = vec_and(vec_sr(u0, v2), lowMask2);
+-        vector signed char u2 = (vector signed char)vec_xl_len(x[i].scales + 8, 4);
++        vector signed char u2 = (vector signed char)ggml_p8_xl_len(x[i].scales + 8, 4);
+         vector signed char u3 = vec_sr(u2, v4);
+ 
+         vector signed char u30 = u1;
+@@ -1239,7 +1249,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector int v0 = vec_splats((int32_t)0);
+     const vector unsigned char v2 = vec_splats((unsigned char)0x2);
+@@ -1333,7 +1343,7 @@
+             vector signed short qv21 = vec_add(vec_mule(q6x21, q8y21), vec_mulo(q6x21, q8y21));
+             vector signed short qv31 = vec_add(vec_mule(q6x31, q8y31), vec_mulo(q6x31, q8y31));
+ 
+-            vector signed short vscales = vec_unpackh(vec_xl_len(qs, 8));
++            vector signed short vscales = vec_unpackh((vector signed char)ggml_p8_xl_len(qs, 8));
+             qs += 8;
+ 
+             vector signed short vs0 = vec_splat(vscales, 0);
+@@ -1384,7 +1394,7 @@
+ #endif
+ }
+ 
+-#if defined (__POWER9_VECTOR__)
++#if defined (__VSX__)
+ static const int8_t keven_signs_q2xs[1024] = {
+      1,  1,  1,  1,  1,  1,  1,  1, -1,  1,  1,  1,  1,  1,  1, -1,  1, -1,  1,  1,  1,  1,  1, -1, -1, -1,  1,  1,  1,  1,  1,  1,
+      1,  1, -1,  1,  1,  1,  1, -1, -1,  1, -1,  1,  1,  1,  1,  1,  1, -1, -1,  1,  1,  1,  1,  1, -1, -1, -1,  1,  1,  1,  1, -1,
+@@ -1434,7 +1444,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector int v0 = vec_splats((int32_t)0);
+     vector float vsumf0 = vec_splats(0.0f);
+     vector float vsumf1 = vec_splats(0.0f);
+@@ -1541,7 +1551,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector int v0 = vec_splats((int32_t)0);
+     vector float vsumf0 = vec_splats(0.0f);
+     vector float vsumf1 = vec_splats(0.0f);
+@@ -1649,7 +1659,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     static const uint8_t k_mask1[32] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+                                         0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03
+     };
+@@ -1778,7 +1788,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const uint64_t * signs64 = (const uint64_t *)keven_signs_q2xs;
+ 
+     const vector int v0 = vec_splats((int32_t)0);
+@@ -1884,7 +1894,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     static const uint8_t k_mask1[32] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+                                         0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03
+     };
+@@ -2013,7 +2023,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector unsigned char v0 = vec_splats((unsigned char)0x0);
+     const vector unsigned short vsign = vec_splats((unsigned short)0x8000);
+ 
+@@ -2077,7 +2087,7 @@
+             vsumi2 = vec_msum(qv2, vscales23, vsumi2);
+             vsumi3 = vec_msum(qv3, vscales23, vsumi3);
+ 
+-            vector signed short q8ysums = vec_xl_len(qs, 8);
++            vector signed short q8ysums = (vector signed short)ggml_p8_xl_len(qs, 8);
+             qs += 4;
+             q8ysums = vec_mergeh(q8ysums, (vector signed short)v0);
+ 
+@@ -2133,7 +2143,7 @@
+     int ib = 0;
+     float sumf = 0;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector signed int v0 = vec_splats((int32_t)0);
+     const vector unsigned char v4 = vec_splats((unsigned char)0x4);
+@@ -2207,7 +2217,7 @@
+ 
+     const int nb = n / QK_K;
+ 
+-#if defined(__POWER9_VECTOR__)
++#if defined(__VSX__)
+     const vector signed char lowMask = vec_splats((signed char)0xF);
+     const vector int v0 = vec_splats((int32_t)0);
+     const vector unsigned char v4 = vec_splats((unsigned char)0x4);
+--- a/ggml/src/ggml-cpu/ggml-cpu-impl.h
++++ b/ggml/src/ggml-cpu/ggml-cpu-impl.h
+@@ -335,7 +335,7 @@
+ #include <wasm_simd128.h>
+ #endif
+ 
+-#ifdef __POWER9_VECTOR__
++#if defined(__POWER9_VECTOR__) || defined(__VSX__)
+ #include <altivec.h>
+ #endif
+ 

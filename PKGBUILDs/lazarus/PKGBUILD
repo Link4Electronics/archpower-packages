@@ -1,0 +1,71 @@
+# Maintainer: BlackIkeEagle <ike DOT devolder AT gmail DOT com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Jens Adam <jra@byte.cx>
+
+pkgbase=lazarus
+pkgname=('lazarus')
+_lazarus_tag=4_4
+pkgver=4.4
+pkgrel=1
+url='http://www.lazarus.freepascal.org/'
+license=('GPL-2.0-or-later' 'LGPL-2.1-or-later' 'MPL-1.1')
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+makedepends=('fpc' 'fpc-src' 'qt5pas' 'qt6pas' 'rsync')
+options=(!makeflags libtool staticlibs !debug strip)
+source=("https://gitlab.com/freepascal.org/lazarus/lazarus/-/archive/lazarus_${_lazarus_tag}/lazarus-lazarus_${_lazarus_tag}.tar.bz2")
+sha512sums=('2c01b489b747b34e4da6e872ceed7be359567ba85d4b00d3ac99239071e54156b0e5a065f3d5757c4bc1e8ba745304adda789364259bc9d2f2b39986d81fcf56')
+
+build() {
+  cd "lazarus-lazarus_${_lazarus_tag}"
+
+  # build Qt6 IDE
+  make FPC=/usr/bin/fpc OPT='-gl -gw -Crtoi' LCL_PLATFORM=qt6 bigide
+  # move Qt binaries
+  mv lazarus lazarus-qt6
+  mv startlazarus startlazarus-qt6
+}
+
+package_lazarus() {
+  pkgdesc='Delphi-like IDE for FreePascal common files'
+  depends=('fpc' 'fpc-src' 'gdb')
+  optdepends=(
+    'perl: to run some scripts in the tools directory'
+    'qt5pas: to compile Qt5 apps'
+    'qt6pas: to compile Qt6 apps'
+  )
+
+  cd "lazarus-lazarus_${_lazarus_tag}"
+
+  # skip the 'make install' mess completely and do everything manually
+  mkdir -p "$pkgdir"/usr/lib/lazarus "$pkgdir"/usr/bin "$pkgdir"/usr/share/man/man1 "$pkgdir"/usr/share/doc
+  rsync -a \
+    --exclude="CVS"     --exclude=".cvsignore" \
+    --exclude="*.ppw"   --exclude="*.ppl" \
+    --exclude="*.ow"    --exclude="*.a"\
+    --exclude="*.rst"   --exclude=".#*" \
+    --exclude="*.~*"    --exclude="*.bak" \
+    --exclude="*.orig"  --exclude="*.rej" \
+    --exclude=".xvpics" \
+    --exclude="killme*" --exclude=".gdb_hist*" \
+    --exclude="debian"  --exclude="COPYING*" \
+    --exclude="*.app"   --exclude="tools/install" \
+    . "$pkgdir"/usr/lib/lazarus
+
+  # remove some stuff, not needed or for in other package
+  pushd "$pkgdir"/usr/lib/lazarus
+  rm lazarus-*
+  rm startlazarus-*
+  popd
+
+  ln -s /usr/lib/lazarus/lazbuild "$pkgdir"/usr/bin/lazbuild
+  cp -R install/man/man1/* "$pkgdir"/usr/share/man/man1/
+  mv "$pkgdir"/usr/lib/lazarus/docs "$pkgdir"/usr/share/doc/lazarus
+  mkdir -p "$pkgdir"/usr/lib/lazarus/docs
+  ln -s /usr/share/doc/lazarus/chm "$pkgdir"/usr/lib/lazarus/docs/html
+  ln -s /usr/share/doc/lazarus/lazdoc.css "$pkgdir"/usr/lib/lazarus/docs/lazdoc.css
+
+  rm -r "$pkgdir"/usr/lib/lazarus/install
+
+  # license files: /usr/lib/lazarus/COPYING*
+  install -D -m644 COPYING.modifiedLGPL.txt "$pkgdir"/usr/share/licenses/$pkgname/COPYING.modifiedLGPL
+}

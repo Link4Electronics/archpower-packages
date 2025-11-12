@@ -1,0 +1,42 @@
+# Maintainer: Frederic Bezies <fredbezies at gmail dot com>
+# Contributors: carstene1ns, Arkham, Christoph Zeiler and JD Steffen
+
+pkgname=eduke32
+_pkgdate=20251111
+_pkgrev='10652-39967d866'
+pkgver=$_pkgdate.r${_pkgrev/-/_}
+pkgrel=1
+pkgdesc="An advanced Duke Nukem 3D source port"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="http://eduke32.com/"
+license=('GPL' 'custom: BUILD')
+options=('!debug' 'strip')
+depends=('libvpx' 'sdl2' 'flac' 'libvorbis' 'alsa-lib')
+makedepends=('mesa' 'glu')
+optdepends=('freepats-general-midi: a free soundfont for music'
+            'fluidsynth: alternative midi sequencer'
+            'eduke32-shareware-episode: Duke Nukem 3D Demo')
+install=$pkgname.install
+source=("http://dukeworld.com/$pkgname/synthesis/$_pkgdate-$_pkgrev/eduke32_src_$_pkgdate-$_pkgrev.tar.xz"
+        "$pkgname.desktop")
+sha256sums=('2ae33cb4edbf27df758a9ea23954166ccc616f41825d0ae8e1aedba6b20789ca'
+            '337dcbd3dcb260be90aa8ecfdf488f42a8cde48f8ff7b3f7276630ddd08d4efd')
+options=(!debug)
+
+build() {
+  cd eduke32_$_pkgdate-$_pkgrev
+
+  # add cxxflags, set revision
+  make PACKAGE_REPOSITORY=1 VC_REV=$_pkgrev #PRETTY_OUTPUT=0
+}
+
+package() {
+  cd eduke32_$_pkgdate-$_pkgrev
+
+  # install binaries, buildlicense, icon and desktop files
+  install -d "$pkgdir"/usr/bin
+  install -m755 eduke32 mapster32 "$pkgdir"/usr/bin
+  install -Dm644 package/common/buildlic.txt "$pkgdir"/usr/share/licenses/$pkgname/buildlic.txt
+  install -Dm644 source/duke3d/rsrc/game_icon.ico "$pkgdir"/usr/share/pixmaps/$pkgname.ico
+  install -Dm644 ../$pkgname.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
+}

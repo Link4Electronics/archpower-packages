@@ -1,0 +1,24 @@
+pkgbase = mate-netbook
+	pkgdesc = A simple window management tool
+	pkgver = 1.27.0
+	pkgrel = 3
+	url = https://mate-desktop.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	groups = mate-extra
+	license = GPL-3.0-or-later
+	makedepends = autoconf-archive
+	makedepends = mate-common
+	depends = libfakekey
+	depends = mate-panel
+	depends = gettext
+	conflicts = mate-netbook-gtk3
+	replaces = mate-netbook-gtk3
+	options = !debug
+	options = strip
+	source = mate-netbook-1.27.0.tar.gz::https://github.com/mate-desktop/mate-netbook/archive/refs/tags/v1.27.0.tar.gz
+	sha256sums = 447f7ebac65f982548ff1e277e0ff0075dd7a53c3daf4e55e0cedc77fdef58a4
+
+pkgname = mate-netbook

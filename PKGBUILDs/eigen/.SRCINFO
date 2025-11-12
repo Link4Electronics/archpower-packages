@@ -1,0 +1,28 @@
+pkgbase = eigen
+	pkgdesc = Lightweight C++ template library for vector and matrix math, a.k.a. linear algebra
+	pkgver = 5.0.1
+	pkgrel = 1
+	url = https://eigen.tuxfamily.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = MPL-2.0
+	license = Apache-2.0
+	license = BSD-3-Clause
+	license = Minpack
+	license = LGPL-2.1-only OR LGPL-2.1-or-later
+	makedepends = cmake
+	makedepends = fftw
+	makedepends = freeglut
+	makedepends = gcc-fortran
+	makedepends = git
+	makedepends = suitesparse
+	depends = gcc-libs
+	depends = glibc
+	options = !debug
+	options = strip
+	source = git+https://gitlab.com/libeigen/eigen#tag=5.0.1
+	sha256sums = 5f1252d70f39d43243b1346f3cdeb944178d6d28cd18c44ed3614625d371e6f0
+
+pkgname = eigen

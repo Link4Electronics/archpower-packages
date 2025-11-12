@@ -1,0 +1,52 @@
+# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+
+pkgname=rsdkv4-git
+pkgver=r676.7a23c39
+pkgrel=1
+pkgdesc="Complete decompilation of Sonic 1 & Sonic 2 (2013) & Retro Engine (v4)"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://github.com/RSDKModding/RSDKv4-Decompilation"
+license=(custom)
+depends=(glibc gcc-libs sdl2 glew libvorbis libglvnd)
+makedepends=(git cmake)
+options=('!debug' 'strip')
+source=("rsdkv4::git+https://github.com/RSDKModding/RSDKv4-Decompilation.git"
+        big-endian.patch
+        sonic1-launcher
+        sonic2-launcher)
+sha256sums=('SKIP'
+            '63b983defb500c734382338d77d3ab510dd5da12d41ea91dbfb9eb5333694dbd'
+            'ad5038cb19502943f06b9e79270d30dd35fc885ab9867ae2e043cfeb89e1a2c9'
+            'b3a46a8c131d3167b7b3bc4985de4a25e3f79bed49ddc6f7d3e569cc2e192733')
+
+prepare() {
+  cd rsdkv4
+  git submodule init
+  git -c protocol.file.allow=always submodule update
+  patch -Np1 -i "${srcdir}/big-endian.patch"
+  sed -i 's/Exec=RSDKv4/Exec=sonic1-launcher/g' flatpak/com.sega.Sonic1.desktop
+  sed -i 's/Exec=RSDKv4/Exec=sonic2-launcher/g' flatpak/com.sega.Sonic2.desktop
+}
+
+build() {
+  cmake -B build -S "rsdkv4" -Wno-dev \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+
+  cmake --build build
+}
+
+package() {
+  #DESTDIR="$pkgdir" cmake --install build
+  install -Dm755 sonic1-launcher "$pkgdir/usr/bin/sonic1-launcher"
+  install -Dm755 sonic2-launcher "$pkgdir/usr/bin/sonic2-launcher"
+  install -D build/RSDKv4 -t "${pkgdir}/usr/bin"
+
+  install -Dm644 "$srcdir/rsdkv4/flatpak/com.sega.Sonic1.desktop" "$pkgdir/usr/share/applications/com.sega.Sonic1.desktop"
+  install -Dm644 "$srcdir/rsdkv4/flatpak/com.sega.Sonic2.desktop" "$pkgdir/usr/share/applications/com.sega.Sonic2.desktop"
+  install -dm755 "$pkgdir/usr/share/icons"
+  cp -r "$srcdir/rsdkv4/flatpak/com.sega.Sonic1.svg" "$pkgdir/usr/share/icons"
+  cp -r "$srcdir/rsdkv4/flatpak/com.sega.Sonic2.svg" "$pkgdir/usr/share/icons"
+
+  install -D rsdkv4/LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}

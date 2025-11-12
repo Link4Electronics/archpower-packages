@@ -1,0 +1,22 @@
+pkgbase = csfml
+	pkgdesc = C bindings for sfml
+	pkgver = 3.0.0.rc2
+	pkgrel = 1
+	url = http://www.sfml-dev.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = Zlib
+	makedepends = cmake
+	makedepends = doxygen
+	makedepends = ninja
+	depends = glibc
+	depends = gcc-libs
+	depends = sfml
+	options = !debug
+	options = strip
+	source = csfml-3.0.0.rc2.tar.gz::https://github.com/SFML/CSFML/archive/refs/tags/3.0.0-rc.2.tar.gz
+	sha512sums = c3f17104a4e1b84ef623c06e6006f73efdd93712577e791bb27de5810e04dcbe6a92371550b6f645a7446b62fb7ecb8588c1469c18dd068d9d4acbe50703b256
+
+pkgname = csfml

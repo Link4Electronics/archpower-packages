@@ -1,0 +1,191 @@
+# Maintainer: robertfoster
+# Contributor: Gustavo6046
+
+pkgbase=iortcw-git
+pkgname=iortcw-git
+pkgver=1.51c.r129.g438e7d41
+pkgrel=2
+pkgdesc="Merge of ioquake3 features and fixes into Return to Castle Wolfenstein"
+arch=('i686' 'x86_64' 'powerpc64le' 'powerpc64' 'powerpc' 'espresso')
+url="https://github.com/iortcw/iortcw"
+license=('GPL3')
+depends=('freetype2' 'graphite' 'harfbuzz' 'iortcw-data' 'libjpeg-turbo' 'libogg' 'openal' 'opus' 'opusfile' 'pcre' 'sdl2' 'zlib')
+conflicts=("${pkgname%-git}")
+provides=("${pkgname%-git}")
+makedepends=('git')
+options=('!debug' 'strip')
+source=("git+${url}"
+  'iortcw-ded.launcher'
+  'iortcw-sp.launcher'
+  'iortcw-mp.launcher'
+  'iortcw-sp.desktop'
+  'iortcw-mp.desktop'
+)
+
+pkgver() {
+  cd "${srcdir}/iortcw"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${srcdir}/iortcw"
+
+  # (A) lcc patch: avoid collision with keyword C23 'constexpr'
+  for d in SP MP
+  do
+    if [[ -d "$d/code/tools/lcc/src" ]]; then
+      sed -i 's/\<constexpr>[[:space:]](/constexpr_lcc(/g' "$d/code/tools/lcc/src/c.h" grep -RIl --include='.c' '\<constexpr>[[:space:]](' "$d/code/tools/lcc/src" \ | xargs -r sed -i 's/\<constexpr>[[:space:]](/constexpr_lcc(/g'
+    fi
+  done
+
+  # (B) ARCH_STRING Fallback in case the Makefile does not propagate it to tools
+  for d in SP MP
+  do
+    f="$d/code/qcommon/q_platform.h"
+    if [[ -f "$f" ]]; then
+      tmp="${f}.new" awk 'NR==1{ print "#ifndef ARCH_STRING"; print "# if defined(x86_64) || defined(_M_X64)"; print "# define ARCH_STRING \"x86_64\""; print "# elif defined(i386) || defined(_M_IX86)"; print "# define ARCH_STRING \"x86\""; print "# elif defined(aarch64)"; print "# define ARCH_STRING \"aarch64\""; print "# elif defined(arm)"; print "# define ARCH_STRING \"arm\""; print "# elif defined(ppc64le)"; print "# define ARCH_STRING \"ppc64le\""; print "# elif defined(ppc64)"; print "# define ARCH_STRING \"ppc64\""; print "# elif defined(powerpc)"; print "# define ARCH_STRING \"ppc\""; print "# endif"; print "#endif"; }1' "$f" > "$tmp" && mv "$tmp" "$f"
+    fi
+  done
+
+  # (C) Force C17 and add lcc ABSOLUTE includes to the tools from the Makefiles
+  absroot="$(realpath "${srcdir}/iortcw")" absincs="-I${absroot}/code/tools/lcc/src -I${absroot}/code/tools/lcc/lburg"
+
+  for d in SP MP
+  do
+    mf="$d/Makefile"
+    [[ -f "$mf" ]] || continue
+
+    # avoid duplicates if you've already run prepare() before
+    grep -q '^TOOLS_CFLAGS \+= -std=gnu17' "$mf" || echo 'TOOLS_CFLAGS += -std=gnu17' >> "$mf"
+
+    # includes ABSOLUTE for that dagcheck.c find C.h always
+    grep -q -- "TOOLS_CFLAGS \+= ${absincs//\//\\/}" "$mf" || echo "TOOLS_CFLAGS += ${absincs}" >> "$mf"
+    grep -q -- "CPPFLAGS \+= ${absincs//\//\\/}" "$mf"     || echo "CPPFLAGS += ${absincs}"     >> "$mf"
+
+  done
+}
+
+
+build() {
+  case "${CARCH}" in
+    powerpc) EXTRAOPTS='COMPILE_ARCH=ppc' ;;
+    *) EXTRAOPTS='' ;;
+  esac
+
+  cd "${srcdir}/iortcw"
+
+  # Build Single Player
+  cd SP
+  make USE_INTERNAL_LIBS=0 $EXTRAOPTS
+
+  # Build Multi Player
+  cd ../MP
+  make USE_INTERNAL_LIBS=0 $EXTRAOPTS
+}
+
+package() {
+  case "${CARCH}" in
+    powerpc) EXTRAOPTS='COMPILE_ARCH=ppc' ;;
+    *) EXTRAOPTS='' ;;
+  esac
+
+  cd "${srcdir}/iortcw"
+
+  cd SP
+  make USE_INTERNAL_LIBS=0 $EXTRAOPTS \
+    COPYDIR="${pkgdir}/opt/iortcw" copyfiles
+
+  cd ../MP
+  make USE_INTERNAL_LIBS=0 $EXTRAOPTS \
+    COPYDIR="${pkgdir}/opt/iortcw" copyfiles
+
+  ln -s /opt/iortcw-data/pak0.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/sp_pak1.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pak0.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+
+  ln -s /opt/iortcw-data/mp_bin.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pak1.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pak2.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pak3.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pak4.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pak5.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps0.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps1.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps2.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps3.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps4.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps5.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/mp_pakmaps6.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/sp_pak2.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/sp_pak3.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+  ln -s /opt/iortcw-data/sp_pak4.pk3 \
+    "${pkgdir}/opt/iortcw/main"
+
+  ln -s /opt/iortcw-data/openurl.sh \
+    "${pkgdir}/opt/iortcw/openurl.sh"
+
+  # Modify Launcher Scripts
+  case "${CARCH}" in
+    "x86_64") TARGET=x86_64 ;;
+    "i686") TARGET=x86 ;;
+    "powerpc") TARGET=ppc ;;
+    "powerpc64") TARGET=ppc64 ;;
+    "powerpc64le") TARGET=ppc64le ;;
+  esac
+
+  sed -i "s:ARCH:$TARGET:" \
+    "${srcdir}"/iortcw-sp.*
+  sed -i "s:ARCH:$TARGET:" \
+    "${srcdir}"/iortcw-mp.*
+  sed -i "s:ARCH:$TARGET:" \
+    "${srcdir}"/iortcw-ded.*
+
+  # Install Launcher Script (Single Player Client)
+  install -D -m 755 ${srcdir}/iortcw-sp.launcher \
+    "${pkgdir}/usr/bin/iortcw-sp"
+
+  # Install Launcher Script (Multi Player Client)
+  install -D -m 755 "${srcdir}/iortcw-mp.launcher" \
+    "${pkgdir}/usr/bin/iortcw-mp"
+
+  # Install Launcher Script (Dedicated Server)
+  install -D -m 755 "${srcdir}/iortcw-ded.launcher" \
+    "${pkgdir}/usr/bin/iortcw-ded"
+
+  # Install Desktop File (Single Player)
+  install -D -m 644 "${srcdir}/iortcw-sp.desktop" \
+    "${pkgdir}/usr/share/applications/iortcw-sp.desktop"
+
+  # Install Desktop File (Multi Player)
+  install -D -m 644 "${srcdir}/iortcw-mp.desktop" \
+    "${pkgdir}/usr/share/applications/iortcw-mp.desktop"
+
+  # Install Icon File (Single Player)
+  install -D -m 644 "${srcdir}/iortcw/SP/misc/iortcw.svg" \
+    "${pkgdir}/usr/share/icons/hicolor/scalable/apps/iortcw.svg"
+}
+
+sha256sums=('SKIP'
+  '4af024d025009cb3c39fb6137d10a417167c6b026f82e162aaea583d0b4934d2'
+  'ab55a395fa2e164f655cba91dd197d98697621d5cdd2cfb30e8f06f49fc2b5d2'
+  '13dacae097c252609e2931eb799d79e07da31403fb2b0b6cde16fa7237d8d3d7'
+  '9ec990fd48bb09e1898f4ef7e5ff9dfe753a1062ced019c824b3373179969b80'
+  '645e88a8c48c7e5f29af64941432f936b4a51ae41204091b6e2218e3fe880fd6')

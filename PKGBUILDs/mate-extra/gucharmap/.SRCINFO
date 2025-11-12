@@ -1,0 +1,35 @@
+pkgbase = gucharmap
+	pkgdesc = Unicode Character Map
+	pkgver = 17.0.0
+	pkgrel = 1
+	url = https://wiki.gnome.org/Apps/Gucharmap
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-3.0-or-later
+	makedepends = unicode-character-database>=17.0.0
+	makedepends = git
+	makedepends = glib2-devel
+	makedepends = gobject-introspection
+	makedepends = gtk-doc
+	makedepends = meson
+	makedepends = unzip
+	makedepends = vala
+	makedepends = yelp-tools
+	depends = at-spi2-core
+	depends = cairo
+	depends = dconf
+	depends = glib2
+	depends = glibc
+	depends = gtk3
+	depends = pango
+	depends = pcre2
+	provides = libgucharmap_2_90.so
+	options = !lto
+	options = !debug
+	options = strip
+	source = git+https://gitlab.gnome.org/GNOME/gucharmap.git#tag=17.0.0
+	b2sums = 6e4446d63cffff39a3b8bcbecaee304238069c18ccd758c0afa60132a2ec346830754cad45ee62b39efede3862d7cebe897f599de80dc06f354c87464cbd6605
+
+pkgname = gucharmap

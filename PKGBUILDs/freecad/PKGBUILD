@@ -1,0 +1,141 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Contributor: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Contributor: loqs <bugs-archlinux@entropy-collector.net>
+# Contributor: Gabriel Souza Franco <gabrielfrancosouza@gmail.com>
+# Contributor: Florian Pritz
+# Contributor: Jonas Heinrich <onny@project-insanity.org>
+# Contributor: Jordi De Groof <jordi.degroof@gmail.com>
+# Contributor: mickele
+# Contributor: manwithgrenade
+# Contributor: bricem13
+# Contributor: gborzi
+# Contributor: Adrian Insaurralde
+# Contributor: Martin Rodriguez Reboredo
+# Contributor: Jamin Collins
+
+pkgname=freecad
+pkgver=1.0.2
+pkgrel=8
+pkgdesc='Feature based parametric 3D CAD modeler'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://www.freecad.org'
+license=(LGPL-2.0-only)
+depends=(
+  boost-libs
+  coin
+  fmt
+  glew
+  libspnav
+  med
+  opencascade
+  openmpi
+  pugixml
+  pyside6
+  yaml-cpp
+  python-markdown
+  python-matplotlib
+  python-pip
+  python-pivy
+  python-ply
+  python-yaml
+  qt6-svg
+  qt6-tools
+  verdict
+  vtk
+  xerces-c
+)
+makedepends=(
+  boost
+  cgns
+  cmake
+  eigen
+  git
+  libharu
+  liblas
+  ninja
+  nlohmann-json
+  openvdb
+  openvr
+  pdal
+  postgresql-libs
+  python-mpi4py
+  shiboken6
+  swig
+  utf8cpp
+  dos2unix
+  microsoft-gsl
+  fast_float
+)
+optdepends=(
+  'graphviz: dependency graph support'
+  'opencamlib: CAM workbench support'
+  'openscad: OpenSCAD support'
+  'python-ladybug-core: Solar/Wind diagram support'
+)
+options=('!lto' '!debug' 'strip')
+source=("git+https://github.com/$pkgname/$pkgname#tag=$pkgver"
+        fix-opencascade-7.9.patch
+        boost-1.89.patch)
+sha512sums=('5d03fa9a6ce205ad7b247a9c1b31daab0b827c16fc3f48b0f911c3ada0eb001a6ea7f1c6cdf79acec2f918b0192e2ca818fff673d6f7f8a7a1c0108c41466463'
+            '18e4c6f99d9fa3af71eb9e95ebf95dbacc82e1d7506b3b259b18c1f0902806165994bfe4eb45176cca4034ff81a7b02156099b461c4936fad91df19132657e60'
+            'a65999e863d91309c504c20577fd88edaf4a04ef6e692c33e2035d95cb1a36a7842cb05d2721f2f755247899a4cefcc3b8c5201664ad273bad62c258b986740b')
+b2sums=('2d61583f432b966b7b4377a72f3496579afe65331d3f9d7ff373098ec5bd112d8686c55249acb5c980da5a48f4ae03c24917db76cc4be7af5d87e7872db21405'
+        'ed78606025f2781b67ccf5874d8cb51c5f8740429057e670e7328a566c8307026b626d246a41e0747000f9048b3325c9b0b6625fa1765b612effe2b0efbd7683'
+        '99ec8fc857463595c44bc03826e966f075d8d0d2e4a84b6ee0b72b96c57f6b56f9c50fd78f93943426b7b4191a7d66cc6b8cbe34c0814027c02b26ca043fe239')
+
+prepare() {
+  cd freecad
+  git submodule update --init --recursive
+  patch -p1 -i ../fix-opencascade-7.9.patch
+  git cherry-pick -n 60aa5ff3730d77037ffad0c77ba96b99ef0c7df3 # Fix crashes on Wayland
+  git cherry-pick -n 8547e798fb3b0f51953b18a2cb98f60aec0a7e33 # Fix build with Eigen 5
+  patch -p1 -i ../boost-1.89.patch
+}
+
+build() {
+  local cmake_options=(
+    -B build
+    -S "$pkgname"
+    -D BUILD_FLAT_MESH=ON
+    -D BUILD_ENABLE_CXX_STD=C++17
+    -D BUILD_DESIGNER_PLUGIN=ON
+    -D CMAKE_BUILD_TYPE=Release
+    -D CMAKE_C_FLAGS="$CFLAGS -ffat-lto-objects -fPIC -w"
+    -D CMAKE_CXX_FLAGS="$CXXFLAGS -ffat-lto-objects -fPIC -w"
+    -D CMAKE_INSTALL_BINDIR=/usr/lib/freecad/bin
+    -D CMAKE_INSTALL_DATADIR=/usr/share/freecad
+    -D CMAKE_INSTALL_DATAROOTDIR=/usr/share
+    -D CMAKE_INSTALL_DOCDIR=/usr/share/freecad/doc
+    -D CMAKE_INSTALL_LIBDIR=/usr/lib/freecad/lib
+    -D CMAKE_INSTALL_PREFIX=/usr/lib/freecad
+    -D FREECAD_USE_EXTERNAL_PIVY=ON
+    -D FREECAD_USE_OCC_VARIANT='Official Version'
+    -D FREECAD_USE_QT_FILEDIALOG=ON
+    -D FREECAD_QT_VERSION=6
+    -D INSTALL_TO_SITEPACKAGES=ON
+    -D PYTHON_EXECUTABLE=/usr/bin/python
+    -G Ninja
+    -W no-dev
+  )
+
+  cmake "${cmake_options[@]}"
+
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  # tools
+  cd "$pkgname"
+  install -Dm755 src/Tools/{$pkgname-thumbnailer,fcinfo} -t "$pkgdir/usr/bin"
+
+  # symlinks
+  install -d "$pkgdir/usr/bin"
+  ln -sf /usr/lib/freecad/bin/FreeCAD "$pkgdir/usr/bin/freecad"
+  ln -sf /usr/lib/freecad/bin/FreeCAD "$pkgdir/usr/bin/FreeCAD"
+  ln -sf /usr/lib/freecad/bin/FreeCADCmd "$pkgdir/usr/bin/freecadcmd"
+  ln -sf /usr/lib/freecad/bin/FreeCADCmd "$pkgdir/usr/bin/FreeCADCmd"
+}

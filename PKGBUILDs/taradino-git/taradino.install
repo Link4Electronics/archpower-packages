@@ -1,0 +1,19 @@
+post_install() {
+cat <<EOF
+To install game data files, there are two main locations for
+the engine to easily find them:
+ * For all users: /usr/share/games/rott or /usr/local/share/games/rott
+ * For a single user: ~/.local/share/games/rott
+
+Files such as
+REMOTE1.RTS
+DARKWAR.RTC
+DARKWAR.RTL
+DARKWAR.WAD
+Or
+HUNTBGIN.RTC
+HUNTBGIN.RTL
+HUNTBGIN.WAD
+are appropriate for installation and usage with taradino.
+EOF
+}

@@ -1,0 +1,22 @@
+pkgbase = jazz2-native-git
+	pkgdesc = Jazz jackrabbit 2 Reimplimentation engine.
+	pkgver = 3.4.0.r68.g2ca026a
+	pkgrel = 1
+	url = https://deat.tk/jazz2
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	depends = sdl2
+	depends = curl
+	depends = openal
+	depends = glew
+	depends = glfw
+	depends = libopenmpt
+	options = !debug
+	options = strip
+	source = git+https://github.com/deathkiller/jazz2-native.git#branch=gl2
+	sha256sums = SKIP
+
+pkgname = jazz2-native-git

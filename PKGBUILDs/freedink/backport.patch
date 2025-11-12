@@ -1,0 +1,25 @@
+From ced987af0574b7fdb11a85ccdcb32f7a6748ef09 Mon Sep 17 00:00:00 2001
+From: Sylvain Beucler <beuc@beuc.net>
+Date: Wed, 27 Feb 2019 19:39:30 +0100
+Subject: gfx_fonts: consistently get errors from TTF rather than SDL
+
+---
+ src/gfx_fonts.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gfx_fonts.cpp b/src/gfx_fonts.cpp
+index b00816e..25e017e 100644
+--- a/src/gfx_fonts.cpp
++++ b/src/gfx_fonts.cpp
+@@ -134,7 +134,7 @@ int gfx_fonts_init()
+ 			       1, FONT_SIZE);
+   if (system_font == NULL)
+     {
+-      log_error("Failed to load built-in 'vgasys.fon' font: %s", SDL_GetError());
++      log_error("Failed to load built-in 'vgasys.fon' font: %s", TTF_GetError());
+       return -1;
+     }
+   setup_font(system_font);
+-- 
+cgit v1.2.3
+

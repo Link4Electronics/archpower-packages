@@ -1,0 +1,12 @@
+
+post_install() {
+  echo "You will need the original Hexen II data files from either the demo,"
+  echo "  retail version or "Portal of Praevus" add-on."
+
+  echo "Copy the needed .pak files with lowercase file names to '~/.hexen2/data1'"
+  echo "  and patch them with 'h2patch', if needed."
+}
+
+post_upgrade() {
+  post_install $1
+}

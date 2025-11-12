@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=CSE2EX (English)
+Comment=Decompilation of Cave Story
+Exec=env SDL_VIDEODRIVER=wayland,x11 cse2ex-english
+Type=Application
+Icon=cse2-english
+Categories=Game;
+Path=
+Terminal=false
+StartupNotify=false

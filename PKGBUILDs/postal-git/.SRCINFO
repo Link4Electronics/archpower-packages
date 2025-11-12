@@ -1,0 +1,21 @@
+pkgbase = postal-git
+	pkgdesc = Postal: quirky FPS shooter
+	pkgver = 314.f58b127b0202
+	pkgrel = 1
+	url = http://runningwithscissors.com/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	makedepends = git
+	makedepends = gcc
+	makedepends = patch
+	depends = sdl2
+	options = !debug
+	options = strip
+	source = git+https://github.com/Cowcat5150/postal1
+	sha256sums = SKIP
+
+pkgname = postal-git
+

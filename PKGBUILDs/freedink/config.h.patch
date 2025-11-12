@@ -1,0 +1,77 @@
+Description: always include config.h before unistd.h
+ gnulib provides its own implementation of unistd.h which appears on the
+ search path first and can't be included unless config.h is included before
+ it.  On some archs, SDL.h will recursively include unistd.h and get a
+ version it isn't expecting.
+ .
+ Make sure config.h is always included before SDL.h.
+Author: Steve Langasek <steve.langasek@ubuntu.com>
+Last-Update: 2023-03-04
+Forwarded: no
+
+Index: freedink-109.6/src/IOGfxGLFuncs.cpp
+===================================================================
+--- freedink-109.6.orig/src/IOGfxGLFuncs.cpp
++++ freedink-109.6/src/IOGfxGLFuncs.cpp
+@@ -20,6 +20,8 @@
+  * <http://www.gnu.org/licenses/>.
+  */
+ 
++#include "config.h"
++
+ #include "IOGfxGLFuncs.h"
+ 
+ #include "SDL.h"
+Index: freedink-109.6/src/ImageLoader.cpp
+===================================================================
+--- freedink-109.6.orig/src/ImageLoader.cpp
++++ freedink-109.6/src/ImageLoader.cpp
+@@ -1,3 +1,5 @@
++#include "config.h"
++
+ #include "ImageLoader.h"
+ 
+ #include "SDL.h"
+Index: freedink-109.6/src/IOGfxSurface.cpp
+===================================================================
+--- freedink-109.6.orig/src/IOGfxSurface.cpp
++++ freedink-109.6/src/IOGfxSurface.cpp
+@@ -1,3 +1,5 @@
++#include "config.h"
++
+ #include "IOGfxSurface.h"
+ 
+ IOGfxSurface::IOGfxSurface(int w, int h)
+Index: freedink-109.6/src/IOGfxSurfaceSW.cpp
+===================================================================
+--- freedink-109.6.orig/src/IOGfxSurfaceSW.cpp
++++ freedink-109.6/src/IOGfxSurfaceSW.cpp
+@@ -1,3 +1,5 @@
++#include "config.h"
++
+ #include "IOGfxSurfaceSW.h"
+ 
+ #include "SDL.h"
+Index: freedink-109.6/src/IOGfxPrimitivesSW.cpp
+===================================================================
+--- freedink-109.6.orig/src/IOGfxPrimitivesSW.cpp
++++ freedink-109.6/src/IOGfxPrimitivesSW.cpp
+@@ -1,3 +1,5 @@
++#include "config.h"
++
+ #include "SDL.h"
+ #include "SDL_image.h"
+ #include "SDL2_rotozoom.h"
+Index: freedink-109.6/src/dinkc_console.h
+===================================================================
+--- freedink-109.6.orig/src/dinkc_console.h
++++ freedink-109.6/src/dinkc_console.h
+@@ -24,6 +24,8 @@
+ #ifndef _DINKC_CONSOLE_H
+ #define _DINKC_CONSOLE_H
+ 
++#include "config.h"
++
+ #include "SDL.h"
+ 
+ extern int console_active;

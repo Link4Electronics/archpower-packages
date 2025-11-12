@@ -1,0 +1,78 @@
+# Maintainer: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Guilhem Saurel <guilhem@saurel.me>
+# Contributor: Michel Zou
+# Contributor: Oliver Goethel
+# Contributor: Gustavo Alvarez <sl1pkn07@gmail.com>
+#
+# Upstream disappeared:
+#     https://www.salome-platform.org/downloads
+#     https://files.salome-platform.org/Salome/other/med-4.1.1.tar.gz
+#
+# Using a fork on GitHub by one of the FreeCAD developers instead.
+
+pkgname=med
+pkgver=5.0.0
+pkgrel=2
+pkgdesc='Library for reading and writing MED files'
+url='https://github.com/chennes/med'
+license=(LGPL-3.0-or-later GPL-3.0-or-later)
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+depends=(hdf5 python tk)
+makedepends=(cmake gcc-fortran git openmpi swig)
+options=('!debug' 'strip')
+source=(
+  "$pkgname::git+https://github.com/chennes/med#tag=v$pkgver"
+  https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-py3.13.patch
+  https://src.fedoraproject.org/rpms/med/raw/rawhide/f/hdf5-1.14.patch
+  https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-swig-4.3.0.patch
+  https://src.fedoraproject.org/rpms/med/raw/rawhide/f/med-gcc15.patch
+)
+sha512sums=('7b7c0d5a3a5b589ef558852035e7e7b654f8eb51b831aa310e1bcdfaaf1ec79105a79c38c89bf71def8f744a68856e113248d6287cb01a0a2b25d092db28e8f2'
+            '94e98893e7e2177a8736a3c8f9a9df1960d8fce9faa56b65b79d83e59a888e6241a75cb03a9da4174ad19d290cbc32b39ca6afb67e0e31fbc384e6371b071cb6'
+            '4549552700244065cfc5bdcc395680dbdb8fd670b0b317f521df1e36c18353e98d00e26ec6363ea2b9ba96854d7154aae41373ba272076720841c97609082e42'
+            '225e4ef80cffdd41b779ae7184c54d4c412b47974c5e1f6daa275bfcf585a4bc36a238339f1e273a3d114ada258212728f7846dec14cbe9da5e36d04be0d66a7'
+            '02f8a1c17cf0ed53b256a67459696e99cabd8b9d3541d0d90c0b784231584680f74b126b08233b662f799163f79e04629ff9e09071b018ff5c1e7ad69134a6ca')
+b2sums=('4e37307328cb65124f78566364847d15a2a925cc3aab79d9d269bd2dde9e6b49e1fa30aea8ccf4a36d7307ba61536858a64b7df4827a7f7f9407547cacc394e6'
+        'a29dd633a41382bf5034a08990c1755dbd7936fb3a168fd02f04fc5d31114f845515f4d45e3316be1c74e82aacf3126bcc658c33ddcf82cfeb0c43b3be7f68dd'
+        'b36846255fa24e27373b23b5301abec49fa2ca7502bf7a4d02c3930a216bca2adedf8e0acf7c4c4946079ddec25b11e1c238fe7c425872a6e8d542b33c9b008c'
+        '8bc9b918b146172a3c0001263f1787afdc5a4016514ad1d8ba30e195b01221504d58f004236aa83bdb1e7c9e891861d2b4f2e87953b6b306dd11f32908e22a6b'
+        '1729a365256dc3bdf394983a9df00cb88d911797563c0769579720eb0a6c822c013e80aeba98ce72f24050f2791c6dc4ec979fbd5a0c39d6ef77e6faa8651f65')
+
+prepare() {
+  cd "$pkgname"
+
+  # various fixes borrowed from Fedora
+  patch -p1 -i "$srcdir/med-py3.13.patch"
+  patch -p1 -i "$srcdir/hdf5-1.14.patch"
+  patch -p1 -i "$srcdir/med-swig-4.3.0.patch"
+  patch -p1 -i "$srcdir/med-gcc15.patch"
+
+  # install cmake files to /usr/lib${LIB_SUFFIX}/cmake
+  sed -i 's,share/cmake,lib${LIB_SUFFIX}/cmake,g' CMakeLists.txt
+}
+
+build() {
+  local cmake_options=(
+    -B build
+    -S "$pkgname"
+    -D CMAKE_BUILD_TYPE=Release
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D CMAKE_SKIP_RPATH=ON
+    -D MEDFILE_BUILD_PYTHON=ON
+    -D MEDFILE_BUILD_TESTS=OFF
+    -D MEDFILE_INSTALL_DOC=OFF
+  )
+
+  cmake "${cmake_options[@]}"
+
+  cmake --build build
+}
+
+check() {
+  cd build
+  LD_LIBRARY_PATH="$srcdir/build/src" ctest -E '._Python' --output-on-failure
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}

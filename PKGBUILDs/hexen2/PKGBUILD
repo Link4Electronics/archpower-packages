@@ -1,0 +1,120 @@
+# Maintainer: carstene1ns <arch carsten-teibes de> - http://git.io/ctPKG
+# Contributor: Petteri Tolonen <petteri dot tolonen at gmail dot com>
+# Contributor: erm67
+# Contributor: JD Steffen
+
+pkgname=hexen2-git
+_pkgname=hexen2
+pkgver=1.5.9.r504.g7a53adaff
+_gamecodever=1.29c
+pkgrel=1
+pkgdesc="Hammer of Thyrion: Raven Software's Hexen II source port (based on Anvil of Thyrion)"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="http://uhexen2.sourceforge.net/"
+license=('GPL2')
+depends=('bash' 'libmad' 'libvorbis' 'sdl')
+makedepends=('nasm')
+provides=('hexenworld')
+install=hexen2.install
+options=('!debug' 'strip')
+source=("git+https://github.com/sezero/uhexen2"
+        "http://downloads.sourceforge.net/uhexen2/hexenworld-pakfiles-0.15.tgz"
+        "hexen2.desktop"
+        "hexen2.sh")
+sha256sums=('SKIP'
+            '49462cdf984deee7350d03c7d192d1c34d682647ffc9d06de4308e0a7c71c4d9'
+            'fa0bde060ba3afda3683b96d7ece23161816a04a2365ba996c1cb07268d6580f'
+            '9882421ee54afa4995c11e3759ab7fffb59a448291f0d647b3857d43b5cf27a9')
+
+prepare() {
+  sed 's|^hexen2dir=.*$|hexen2dir=/opt/hexen2|' -i uhexen2/scripts/hexen2-run.sh
+}
+
+build() {
+  cd uhexen2
+
+  # main game
+  make -C engine/hexen2 h2
+  make -s -C engine/hexen2 localclean
+  make -C engine/hexen2 glh2
+  make -s -C engine/hexen2 localclean
+
+  # dedicated server
+  make -C engine/hexen2/server
+
+  # HexenWorld
+  make -C engine/hexenworld/server
+  make -s -C engine/hexenworld/client localclean
+  make -C engine/hexenworld/client hw
+  make -s -C engine/hexenworld/client localclean
+  make -C engine/hexenworld/client glhw
+
+  # HexenWorld master server
+  make -C hw_utils/hwmaster
+
+  # h2patch
+  make -C h2patch
+
+  # hcode compiler
+  make -C utils/hcc
+
+  # game-code
+  utils/hcc/hcc -src gamecode/hc/h2 -os
+  utils/hcc/hcc -src gamecode/hc/h2 -os -name progs2.src
+  utils/hcc/hcc -src gamecode/hc/portals -os -oi -on
+  utils/hcc/hcc -src gamecode/hc/hw -os -oi -on
+  #utils/hcc/hcc -src gamecode/hc/siege -os -oi -on
+}
+
+package() {
+  cd uhexen2
+
+  install -d "$pkgdir"/opt/$_pkgname
+
+  # executables
+  install -m755 engine/hexen2/{gl,}hexen2 engine/hexen2/server/h2ded \
+    engine/hexenworld/client/{gl,}hwcl engine/hexenworld/server/hwsv \
+    hw_utils/hwmaster/hwmaster "$pkgdir"/opt/$_pkgname
+  install -Dm755 h2patch/h2patch  "$pkgdir"/usr/bin/h2patch
+
+  # run and cd-rip scripts
+  install -m755 scripts/hexen2-run.sh scripts/cdrip_*.sh "$pkgdir"/opt/$_pkgname
+
+  # launchers
+  for _b in glhexen2 hexen2 h2ded glhwcl hwcl hwsv; do
+    ln -s /opt/$_pkgname/hexen2-run.sh "$pkgdir"/usr/bin/$_b
+  done
+
+  # docs
+  (cd docs
+    install -d "$pkgdir"/opt/$_pkgname/docs
+    install -m644 -t "$pkgdir"/opt/$_pkgname/docs ABOUT AUTHORS BUGS TODO Features \
+      README README.music README.3dfx README.h* ReleaseNotes* SrcNotes.txt
+  )
+
+  cd ..
+
+  # gamedata
+  (cd uhexen2/gamecode
+    install -d "$pkgdir"/opt/$_pkgname/data1
+    install -m644 hc/h2/*.dat res/h2/* "$pkgdir"/opt/$_pkgname/data1
+    install -d "$pkgdir"/opt/$_pkgname/portals
+    install -m644 hc/portals/*.dat res/portals/* "$pkgdir"/opt/$_pkgname/portals
+    install -d "$pkgdir"/opt/$_pkgname/hw
+    install -m644 hc/hw/*.dat res/hw/* "$srcdir"/hw/pak4.pak "$pkgdir"/opt/$_pkgname/hw
+
+    # ent fixes (handling map quirks)
+    install -d "$pkgdir"/opt/$_pkgname/{data1,portals}/maps
+    install -m644 mapfixes/data1/maps/* "$pkgdir"/opt/$_pkgname/data1/maps
+    install -m644 mapfixes/portals/maps/* "$pkgdir"/opt/$_pkgname/portals/maps
+
+    # xdelta updates
+    install -d "$pkgdir"/opt/$_pkgname/patchdat/data1
+    install -m644 patch111/patchdat/data1/* "$pkgdir"/opt/$_pkgname/patchdat/data1
+    install -m644 patch111/patchdat.txt "$pkgdir"/opt/$_pkgname
+  )
+
+  # .desktop entry
+  install -Dm644 uhexen2/engine/resource/hexen2.png "$pkgdir"/usr/share/pixmaps/hexen2.png
+  install -Dm644 $_pkgname.desktop "$pkgdir"/usr/share/applications/$_pkgname.desktop
+}

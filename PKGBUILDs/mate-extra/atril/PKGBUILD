@@ -1,0 +1,55 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=atril
+pkgver=1.28.2
+pkgrel=1
+pkgdesc="A document viewer for MATE"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later')
+depends=('djvulibre' 'libspectre' 'libgxps' 'mathjax2' 'gettext' 'poppler-glib' 'cairo>=1.14.0' 'webkit2gtk-4.1>=2.6.0' 'libsynctex' 'mate-desktop')
+makedepends=('autoconf-archive' 'caja' 'git' 'glib2-devel' 'gobject-introspection' 'itstool' 'mate-common' 'texlive-bin' 'python-packaging' 'yelp-tools')
+optdepends=('caja: Document Properties extension'
+            'texlive-bin: DVI support')
+groups=('mate-extra')
+conflicts=('atril-gtk3')
+replaces=('atril-gtk3')
+options=('!debug' 'strip')
+source=("git+https://github.com/mate-desktop/atril.git#tag=v${pkgver}"
+        git+https://github.com/mate-desktop/mate-submodules.git)
+sha256sums=('873ae0cbcecc12519e54e0ab9bdebf13f3c8cf9bdddb4236f820d27002c67f8e'
+            'SKIP')
+
+prepare() {
+	cd "${pkgname}"
+	git submodule init
+	git config submodule.mate-submodules.url "${srcdir}/mate-submodules"
+	git -c protocol.file.allow=always submodule update
+	./autogen.sh
+
+	# Fix mathjax path
+	sed -i 's|/usr/share/javascript/mathjax|/usr/share/mathjax2|' backend/epub/epub-document.c
+}
+
+build() {
+	cd "${pkgname}"
+	./configure \
+        	--prefix=/usr \
+		--libexecdir="/usr/lib/${pkgname}" \
+        	--enable-djvu \
+        	--enable-dvi \
+        	--enable-epub \
+        	--enable-t1lib \
+        	--enable-pixbuf \
+        	--enable-comics \
+        	--enable-xps \
+        	--enable-introspection
+    	make
+}
+
+package() {
+	cd "${pkgname}"
+	make DESTDIR="${pkgdir}" install
+}

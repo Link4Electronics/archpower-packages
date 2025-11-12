@@ -1,0 +1,61 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+
+pkgname=libgxps
+pkgver=0.3.2
+pkgrel=5
+pkgdesc="XPS Documents library"
+url="https://wiki.gnome.org/Projects/libgxps"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL2)
+options=('!debug' 'strip')
+depends=(
+  cairo
+  freetype2
+  glib2
+  lcms2
+  libarchive
+  libjpeg-turbo
+  libpng
+  libtiff
+)
+makedepends=(
+  git
+  gobject-introspection
+  gtk-doc
+  gtk3
+  meson
+)
+_commit=f5027ed09c767e8a02e652fbc77dcea79e19e10d  # tags/0.3.2^0
+source=("git+https://gitlab.gnome.org/GNOME/libgxps.git#commit=$_commit")
+b2sums=('SKIP')
+
+pkgver() {
+  cd libgxps
+  git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
+}
+
+prepare() {
+  cd libgxps
+}
+
+build() {
+  local meson_options=(
+    -D enable-man=true
+    -D enable-gtk-doc=true
+  )
+
+  arch-meson libgxps build "${meson_options[@]}"
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
+
+# vim:set sw=2 sts=-1 et:

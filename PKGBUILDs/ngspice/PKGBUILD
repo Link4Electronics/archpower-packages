@@ -1,0 +1,84 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Abhishek Dasgupta <abhidg@gmail.com>
+# Contributor: Jason Taylor <jftaylor21@gmail.com>
+# Contributor: Luis Henrique <lmello.009@gmail.com>
+
+pkgname=ngspice
+pkgver=45.2
+_manual_pkgver=45 # manual seems to lag a bit behind
+pkgrel=1
+pkgdesc='Mixed-level/Mixed-signal circuit simulator based on Spice3f5, Ciber1b1, and Xspice'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://ngspice.sourceforge.net'
+license=(BSD-3-Clause)
+options=('!debug' 'strip')
+depends=(
+  glibc
+  libxt
+  libx11
+  ncurses
+  gcc-libs
+  readline
+  libxaw
+)
+source=(
+  "$pkgname-$pkgver.tar.gz::https://downloads.sourceforge.net/project/$pkgname/ng-spice-rework/$pkgver/$pkgname-$pkgver.tar.gz"
+  "https://sourceforge.net/projects/ngspice/files/ng-spice-rework/$pkgver/ngspice-$_manual_pkgver-manual.pdf"
+  "configurefix.patch"
+)
+sha512sums=('4090e9433457c0b49dc1e7561bc630a5c6a340391f26be8142c6bd514ae13b72137589964fe9ae5a01069c9de7d8457bd41b0811a335b2c93a3c6e07044b35b1'
+            '425d9320a01d409c7baab83d111f92643cae7df62a109e06d7e4fd366262441f4fdd62532db63fb4d4af4cb98e478b4f9fca5bd6c63fb89507dba685220f34ab'
+            '3615fb034ada748997f8da1ab1346a7d8acf1031685d1ddc2e7b05a6854f62fc1fd76142d0876b878f3be8022297973af72253d017c3f5da10da80f87d1e7438')
+b2sums=('e47a865f16c6d373ae9940317283890cff0b2d7cda0d77ee26ab3615b18a75b1a2a29133d9a03e14f9034c9ff48694edb6bfd89cd9fbc632c3b713948eae4349'
+        'd5163652c6e7e088d3d3a95494a088f394f0c8efd71e80f15ac0f1d3dd238f17b7104be45390de39bf9aa2d41f1677ea7979685471cf9deaafc934c2a531c67a'
+        '3cfc87a0675ed969ef8e11b8b734b1641b0491a1b8f05e84db3210dfeb2d7f238210177dc87ec2c7df4676946db249f5c12573d015775d886028bd286aec645f')
+
+build() {
+  patch -Np1 -i "$srcdir"/configurefix.patch -d "$pkgname-$pkgver/"
+  cd "$pkgname-$pkgver"
+  chmod u+x configure
+
+  local _common_flags=(
+    --prefix=/usr
+    --mandir=/usr/share/man
+    --infodir=/usr/share/info
+    --with-readline=yes
+    --enable-xspice
+    --enable-cider
+    --enable-openmp
+    --disable-debug
+  )
+
+  # FS#45230, create so lib
+  # shared lib sets flags and modifies headers, needs dedicated pass
+  ./configure \
+    "${_common_flags[@]}" \
+    --with-ngshared
+  make
+
+  ./configure "${_common_flags[@]}"
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  # license
+  install -vDm644 -t "$pkgdir/usr/share/licenses/$pkgname" COPYING
+
+  # documentation
+  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" "$srcdir/ngspice-$_manual_pkgver-manual.pdf"
+
+  # shared library
+  local _sover="0.0.14"
+  install -vDm755 "src/.libs/libngspice.so.$_sover" "$pkgdir/usr/lib/libngspice.so.$_sover"
+  ln -s "libngspice.so.$_sover" "$pkgdir/usr/lib/libngspice.so.0"
+  ln -s "libngspice.so.$_sover" "$pkgdir/usr/lib/libngspice.so"
+
+  # FS#70563, probably remove on v35
+  install -Dm644 ngspice.pc "$pkgdir/usr/lib/pkgconfig/ngspice.pc"
+  install -Dm644 src/include/ngspice/sharedspice.h "$pkgdir/usr/include/ngspice/sharedspice.h"
+}

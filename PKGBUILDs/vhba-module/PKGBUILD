@@ -1,0 +1,46 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Ray Rashif <schiv@archlinux.org>
+# Contributor: Mateusz Herych <heniekk@gmail.com>
+# Contributor: Charles Lindsay <charles@chaoslizard.org>
+
+pkgbase=vhba-module
+pkgname=(
+  vhba-module-dkms
+)
+pkgver=20250329
+pkgrel=52
+pkgdesc="Kernel module that emulates SCSI devices"
+url="https://cdemu.sourceforge.io/"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL-2.0-or-later)
+options=('!debug' 'strip')
+makedepends=(
+  git
+  linux-ppc64-headers
+)
+source=(
+  "cdemu-code::git+https://git.code.sf.net/p/cdemu/code#tag=$pkgbase-$pkgver"
+  dkms.conf
+)
+b2sums=('14276567e02f0d832fbf7fa5d337a74ece381812b11f89fb72346bb33a8ad19b463142fc7495f3485cd65490a5b42c8dcadce3c21e0f1f07259fb2a1f917604c'
+        'f1f3d97fc450de4a0257fa4c864eb7245f6c9657472eec67949b1335681ba86a40273b7fb11d023e406f792709252d80e635791674bdf79153f53161b4c5d871')
+
+prepare() {
+  cd cdemu-code
+}
+
+build() {
+  cd cdemu-code/$pkgbase
+  make KERNELRELEASE="$(</usr/src/linux-ppc64/version)"
+}
+
+package_vhba-module-dkms() {
+  depends=(dkms)
+  provides=(VHBA-MODULE)
+  conflicts=(vhba-module)
+
+  install -Dt "$pkgdir/usr/src/$pkgbase-$pkgver" -m644 \
+    dkms.conf cdemu-code/$pkgbase/{Makefile,vhba.c}
+}
+
+# vim:set sw=2 sts=-1 et:

@@ -1,0 +1,35 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=caja-actions
+pkgver=1.28.0
+pkgrel=4
+pkgdesc="Extension for Caja which allows the user to add arbitrary program to be launched"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later AND LGPL-2.0-or-later')
+depends=('caja' 'libgtop')
+makedepends=('autoconf-archive' 'glib2-devel' 'itstool' 'mate-common' 'python-packaging' 'yelp-tools')
+groups=('mate-extra')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/caja-actions/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('26de83562a7cab208c3871285f287cb2cd94beaf18fecbfefcd9a541c531d748')
+
+prepare() {
+	cd "${pkgname}-${pkgver}"
+	NOCONFIGURE=1 ./autogen.sh
+}
+
+build() {
+	cd "${pkgname}-${pkgver}"
+    	./configure \
+        	--prefix=/usr \
+		--libexecdir="/usr/lib/${pkgname}"
+    	make
+}
+
+package() {
+    	cd "$pkgname-$pkgver"
+    	make DESTDIR="${pkgdir}" install
+}

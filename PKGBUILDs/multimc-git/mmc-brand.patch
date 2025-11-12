@@ -1,0 +1,12 @@
+diff '--color=auto' -x '.*' --unified --recursive --text --new-file Launcher0/launcher/Application.cpp Launcher1/launcher/Application.cpp
+--- Launcher0/launcher/Application.cpp	2021-12-13 07:43:23.274019056 +0000
++++ Launcher1/launcher/Application.cpp	2021-12-13 07:50:33.016549365 +0000
+@@ -312,7 +312,7 @@
+         QString xdgDataHome = QFile::decodeName(qgetenv("XDG_DATA_HOME"));
+         if (xdgDataHome.isEmpty())
+             xdgDataHome = QDir::homePath() + QLatin1String("/.local/share");
+-        dataPath = xdgDataHome + "/devlauncher";
++        dataPath = xdgDataHome + "/multimc";
+         adjustedBy += "XDG standard " + dataPath;
+ #elif defined(Q_OS_MAC)
+         QDir foo(FS::PathCombine(applicationDirPath(), "../../Data"));

@@ -1,0 +1,54 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Contributor: Daenyth <Daenyth+Arch [AT] gmail [DOT] com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: rabyte <rabyte__gmail>
+
+pkgname=supertuxkart
+pkgver=0.8.1
+pkgrel=4
+pkgdesc='Kart racing game featuring Tux and his friends'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://supertuxkart-evolution.com'
+license=('GPL-3.0-or-later')
+depends=('openal' 'libvorbis' 'libgl' 'fribidi' 'curl' 'bluez-libs')
+makedepends=('cmake' 'setconf' 'ninja' 'mesa' 'imagemagick')
+options=('!debug' 'strip')
+source=("https://master.dl.sourceforge.net/project/${pkgname}/SuperTuxKart/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2"
+        "wglext.h")
+sha512sums=('1d72230a2cfa6196c6ea6c5464f01d1a0064994c9dafbf5d47c04b5db87e82590fde57a88d5316f2cf6094dcebae5e115b81e5ecc964a29bd669bc83d527d13a'
+            '7894afd4ce2c364bb47a355883a8309cc3c1bf06e3b445cd79c02da63a56a4aeaf7660041fab70fcfdba8d5d53e2e81c4fe2f29f17e3bf15952c4ef91f61c6a4')
+
+build() {
+  cd ${srcdir}/SuperTuxKart-${pkgver}
+
+  _fn="data/${pkgname}_desktop.template"
+  setconf "$_fn" Exec "$pkgname"
+  setconf "$_fn" TryExec "$pkgname"
+  setconf "$_fn" Icon "$pkgname"_128
+
+  cp /usr/include/GL/glext.h lib/irrlicht/source/Irrlicht/glext.h
+  cp /usr/include/GL/glxext.h lib/irrlicht/source/Irrlicht/glxext.h
+  cp "${srcdir}/wglext.h" lib/irrlicht/source/Irrlicht/wglext.h
+  sed -i '/add_dependencies(supertuxkart supertuxkart.desktop)/d' CMakeLists.txt
+  sed -i '/#include <sys\/sysctl.h>/d' lib/irrlicht/source/Irrlicht/COSOperator.cpp
+  sed -i '29a#include <ctime>' src/utils/time.hpp
+
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+
+  cmake .. \
+    -DIRRLICHT_DIR="$srcdir/irrlicht" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    -DCMAKE_C_FLAGS="-Wno-implicit-function-declaration" \
+    -DCMAKE_CXX_FLAGS="-lpthread -lm -ldl -lX11 -std=gnu++98"
+  make
+}
+
+package() {
+  cd ${srcdir}/SuperTuxKart-${pkgver}
+
+  cd build
+  make DESTDIR=${pkgdir} install
+}

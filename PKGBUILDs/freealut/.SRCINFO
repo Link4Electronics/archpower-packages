@@ -1,0 +1,21 @@
+pkgbase = freealut
+	pkgdesc = OpenAL Utility Toolkit (ALUT)
+	pkgver = 1.1.0
+	pkgrel = 10
+	url = https://www.openal.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = LGPL-2.0-only
+	makedepends = autoconf-archive
+	makedepends = git
+	depends = bash
+	depends = glibc
+	depends = openal
+	options = !debug
+	options = strip
+	source = git+https://github.com/vancegroup/freealut#tag=freealut_1_1_0
+	b2sums = 195e06a6368194e64e65b30eb1db3d0225a492146b074935bd319c574e3c2b149235a88ae262954d222a2230088bb5e094407e2ffb4c8641ea3046f12c31cd27
+
+pkgname = freealut

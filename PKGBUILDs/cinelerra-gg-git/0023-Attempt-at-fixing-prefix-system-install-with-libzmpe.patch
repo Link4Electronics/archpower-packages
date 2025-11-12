@@ -1,0 +1,56 @@
+From 3f26436694f8fbb8ccc5fed7029a6a62cc46135d Mon Sep 17 00:00:00 2001
+From: Andrew Randrianasulu <randrianasulu@gmail.com>
+Date: Wed, 3 Dec 2025 17:11:03 +0300
+Subject: [PATCH 23/25] Attempt at fixing prefix system install with libzmpeg
+ but without 3rdparty
+
+---
+ cinelerra-5.1/Makefile.am  | 11 +++++++++++
+ cinelerra-5.1/configure.ac |  6 +++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/cinelerra-5.1/Makefile.am b/cinelerra-5.1/Makefile.am
+index 32fc45c2..3a4b8100 100644
+--- a/cinelerra-5.1/Makefile.am
++++ b/cinelerra-5.1/Makefile.am
+@@ -87,6 +87,17 @@ zmp_install:
+ zmp_uninstall:
+ 	rm -f "$(DESTDIR)$(bindir)"/zmpeg3{cc2txt,ifochk}
+ 
++# with-libzmpeg3 without thirdparty
++zmp_install_nothird:
++	cd bin; $(inst_sh) "$(DESTDIR)$(bindir)" \
++		zmpeg3{cc2txt,ifochk}
++	cd bin; $(inst_sh) "$(DESTDIR)$(WANT_CINLIB_DIR)" \
++		hveg2enc mplexlo
++
++zmp_uninstall_nothird:
++	rm -f "$(DESTDIR)$(bindir)"/zmpeg3{cc2txt,ifochk}
++
++
+ # with-commercial
+ com_install:
+ 	cd bin; $(inst_sh) "$(DESTDIR)$(bindir)" cin_db
+diff --git a/cinelerra-5.1/configure.ac b/cinelerra-5.1/configure.ac
+index 2422e74d..ac01c01a 100644
+--- a/cinelerra-5.1/configure.ac
++++ b/cinelerra-5.1/configure.ac
+@@ -152,10 +152,14 @@ fi
+ 
+ CIN_INSTALLS=""
+ CIN_UNINSTALLS=""
+-if test "x$WANT_LIBZMPEG" = "xyes"; then
++if test "x$WANT_LIBZMPEG" = "xyes" -a "x$WANT_CIN_3RDPARTY" = "xyes"; then
+   CIN_INSTALLS+=" zmp_install"
+   CIN_UNINSTALLS+=" zmp_uninstall"
+ fi
++if test "x$WANT_LIBZMPEG" = "xyes" -a "x$WANT_CIN_3RDPARTY" = "xno"; then
++  CIN_INSTALLS+=" zmp_install_nothird"
++  CIN_UNINSTALLS+=" zmp_uninstall_nothird"
++fi
+ if test "x$WANT_COMMERCIAL" = "xyes"; then
+   CIN_INSTALLS+=" com_install"
+   CIN_UNINSTALLS+=" com_uninstall"
+-- 
+2.52.0
+

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Planet Blupi
+Comment=Planet Blupi Game.
+Icon=blupi
+Exec=planetblupi
+Actions=
+Categories=Game;
+StartupWMClass=planetblupi

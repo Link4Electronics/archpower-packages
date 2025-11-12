@@ -1,0 +1,20 @@
+pkgbase = tolua++
+	pkgdesc = Tool to integrate C/C++ code with Lua
+	pkgver = 1.0.93
+	pkgrel = 5
+	url = https://github.com/LuaDist/toluapp
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = MIT
+	makedepends = cmake
+	makedepends = git
+	depends = lua51
+	options = staticlibs
+	options = !debug
+	options = strip
+	source = git+https://github.com/LuaDist/toluapp.git#tag=1.0.93
+	sha512sums = SKIP
+
+pkgname = tolua++

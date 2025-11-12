@@ -1,0 +1,37 @@
+pkgname=doom64ex-ultra-git
+pkgver=0.r503.a3cafc1
+pkgrel=1
+pkgdesc="Engine recreation of Doom 64, requires N64 ROM (not included)."
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://github.com/StevenSYS/DOOM64EXUltra"
+license=('GPL2')
+depends=('fluidsynth' 'libpng' 'sdl3' 'sdl3_mixer' 'zlib')
+makedepends=('cmake' 'git')
+install=doom64ex.install
+options=('!debug' 'strip')
+source=("${pkgname}::git+${url}")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+
+  printf "0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  mkdir "$srcdir/$pkgname/build"
+  cd "$srcdir/$pkgname/build"
+
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+           -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname/build"
+  install -D -t "$pkgdir"/usr/bin DOOM64
+
+  cd ..
+  install -Dm644 AppImage/DOOM64EXUltra.png "$pkgdir/usr/share/icons/DOOM64EXUltra.png"
+  install -Dm644 AppImage/DOOM64EXUltra.desktop "$pkgdir/usr/share/applications/DOOM64EXUltra.desktop"
+}

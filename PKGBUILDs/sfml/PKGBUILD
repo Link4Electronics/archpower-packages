@@ -1,0 +1,41 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Contributor: Ondrej Martinak <omartinak@gmail.com>
+
+pkgname=sfml
+pkgver=3.0.2
+pkgrel=1
+pkgdesc='A simple, fast, cross-platform, and object-oriented multimedia API'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://www.sfml-dev.org/'
+license=('Zlib')
+depends=('libsndfile' 'libxrandr' 'glew' 'freetype2' 'libx11' 'libxcursor' 'libxi')
+makedepends=('mesa' 'cmake' 'doxygen' 'systemd' 'ninja')
+provides=('libsfml-window.so' 'libsfml-network.so' 'libsfml-system.so'
+          'libsfml-audio.so' 'libsfml-graphics.so')
+options=('!debug' 'strip')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/SFML/SFML/archive/${pkgver}.tar.gz)
+sha512sums=('7fc3f91b84ba2353b4216c0d0a71fd15f7349b8e22630dd727fc98a1f8c295a69fe21f3e1e878413966662047280ed4f195b51ee3302061c3903aea4958a6999')
+
+build() {
+  export CXXFLAGS+=" -ffat-lto-objects"
+
+  cmake \
+    -B build \
+    -S SFML-${pkgver} \
+    -G Ninja \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSFML_USE_SYSTEM_DEPS=ON \
+    -DSFML_BUILD_EXAMPLES=ON \
+    -DSFML_BUILD_DOC=ON \
+    -DSFML_PKGCONFIG_INSTALL_DIR=/usr/lib/pkgconfig \
+    -DSFML_INSTALL_PKGCONFIG_FILES=ON
+  ninja -C build
+  ninja -C build doc
+}
+
+package() {
+  DESTDIR="$pkgdir/" ninja -C build install
+
+  install -Dm644 SFML-${pkgver}/license.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

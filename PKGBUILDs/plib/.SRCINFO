@@ -1,0 +1,24 @@
+pkgbase = plib
+	pkgdesc = Set of libraries to write games and other realtime interactive applications
+	pkgver = 1.8.5
+	pkgrel = 10
+	url = https://plib.sourceforge.net/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = custom:LGPL
+	makedepends = mesa
+	makedepends = libxi
+	makedepends = libxmu
+	options = staticlibs
+	options = !debug
+	options = strip
+	source = http://plib.sourceforge.net/dist/plib-1.8.5.tar.gz
+	source = config.guess
+	source = config.sub
+	md5sums = 47a6fbf63668c1eed631024038b2ea90
+	md5sums = 11714d3cd0a013dc3a7fd350d3a67066
+	md5sums = cf258f914ddb13bb4cfa8a5d60f951b5
+
+pkgname = plib

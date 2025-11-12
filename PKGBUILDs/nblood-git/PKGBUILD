@@ -1,0 +1,46 @@
+# Maintainer: Sid <sidpranjale127@protonmail.com>
+# Continuing the work of:
+# Maintainer: Jan Cholasta <jan at cholasta net>
+
+pkgname=nblood-git
+pkgver=r14330.970f59d10
+pkgrel=1
+pkgdesc='Blood port based on EDuke32 (git version)'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://nukeykt.retrohost.net/'
+license=('GPL' 'custom:BUILD')
+depends=('flac'
+         'libogg'
+         'libvorbis'
+         'libvpx'
+         'sdl2'
+)
+makedepends=('git' 'glu' 'imagemagick')
+optdepends=('blood-demo')
+provides=('nblood')
+conflicts=('nblood')
+options=('!debug' 'strip')
+source=('git+https://github.com/NBlood/NBlood.git'
+        'nblood.desktop')
+sha256sums=('SKIP'
+            'da48d9c53e35d6b9c7f5d9da891dfebea6751b9b5ea2505bc458e6b42f33f4ba')
+
+pkgver() {
+    cd $srcdir/NBlood
+    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd NBlood
+    make blood
+}
+
+package() {
+    cd NBlood
+    install -D -t "$pkgdir"/usr/bin nblood
+    install -D -t "$pkgdir"/usr/share/games/nblood -m 644 nblood.pk3
+    install -D -t "$pkgdir"/usr/share/licenses/$pkgname -m 644 package/common/buildlic.txt
+    install -Dm644 source/blood/rsrc/game_icon.ico "$pkgdir"/usr/share/pixmaps/nblood.ico
+    install -D -t "$pkgdir"/usr/share/applications -m 644 "$srcdir"/nblood.desktop
+    echo "Place your game files in ~/.config/nblood"
+}

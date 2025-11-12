@@ -1,0 +1,55 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Mateusz Herych <heniekk@gmail.com>
+# Contributor: Charles Lindsay <charles@chaoslizard.org>
+
+pkgname=libmirage
+pkgver=3.2.10
+pkgrel=1
+pkgdesc="CD-ROM image (B6T/C2D/CCD/CDI/CIF/CUE/ISO/MDS/MDX/NRG/TOC) access library"
+url="https://cdemu.sourceforge.io/"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL-2.0-or-later)
+options=('!debug' 'strip')
+depends=(
+  bzip2
+  glib2
+  glibc
+  libsamplerate
+  libsndfile
+  shared-mime-info
+  xz
+  zlib
+)
+makedepends=(
+  cmake
+  git
+  gobject-introspection
+  gtk-doc
+  intltool
+  ninja
+  vala
+)
+source=("cdemu-code::git+https://git.code.sf.net/p/cdemu/code#tag=$pkgname-$pkgver")
+b2sums=('14276567e02f0d832fbf7fa5d337a74ece381812b11f89fb72346bb33a8ad19b463142fc7495f3485cd65490a5b42c8dcadce3c21e0f1f07259fb2a1f917604c')
+
+prepare() {
+  cd cdemu-code/$pkgname
+}
+
+build() {
+  local cmake_options=(
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_LIBDIR=lib
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D POST_INSTALL_HOOKS=OFF
+  )
+
+  cmake -S cdemu-code/$pkgname -B build -G Ninja "${cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
+
+# vim:set sw=2 sts=-1 et:

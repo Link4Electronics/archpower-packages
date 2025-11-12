@@ -1,0 +1,58 @@
+diff --git a/src/sound/Pixtone.cpp b/src/sound/Pixtone.cpp
+index 215e676..760ade7 100644
+--- a/src/sound/Pixtone.cpp
++++ b/src/sound/Pixtone.cpp
+@@ -371,7 +371,7 @@ int Pixtone::playResampled(int32_t chan, int32_t slot, int32_t loop, uint32_t pe
+     {
+       SDL_AudioCVT cvt;
+ 
+-      if (SDL_BuildAudioCVT(&cvt, AUDIO_S16, 2, SAMPLE_RATE, AUDIO_S16, 2, resampled_rate) == -1)
++      if (SDL_BuildAudioCVT(&cvt, AUDIO_S16SYS, 2, SAMPLE_RATE, AUDIO_S16SYS, 2, resampled_rate) == -1)
+       {
+         LOG_ERROR("SDL_BuildAudioCVT: {}", SDL_GetError());
+       }
+@@ -444,7 +444,7 @@ int Pixtone::prepareResampled(int32_t slot, uint32_t percent)
+     {
+       SDL_AudioCVT cvt;
+ 
+-      if (SDL_BuildAudioCVT(&cvt, AUDIO_S16, 2, SAMPLE_RATE, AUDIO_S16, 2, resampled_rate) == -1)
++      if (SDL_BuildAudioCVT(&cvt, AUDIO_S16SYS, 2, SAMPLE_RATE, AUDIO_S16SYS, 2, resampled_rate) == -1)
+       {
+         LOG_ERROR("SDL_BuildAudioCVT: {}", SDL_GetError());
+       }
+@@ -507,7 +507,7 @@ void Pixtone::_prepareToPlay(stPXSound *snd, int32_t slot)
+   // convert the buffer from 8-bit mono signed to 16-bit stereo signed
+   SDL_AudioCVT cvt;
+ 
+-  if (SDL_BuildAudioCVT(&cvt, AUDIO_S8, 1, 22050, AUDIO_S16, 2, SAMPLE_RATE) == -1)
++  if (SDL_BuildAudioCVT(&cvt, AUDIO_S8, 1, 22050, AUDIO_S16SYS, 2, SAMPLE_RATE) == -1)
+   {
+     LOG_ERROR("SDL_BuildAudioCVT: {}", SDL_GetError());
+   }
+@@ -530,4 +530,4 @@ void Pixtone::_prepareToPlay(stPXSound *snd, int32_t slot)
+ }
+ 
+ } // namespace Sound
+-} // namespace NXE
+\ No newline at end of file
++} // namespace NXE
+diff --git a/src/sound/SoundManager.cpp b/src/sound/SoundManager.cpp
+index d29b56e..fcb50f9 100644
+--- a/src/sound/SoundManager.cpp
++++ b/src/sound/SoundManager.cpp
+@@ -40,13 +40,13 @@ bool SoundManager::init()
+   }
+ 
+ #if SDL_MIXER_PATCHLEVEL >= 2
+-  if (Mix_OpenAudioDevice(SAMPLE_RATE, AUDIO_S16, 2, 4096, NULL, 0) == -1)
++  if (Mix_OpenAudioDevice(SAMPLE_RATE, AUDIO_S16SYS, 2, 4096, NULL, 0) == -1)
+   {
+     LOG_ERROR("Unable to open audio device.");
+     return false;
+   }
+ #else
+-  if (Mix_OpenAudio(SAMPLE_RATE, AUDIO_S16, 2, 2048) == -1)
++  if (Mix_OpenAudio(SAMPLE_RATE, AUDIO_S16SYS, 2, 2048) == -1)
+   {
+     LOG_ERROR("Unable to open audio device.");
+     return false;

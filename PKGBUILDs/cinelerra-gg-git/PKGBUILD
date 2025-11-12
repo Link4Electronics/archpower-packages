@@ -1,0 +1,56 @@
+# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+# Maintainer: pingplug < aur at pingplug dot me >
+
+pkgname=cinelerra-gg-git
+pkgver=2025.12.r4.gd8b8d313
+pkgrel=1
+pkgdesc="Professional video editing and compositing environment"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://www.cinelerra-gg.org"
+license=(GPL-2.0-only)
+depends=(alsa-lib aom dav1d fftw flac glu gtk2 libavc1394
+         libdv libiec61883 libpulse libtheora libusb libva libvdpau
+         libvorbis libvpx libwebp libxv numactl openexr opus x265 openjpeg2
+
+         # namcap implicit depends
+         perl libogg libxext freetype2 glib2 at-spi2-core libxft libglvnd libxfixes libsndfile harfbuzz zlib glibc
+         libxinerama cairo libx11 fontconfig gdk-pixbuf2 imath pango jbigkit xz bzip2 libjpeg-turbo libpng gcc-libs
+         libtiff)
+makedepends=(cmake ctags git libxml2 nasm perl-xml-libxml lv2
+             perl-xml-parser python xorg-mkfontdir
+             xorg-mkfontscale yasm)
+provides=(cinelerra-gg)
+conflicts=(cinelerra-gg cin)
+options=('!debug' 'strip')
+source=("git+https://git.cinelerra-gg.org/goodguy/cinelerra.git"
+        "0023-Attempt-at-fixing-prefix-system-install-with-libzmpe.patch")
+sha256sums=('SKIP'
+            'ece22b13f8282ce69c32d635ed8d411e34d25827154db8bda9f1e76e859d9fa6')
+
+pkgver() {
+  cd "${srcdir}/cinelerra/cinelerra-5.1"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  patch -Np1 -i "$srcdir"/0023-Attempt-at-fixing-prefix-system-install-with-libzmpe.patch -d "${srcdir}/cinelerra"
+  cd "${srcdir}/cinelerra/cinelerra-5.1"
+  ./autogen.sh
+}
+
+build() {
+  cd "${srcdir}/cinelerra/cinelerra-5.1"
+  ./configure \
+    --prefix=/usr \
+    --without-thirdparty \
+    --disable-static-build \
+    --without-cuda \
+    --without-lv2 \
+    --with-exec-name=cinelerra-gg
+  make
+}
+
+package() {
+  cd "${srcdir}/cinelerra/cinelerra-5.1"
+  make DESTDIR="${pkgdir}" install
+}

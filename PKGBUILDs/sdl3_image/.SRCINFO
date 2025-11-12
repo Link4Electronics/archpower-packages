@@ -1,0 +1,25 @@
+pkgbase = sdl3_image
+	pkgdesc = SDL3 image loading library
+	pkgver = 3.2.6
+	pkgrel = 1
+	url = https://github.com/libsdl-org/SDL_image
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = 0BSD
+	makedepends = cmake
+	depends = sdl3
+	depends = libpng
+	depends = libtiff
+	depends = libjpeg
+	depends = libwebp
+	depends = libavif
+	depends = libjxl
+	conflicts = sdl3_image-git
+	options = !debug
+	options = strip
+	source = https://github.com/libsdl-org/SDL_image/releases/download/release-3.2.6/SDL3_image-3.2.6.tar.gz
+	sha256sums = 2daee16e6f8f9ea1c59ea243c0b089e2a2c7a2c402efa67f291a6359e5bd50d2
+
+pkgname = sdl3_image

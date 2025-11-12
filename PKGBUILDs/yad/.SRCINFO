@@ -1,0 +1,22 @@
+pkgbase = yad
+	pkgdesc = A fork of zenity - display graphical dialogs from shell scripts or command line
+	pkgver = 14.2
+	pkgrel = 1
+	url = https://github.com/v1cont/yad
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL3
+	makedepends = autoconf
+	makedepends = automake
+	depends = gtk3
+	depends = webkit2gtk-4.1
+	depends = gtksourceview3
+	depends = gspell
+	options = !debug
+	options = strip
+	source = https://github.com/v1cont/yad/releases/download/v14.2/yad-14.2.tar.xz
+	sha256sums = 5cab399af8d9a10b76d477f848180d00addba38f4f1272a05b153a393bba3038
+
+pkgname = yad

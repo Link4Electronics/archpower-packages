@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=ioRTCW SP
+Comment=Return To Castle Wolfenstein with Rend2 (Single Player)
+Exec=/usr/bin/iortcw-sp
+Icon=iortcw
+Terminal=false
+Categories=Game
+StartupWMClass=iowolfsp.ARCH

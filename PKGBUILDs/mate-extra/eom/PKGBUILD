@@ -1,0 +1,39 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=eom
+pkgver=1.28.0
+pkgrel=3
+pkgdesc="An image viewer for MATE"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later')
+depends=('dbus-glib' 'gobject-introspection-runtime' 'gettext' 'exempi' 'lcms2' 'libexif' 'libjpeg-turbo' 'mate-desktop' 'libpeas')
+makedepends=('autoconf-archive' 'glib2-devel' 'gobject-introspection' 'mate-common' 'itstool' 'yelp-tools')
+optdepends=('webp-pixbuf-loader: webp image format support')
+groups=('mate-extra')
+conflicts=('eom-gtk3')
+replaces=('eom-gtk3')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/eom/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('095ab4ae210662b0f2c9b4b8099962cd50f7ca8d4c59b01fe118686ab617a3a9')
+
+prepare() {
+    	cd "${pkgname}-${pkgver}"
+	./autogen.sh
+}
+
+build() {
+    	cd "${pkgname}-${pkgver}"
+    	./configure \
+        	--prefix=/usr \
+        	--localstatedir=/var \
+        	--with-librsvg
+    	make
+}
+
+package() {
+    	cd "${pkgname}-${pkgver}"
+    	make DESTDIR="${pkgdir}" install
+}

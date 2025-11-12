@@ -1,0 +1,21 @@
+pkgbase = fallout1-ce-git
+	pkgdesc = Fallout for modern operating systems
+	pkgver = 1.1.0.r7.g0609bcf
+	pkgrel = 1
+	url = https://github.com/alexbatalov/fallout1-ce
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = custom:SUL
+	depends = sdl2
+	options = !debug
+	options = strip
+	source = git+https://github.com/alexbatalov/fallout1-ce.git
+	source = fallout1-ce.desktop
+	source = be-fix.patch
+	sha256sums = SKIP
+	sha256sums = 599c750ac8dc60d07e7d99301c56ed53634488f172fabe61bac6bd3073933181
+	sha256sums = 1e80df251a9a3e927c0cc5f4313ac3c9315c0d1bc2645f47a8be29d457935337
+
+pkgname = fallout1-ce-git

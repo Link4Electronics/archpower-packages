@@ -1,0 +1,13 @@
+diff --git a/imconfig.h
+index d556cba..60f77c7 100644
+--- a/imconfig.h
++++ b/imconfig.h
+@@ -129,3 +129,8 @@ namespace ImGui
+     void MyFunction(const char* name, MyMatrix44* mtx);
+ }
+ */
++#define IM_COL32_R_SHIFT    24
++#define IM_COL32_G_SHIFT    16
++#define IM_COL32_B_SHIFT    8
++#define IM_COL32_A_SHIFT    0
++#define IM_COL32_A_MASK     0x000000FF

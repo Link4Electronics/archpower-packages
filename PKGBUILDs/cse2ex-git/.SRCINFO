@@ -1,0 +1,40 @@
+pkgbase = cse2ex-git
+	pkgdesc = Decompilation of Cave Story
+	pkgver = 2.2.portable.r42.gb9d9d33
+	pkgrel = 1
+	url = https://github.com/ewancg/CSE2EX
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = MIT
+	makedepends = cmake
+	makedepends = git
+	depends = freetype2
+	depends = glfw
+	depends = hicolor-icon-theme
+	depends = sdl2
+	options = !debug
+	options = strip
+	source = cse2-git::git+https://github.com/ewancg/CSE2EX.git#branch=big-endian-fix
+	source = cse2ex-english.desktop
+	source = cse2ex-japanese.desktop
+	sha256sums = SKIP
+	sha256sums = 03592faf0033025c98bdb68102d53994472e26e8c04c1fe51096e6a1948d4878
+	sha256sums = 1c762948636e4836253a552e85bcb77316d820d74826edd242646a592e94c009
+
+pkgname = cse2ex-english-git
+	depends = freetype2
+	depends = glfw
+	depends = hicolor-icon-theme
+	depends = sdl2
+	provides = cse2ex-english
+	conflicts = cse2-english
+
+pkgname = cse2ex-japanese-git
+	depends = freetype2
+	depends = glfw
+	depends = hicolor-icon-theme
+	depends = sdl2
+	provides = cse2ex-japanese
+	conflicts = cse2-japanese

@@ -1,0 +1,49 @@
+pkgname=fallout1-ce-git
+_gitname=fallout1-ce
+pkgver=1.1.0.r7.g0609bcf
+pkgrel=1
+pkgdesc="Fallout for modern operating systems"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://github.com/alexbatalov/fallout1-ce"
+license=('custom:SUL')
+depends=('sdl2')
+options=('!debug' 'strip')
+source=("git+https://github.com/alexbatalov/fallout1-ce.git"
+        'fallout1-ce.desktop'
+        'be-fix.patch')
+sha256sums=('SKIP'
+            '599c750ac8dc60d07e7d99301c56ed53634488f172fabe61bac6bd3073933181'
+            '1e80df251a9a3e927c0cc5f4313ac3c9315c0d1bc2645f47a8be29d457935337')
+
+pkgver() {
+    cd "${_gitname}"
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "${_gitname}"
+
+    echo $pkgdir
+
+    patch -Np1 -i "${srcdir}/be-fix.patch"
+
+    cmake -G "Unix Makefiles"  -DCMAKE_BUILD_TYPE=Release ./
+    make
+}
+
+package() {
+    cd "${_gitname}"
+    DESTDIR="$pkgdir" cmake -P cmake_install.cmake --install build
+
+    install -Dm 644 os/windows/fallout-ce.ico "$pkgdir/usr/share/pixmaps/fallout-ce.ico"
+    install -Dm 644 "$srcdir/fallout1-ce.desktop" "$pkgdir/usr/share/applications/fallout1-ce.desktop"
+    install -Dm 755 "fallout-ce" "$pkgdir/var/games/fallout1-ce/fallout-ce"
+
+    echo
+    echo '==================================================================================='
+    echo 'Next, copy game data files to /var/games/fallout1-ce/'
+    echo 'WARNING: make sure CRITTER.DAT and MASTER.DAT files are in the same upper or lower case as they are in the fallout.cfg file. Otherwise you get an error indicating that files are not found'
+    echo 'See: https://github.com/alexbatalov/fallout1-ce#configuration'
+    echo '==================================================================================='
+    echo
+}

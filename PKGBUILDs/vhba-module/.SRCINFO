@@ -1,0 +1,23 @@
+pkgbase = vhba-module
+	pkgdesc = Kernel module that emulates SCSI devices
+	pkgver = 20250329
+	pkgrel = 52
+	url = https://cdemu.sourceforge.io/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-2.0-or-later
+	options = !debug
+	options = strip
+	makedepends = git
+	makedepends = linux-ppc64-headers
+	source = cdemu-code::git+https://git.code.sf.net/p/cdemu/code#tag=vhba-module-20250329
+	source = dkms.conf
+	b2sums = 14276567e02f0d832fbf7fa5d337a74ece381812b11f89fb72346bb33a8ad19b463142fc7495f3485cd65490a5b42c8dcadce3c21e0f1f07259fb2a1f917604c
+	b2sums = f1f3d97fc450de4a0257fa4c864eb7245f6c9657472eec67949b1335681ba86a40273b7fb11d023e406f792709252d80e635791674bdf79153f53161b4c5d871
+
+pkgname = vhba-module-dkms
+	depends = dkms
+	provides = VHBA-MODULE
+	conflicts = vhba-module

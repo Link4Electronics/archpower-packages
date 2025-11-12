@@ -1,0 +1,49 @@
+# Maintainer: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+pkgbase=vice
+pkgname=vice
+pkgver=3.10
+pkgrel=1
+pkgdesc='Versatile Commodore Emulator'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL-2.0-only)
+url='https://vice-emu.sourceforge.io/'
+depends=(alsa-lib glew libevdev libpng libpulse)
+makedepends=(dos2unix giflib glib2-devel gtk3 libjpeg-turbo libpcap libxaw python xa xorg-bdftopcf xorg-mkfontscale)
+options=('!debug' 'strip')
+source=("https://downloads.sourceforge.net/project/vice-emu/releases/$pkgbase-$pkgver.tar.gz"
+        disable-fc-cache.patch)
+b2sums=('d41bfe4ed5213f4fff345f195de60e95d87b9c5901e89ff31d221841e51358a55e1f7fecae5afae0e71439d5a8da7411e632bc42b582e5b17b72dba07ae2cadd'
+        'a27ff2a70537a57fd1c3be561181403fede8a6fd75ca8a31a4a4ed97b010cd8f8f0376a619be126ac22ad8c81bf0d1fd9c7e5e411bf94da32006c9ecdd10d32e')
+
+prepare() {
+  cd $pkgbase-$pkgver
+  rm -rf src/lib/{liblame,libx264,libffmpeg}
+  patch -p1 -i ../disable-fc-cache.patch
+  sed -i 's/lib64/lib/g' configure.ac
+  autoreconf -fi
+}
+
+build() {
+  export CFLAGS="$CFLAGS -Wl,--allow-multiple-definition -w"
+
+  cd $pkgbase-$pkgver
+  PKG_CONFIG_PATH='/usr/lib/ffmpeg/pkgconfig' ./configure \
+    --disable-ffmpeg \
+    --disable-sdl2ui \
+    --enable-gtk3ui \
+    --enable-x64 \
+    --with-gif \
+    --libdir=/usr/lib \
+    --prefix=/usr
+  make
+}
+
+package_vice() {
+  pkgdesc='Versatile Commodore Emulator (GTK3)'
+  depends+=(giflib gtk3)
+  provides=(vice)
+  conflicts=(vice-sdl2)
+  make -C $pkgbase-$pkgver DESTDIR="$pkgdir" realdocdir=/usr/share/doc/vice install
+}

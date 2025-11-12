@@ -1,0 +1,35 @@
+pkgbase = xoreos-git
+	pkgdesc = A reimplementation of BioWare's Aurora engine
+	pkgver = 0.0.6.r235.gf36b681b2
+	pkgrel = 1
+	url = https://xoreos.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL3
+	makedepends = git
+	makedepends = cmake
+	depends = zlib
+	depends = xz
+	depends = libxml2
+	depends = boost
+	depends = boost-libs
+	depends = sdl2
+	depends = freetype2
+	depends = openal
+	depends = libmad
+	depends = libogg
+	depends = libvorbis
+	depends = faad2
+	depends = xvidcore
+	depends = libvpx
+	options = !debug
+	options = strip
+	source = git+https://github.com/xoreos/xoreos
+	source = cmakeboost1.89-fix.patch
+	sha256sums = SKIP
+	sha256sums = 8cb073cc1c5e88f46ec9c2fd164d71e533df7de426dc5f0d5d3e6a6b73ae32ba
+
+pkgname = xoreos-git
+

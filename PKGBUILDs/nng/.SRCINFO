@@ -1,0 +1,22 @@
+pkgbase = nng
+	pkgdesc = A lightweight, broker-less messaging library
+	pkgver = 1.11
+	pkgrel = 2
+	url = https://nng.nanomsg.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = MIT
+	options = !debug
+	options = strip
+	makedepends = git
+	makedepends = cmake
+	makedepends = ninja
+	depends = glibc
+	depends = wolfssl
+	source = nng::git+https://github.com/nanomsg/nng#tag=v1.11
+	sha512sums = d15324738e66aee0ddbb947f0014204326e11b607621d1c6af3eee409c59de5bb3fb06b7103ead5f05ae3d571591a1552178d60dc873d35d4cd48731ca0f55a0
+	b2sums = 3ff31eb84bd86c4ad8b030944ee35e8d1f11a462dd1ceddd5b729017a4a7885b045159024fe9d01b75762a568c62244318dd0286f515d93819fdc28d8bd7c47e
+
+pkgname = nng

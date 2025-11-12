@@ -1,0 +1,20 @@
+diff --git a/wartool.cpp b/wartool.cpp
+index 5242ceaa..9583f22f 100644
+--- a/wartool.cpp
++++ b/wartool.cpp
+@@ -510,13 +510,13 @@ int ExtractMPQFile(char *szArchiveName, char *szArchivedFile, char *szFileName,
+ 	// Open an archive, e.g. "d2music.mpq"
+ 	if(nError == ERROR_SUCCESS) {
+ 		if(!SFileOpenArchive(szArchiveName, 0, STREAM_FLAG_READ_ONLY, &hMpq))
+-			nError = GetLastError();
++			nError = SErrGetLastError();
+ 	}
+ 
+ 	// Open a file in the archive, e.g. "data\global\music\Act1\tristram.wav"
+ 	if(nError == ERROR_SUCCESS) {
+ 		if(!SFileOpenFileEx(hMpq, szArchivedFile, 0, &hFile))
+-			nError = GetLastError();
++			nError = SErrGetLastError();
+ 	}
+ 
+ 	// Create the target file

@@ -1,0 +1,30 @@
+pkgbase = python-pivy
+	pkgdesc = Python bindings to Coin3D
+	pkgver = 0.6.10
+	pkgrel = 2
+	epoch = 1
+	url = https://github.com/coin3d/pivy
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = ISC
+	makedepends = git
+	makedepends = cmake
+	makedepends = glu
+	makedepends = swig
+	depends = glibc
+	depends = gcc-libs
+	depends = coin
+	depends = python
+	depends = pyside6
+	depends = python-numpy
+	depends = qt6-base
+	depends = soqt
+	options = !debug
+	options = strip
+	source = python-pivy::git+https://github.com/coin3d/pivy#tag=0.6.10
+	sha512sums = 054dc64126d53095f503377711d0d719cf56f3f9aa770a6c338ba774519f5e1c37410fad46f4caa3e5716a425437a8e734200bf39ce75db83db02bd02eb00724
+	b2sums = a56b7c91fd28bc568468b2788b06b42d8b41a2b3122d2518e9aaa357f46953a478dde4582d1e131314bd437444503970edffb66e6303800700d44c73cd42cf7c
+
+pkgname = python-pivy

@@ -1,0 +1,26 @@
+pkgbase = wipeout-rewrite-git
+	pkgdesc = A re-implementation of the 1995 PSX game wipEout
+	pkgver = r150.e510130
+	pkgrel = 1
+	epoch = 1
+	url = https://github.com/phoboslab/wipeout-rewrite
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = unknown
+	makedepends = git
+	makedepends = cmake
+	makedepends = imagemagick
+	depends = sdl2
+	depends = glew
+	options = !debug
+	options = strip
+	source = git+https://github.com/phoboslab/wipeout-rewrite.git
+	source = https://phoboslab.org/files/wipeout-data-v01.zip
+	source = wipeout.desktop
+	sha256sums = SKIP
+	sha256sums = 5bc02de7118a62a5cb8b4d0ec79062cddbe20ced86dda594df8a10c455f90ad1
+	sha256sums = d0698fee5230e2280b59ac123cfb0b0782b8301df880bc59c1bd2a3fa1557d28
+
+pkgname = wipeout-rewrite-git

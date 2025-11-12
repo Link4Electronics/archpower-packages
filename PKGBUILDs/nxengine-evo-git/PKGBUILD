@@ -1,0 +1,48 @@
+# Maintainer: ibrokemypie <ibrokemypie@bastardi.net>
+pkgname=nxengine-evo-git
+_pkgname=nxengine-evo
+pkgver=2.6.5.1.r0
+_ver=2.6.5-1
+_langver=1.14
+pkgrel=1
+pkgdesc="A somewhat upgraded/refactored version of nxengine"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://github.com/nxengine/nxengine-evo"
+license=('GPL3')
+depends=(sdl2_mixer sdl2_image sdl2_ttf)
+makedepends=(cmake libpng libjpeg)
+options=('!debug' 'strip')
+source=("git+https://github.com/nxengine/nxengine-evo"
+        "https://www.cavestory.org/downloads/cavestoryen.zip"
+        "https://github.com/nxengine/translations/releases/download/v${_langver}/all.zip"
+        "audiofix.patch")
+sha256sums=('SKIP'
+            'aa87fa30bee9b4980640c7e104791354e0f1f6411ee0d45a70af70046aa0685f'
+            '1dd85a8c230c5ebf23c6fd6283fe168d9bf4044339d1e93e324bd336165a4422'
+            'ae7fcf0397d3f54da0f25c0e4ad163c632f3e51c0fd1c511b7e8c7b1d8c9cfec')
+
+pkgver() {
+	cd "${_pkgname}"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "${_pkgname}"
+	patch -Np1 -i "${srcdir}/audiofix.patch"
+	mkdir build
+	cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -Wno-dev -DCMAKE_INSTALL_PREFIX=/usr ..
+    make
+
+	cd ../
+    cp -r "../CaveStory/data/" "./"
+    cp "../CaveStory/Doukutsu.exe" "./"
+    cp -r "../data/" "./"
+  
+    ./build/nxextract
+}
+
+package() {
+	cd "${_pkgname}/build"
+	make DESTDIR="$pkgdir" install
+}

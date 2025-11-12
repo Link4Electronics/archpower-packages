@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Mini vMac
+Comment=A miniature early Macintosh emulator for 68k machines
+Exec=/usr/bin/minivmac
+Icon=/usr/share/icons/hicolor/32x32/apps/minivmac.ico
+Terminal=false
+Categories=Emulator;System;

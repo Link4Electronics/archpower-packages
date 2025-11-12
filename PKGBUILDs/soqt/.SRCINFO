@@ -1,0 +1,21 @@
+pkgbase = soqt
+	pkgdesc = The glue between Coin and Qt
+	pkgver = 1.6.1
+	pkgrel = 2
+	url = https://github.com/coin3d/soqt
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	makedepends = cmake
+	makedepends = mesa
+	makedepends = doxygen
+	depends = coin
+	depends = qt6-base
+	options = !debug
+	options = strip
+	source = https://github.com/coin3d/soqt/releases/download/v1.6.1/soqt-1.6.1-src.tar.gz
+	sha256sums = 80289d9bd49ffe709ab85778c952573f43f1c725ea958c6d5969b2e9c77bb3ba
+
+pkgname = soqt

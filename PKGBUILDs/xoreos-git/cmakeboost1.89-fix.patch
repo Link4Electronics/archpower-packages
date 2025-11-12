@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 293951be6..8cddc4569 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -302,7 +302,7 @@ find_package(ZLIB REQUIRED)
+ include_directories(${ZLIB_INCLUDE_DIRS})
+ list(APPEND XOREOS_LIBRARIES ${ZLIB_LIBRARIES})
+ 
+-find_package(Boost COMPONENTS system filesystem date_time locale REQUIRED)
++find_package(Boost COMPONENTS filesystem date_time locale REQUIRED)
+ 
+ include_directories(${Boost_INCLUDE_DIRS})
+ link_directories(${Boost_LIBRARY_DIRS})

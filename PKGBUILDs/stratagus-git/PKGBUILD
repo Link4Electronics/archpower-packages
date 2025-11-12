@@ -1,0 +1,59 @@
+#Stratagus - https://github.com/Wargus/stratagus
+# Original Maintainer: Angelo Theodorou <encelo at users dot sourceforge dot net>
+# Maintainer: Eden Rose(endlesseden) <eenov1988 "at"  gmail.com >
+_pkgname=stratagus
+pkgname=stratagus-git
+pkgver=3.3.2.07b2339a3.20251126
+pkgrel=1
+pkgdesc="A free cross-platform real-time strategy gaming engine"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://github.com/Wargus/stratagus"
+license=('GPL')
+#//depends=('libgl' 'sdl' 'libpng' 'libmng' 'libtheora' 'libmikmod' 'sqlite' 'tolua++')
+#//makedepends=('git' 'cmake' 'glu')
+# Quick and dirty edit. fix later.
+depends=('sdl2' 'sdl2_mixer' 'sdl2_image' 'libpng' 'libmng' 'libtheora' 'libogg' 'lua51' 'tolua++' 'zlib')
+# Add openmp only for 64-bit PowerPC variants
+if [[ $CARCH == "powerpc64" || $CARCH == "powerpc64le" ]]; then
+  depends+=('openmp')
+fi
+makedepends=('git' 'cmake')
+options=('!debug' 'strip')
+source=("${pkgname}::git+https://github.com/Wargus/stratagus.git")
+md5sums=('SKIP')
+provides=("$_pkgname" 'stratagus' 'stratagus-gameutils.h')
+pkgver() {
+  cd "$srcdir/${pkgname}"
+  
+  DATE="$(date +%Y%m%d)"
+  PV=$(git name-rev --name-only --tags --no-undefined HEAD 2>/dev/null || echo git-`git rev-parse --short HEAD`) ### get GIT version
+  VER=$(git describe --tags | head -1 | grep v | sed 's/v//g;s/-/\n/g' | head -1)
+  echo "$VER$PV.$DATE" | sed -e 's/git-/./g' 
+}
+
+build() {
+  cd $srcdir/${pkgname} 
+  git submodule init
+  git submodule update
+
+  cd ..
+  cmake ${pkgname} \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DGAMEDIR=/usr/bin \
+  -DSBINDIr=/usr/bin \
+  -Bbuild
+
+  make -C build
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
+
+  mkdir -p ${pkgdir}/usr/include
+  cp ${srcdir}/${pkgname}/gameheaders/stratagus-game-launcher.h ${pkgdir}/usr/include
+  cp ${srcdir}/${pkgname}/gameheaders/stratagus-gameutils.h ${pkgdir}/usr/include
+  cp ${srcdir}/${pkgname}/gameheaders/stratagus-tinyfiledialogs.h ${pkgdir}/usr/include
+}
+

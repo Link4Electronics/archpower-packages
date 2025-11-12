@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Quake III Arena
+GenericName=Quake III
+Comment=ioQuake3 - Quake III Open Source Engine
+Path=/opt/quake3/
+Exec=/opt/quake3/ioquake3
+Icon=/usr/share/pixmaps/quake3.svg
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Qt;KDE;GNOME;Application;Game;
+

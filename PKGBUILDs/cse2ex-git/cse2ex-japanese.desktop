@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=CSE2EX (Japanese)
+Comment=Decompilation of Cave Story
+Exec=env SDL_VIDEODRIVER=wayland,x11 cse2ex-japanese
+Type=Application
+Icon=cse2-japanese
+Categories=Game;
+Path=
+Terminal=false
+StartupNotify=false

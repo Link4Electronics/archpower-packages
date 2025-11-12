@@ -1,0 +1,29 @@
+pkgbase = libgxps
+	pkgdesc = XPS Documents library
+	pkgver = 0.3.2
+	pkgrel = 5
+	url = https://wiki.gnome.org/Projects/libgxps
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL2
+	options = !debug
+	options = strip
+	makedepends = git
+	makedepends = gobject-introspection
+	makedepends = gtk-doc
+	makedepends = gtk3
+	makedepends = meson
+	depends = cairo
+	depends = freetype2
+	depends = glib2
+	depends = lcms2
+	depends = libarchive
+	depends = libjpeg-turbo
+	depends = libpng
+	depends = libtiff
+	source = git+https://gitlab.gnome.org/GNOME/libgxps.git#commit=f5027ed09c767e8a02e652fbc77dcea79e19e10d
+	b2sums = SKIP
+
+pkgname = libgxps

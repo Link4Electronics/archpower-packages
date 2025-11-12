@@ -1,0 +1,27 @@
+pkgbase = openttd
+	pkgdesc = Engine for running Transport Tycoon Deluxe
+	pkgver = 15.0
+	pkgrel = 2
+	url = https://www.openttd.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-2.0-only
+	license = BSD-3-Clause
+	license = LGPL-2.1-or-later
+	license = MIT
+	license = Zlib
+	makedepends = cmake
+	depends = fluidsynth
+	depends = sdl2-compat
+	depends = fontconfig
+	depends = hicolor-icon-theme
+	optdepends = openttd-opengfx: free graphics
+	optdepends = openttd-opensfx: free soundset
+	options = !debug
+	options = strip
+	source = https://cdn.openttd.org/openttd-releases/15.0/openttd-15.0-source.tar.xz
+	b2sums = 4f3210e573e622298c3238e2701e0953826eeb91abce232da4acdd47094508cc30f988899ba204a58c30210fbdd9d37e849ba27bfcc4b7a1dfa10d8647279224
+
+pkgname = openttd

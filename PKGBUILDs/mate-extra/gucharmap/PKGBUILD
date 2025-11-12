@@ -1,0 +1,59 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Jan De Groot <jgc@archlinux.org>
+
+pkgname=gucharmap
+pkgver=17.0.0
+pkgrel=1
+pkgdesc="Unicode Character Map"
+url="https://wiki.gnome.org/Apps/Gucharmap"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL-3.0-or-later)
+depends=(
+  at-spi2-core
+  cairo
+  dconf
+  glib2
+  glibc
+  gtk3
+  pango
+  pcre2
+)
+makedepends=(
+  "unicode-character-database>=${pkgver%%.*}.0.0"
+  git
+  glib2-devel
+  gobject-introspection
+  gtk-doc
+  meson
+  unzip
+  vala
+  yelp-tools
+)
+provides=(libgucharmap_2_90.so)
+options=('!lto' '!debug' 'strip')
+source=("git+https://gitlab.gnome.org/GNOME/gucharmap.git#tag=$pkgver")
+b2sums=('6e4446d63cffff39a3b8bcbecaee304238069c18ccd758c0afa60132a2ec346830754cad45ee62b39efede3862d7cebe897f599de80dc06f354c87464cbd6605')
+
+prepare() {
+  cd gucharmap
+}
+
+build() {
+  local meson_options=(
+    -D b_lto=false
+    -D ucd_path=/usr/share/unicode
+  )
+
+  arch-meson gucharmap build "${meson_options[@]}"
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
+
+# vim:set sw=2 sts=-1 et:

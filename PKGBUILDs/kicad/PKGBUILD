@@ -1,0 +1,100 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+# Maintainer: Filipe Laíns <lains@archlinux.org>
+# Contributor: Marq Schneider <queueRAM@gmail.com>
+# Contributor: Nick Østergaard
+# Contributor: Rachel Mant <aur@dragonmux.network>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Alexander Lutsai <s.lyra@ya.ru>
+
+pkgname=kicad
+pkgver=9.0.6
+pkgrel=2
+pkgdesc='Electronic schematic and printed circuit board (PCB) design tools'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://kicad.org/'
+license=(GPL-3.0-or-later)
+options=('!debug' 'strip')
+depends=(
+  fontconfig
+  zstd
+  abseil-cpp
+  freetype2
+  hicolor-icon-theme
+  libsecret
+  glibc
+  glib2
+  gtk3
+  wayland
+  glu
+  cairo
+  harfbuzz
+  gcc-libs
+  libglvnd
+  wxwidgets-common
+  zlib
+  curl
+  glew
+  glm
+  ngspice
+  opencascade
+  python
+  python-wxpython
+  wxwidgets-gtk3
+  unixodbc
+  libgit2
+  nng
+  protobuf
+)
+makedepends=(
+  git
+  cmake
+  ninja
+  mesa
+  boost
+  swig
+)
+optdepends=(
+  'kicad-library: for footprints, symbols and templates'
+  'kicad-library-3d: for 3D models of components'
+)
+source=(
+  "$pkgname::git+https://gitlab.com/kicad/code/kicad.git#tag=$pkgver"
+  fix-version-string.patch
+)
+sha512sums=('01fa523fbb867968eff059ab96ab1ed19d5f1d746da52d23b2ced21bbec6086e1bfd30ae60f0451512e725a2f4a7d08ac26d1780cdbe00332ed74b5b25454162'
+            '17100967610c85ce2e8a860dcf703a87dc0c20f52d3f056cdb5d16323160e8594698bd51e095aea63c00a75ce8b121be681e93cec1bab72a8d1d4eb8065a91f5')
+b2sums=('229abf0f5a97b298216727801db795e3b76a17a1b2eb0bc67a710ad288f28d4d5aae7b7526d65b189f5a41cd92bb9d3026c4a737680ce9b51c72301cbcadb27f'
+        '7e09300161b2a1d7af56580a195e3b132d7b6ad82f1c9c381e02a25cd2fabd7ed0cd33b99b87ca14f9f77dad26eee1e5ea962b6eca49bacb40567ecfc24c21ff')
+
+
+prepare() {
+  cd "$pkgname"
+
+  patch -p1 -i "$srcdir/fix-version-string.patch"
+}
+
+build() {
+  cmake \
+    -B build \
+    -S "$pkgname" \
+    -G Ninja \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D KICAD_USE_EGL=ON \
+    -D KICAD_USE_BUNDLED_GLEW=OFF \
+    -D KICAD_BUILD_I18N=ON \
+    -D KICAD_I18N_UNIX_STRICT_PATH=ON \
+    -D KICAD_BUILD_QA_TESTS=OFF \
+    -D KICAD_USE_CMAKE_FINDPROTOBUF=0 \
+    -W no-dev
+
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  strip "$STRIP_SHARED" "${pkgdir}"/usr/lib/python*/site-packages/_pcbnew.so
+}
+
+# vim:set ts=2 sw=2 et:

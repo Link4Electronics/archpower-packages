@@ -1,0 +1,43 @@
+# Maintainer: Laurent Carlier <lordheavy@archlinux.org>
+# Contributor: Shinlun Hsieh <yngwiexx@yahoo.com.tw>
+
+pkgname=hatari
+pkgver=2.6.1
+pkgrel=1
+pkgdesc='An Atari ST and STE emulator'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://www.hatari-emu.org/'
+license=('GPL-2.0-or-later')
+options=('!debug' 'strip')
+depends=(
+  'glibc'
+  'hicolor-icon-theme'
+  'sdl2'
+  'libpng'
+  'libx11'
+  'portmidi'
+  'readline'
+  'systemd-libs'
+  'zlib'
+)
+makedepends=('cmake' 'systemd')
+optdepends=(
+  'python: for atari-convert-dir'
+  'sh: for atari-hd-image, zip2st, hatari-prg-args'
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('75f09c8deddb511b8c1574b84c507743097db9abc6edbb078f942efa8677547e')
+
+build() {
+  cd ${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr --disable-debug
+
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR="${pkgdir}" install
+}

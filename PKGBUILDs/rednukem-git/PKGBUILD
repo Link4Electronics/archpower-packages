@@ -1,0 +1,45 @@
+# Maintainer: Sid <sidpranjale127@protonmail.com>
+# Continuing the work of:
+# Maintainer: Jan Cholasta <jan at cholasta net>
+
+pkgname=rednukem-git
+pkgver=r14330.970f59d10
+pkgrel=1
+pkgdesc='A port of serveral BUILD Engine games based on EDuke32 (git version)'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://nukeykt.retrohost.net/'
+license=('GPL' 'custom:BUILD')
+depends=('flac'
+         'libogg'
+         'libvorbis'
+         'libvpx'
+         'sdl2'
+)
+makedepends=('git' 'glu' 'imagemagick')
+provides=('rednukem')
+conflicts=('rednukem')
+options=('!debug' 'strip')
+source=('git+https://github.com/NBlood/NBlood.git'
+        'rednukem.desktop')
+sha256sums=('SKIP'
+            'b2875c877fdb34b9aa24c424892410a5e9d118568241dc4beba37f9ddbe10707')
+
+pkgver() {
+    cd $srcdir/NBlood
+    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd NBlood
+    make rednukem
+}
+
+package() {
+    cd NBlood
+    install -D -t "$pkgdir"/usr/bin rednukem
+    install -D -t "$pkgdir"/usr/share/games/rednukem -m 644 dn64widescreen.pk3
+    install -D -t "$pkgdir"/usr/share/licenses/$pkgname -m 644 package/common/buildlic.txt
+    install -Dm644 source/blood/rsrc/game_icon.ico "$pkgdir"/usr/share/pixmaps/rednukem.ico
+    install -D -t "$pkgdir"/usr/share/applications -m 644 "$srcdir"/rednukem.desktop
+    echo "Place your game files in ~/.config/rednukem"
+}

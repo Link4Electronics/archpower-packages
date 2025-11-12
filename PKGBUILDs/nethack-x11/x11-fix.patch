@@ -1,0 +1,65 @@
+diff --git a/include/winX.h a/include/winX.h
+index a1a5605..1d6b84b 100644
+--- a/include/winX.h
++++ a/include/winX.h
+@@ -279,7 +279,7 @@ typedef struct {
+ } AppResources;
+ 
+ E AppResources appResources;
+-E void (*input_func)();
++E void (*input_func)(Widget, XEvent *, String *, Cardinal *);
+ 
+ extern struct window_procs X11_procs;
+
+diff --git a/include/xwindow.h a/include/xwindow.h
+index 8b9cfa0..c4c4905 100644
+--- a/include/xwindow.h
++++ a/include/xwindow.h
+@@ -76,8 +76,8 @@
+ #define XtNexposeCallback "exposeCallback"
+ #define XtNresizeCallback "resizeCallback"
+ 
+-extern XFontStruct *WindowFontStruct(/* Widget */);
+-extern Font WindowFont(/* Widget */);
++extern XFontStruct *WindowFontStruct(Widget w);
++extern Font WindowFont(Widget w);
+ 
+ #define XtCWindowResource "WindowResource"
+ #define XtCRows "Rows"
+
+diff --git a/win/X11/Window.c a/win/X11/Window.c
+index 09c753f..4910990 100644
+--- a/win/X11/Window.c
++++ a/win/X11/Window.c
+@@ -173,15 +173,13 @@ WindowClassRec windowClassRec = {
+ WidgetClass windowWidgetClass = (WidgetClass) &windowClassRec;
+ 
+ Font
+-WindowFont(w)
+-Widget w;
++WindowFont(Widget w)
+ {
+     return ((WindowWidget) w)->window.font->fid;
+ }
+ 
+ XFontStruct *
+-WindowFontStruct(w)
+-Widget w;
++WindowFontStruct(Widget w)
+ {
+     return ((WindowWidget) w)->window.font;
+ }
+
+diff --git a/win/X11/winX.c a/win/X11/winX.c
+index 961acd2..0984ef1 100644
+--- a/win/X11/winX.c
++++ a/win/X11/winX.c
+@@ -81,7 +81,7 @@ static struct icon_info {
+  */
+ struct xwindow window_list[MAX_WINDOWS];
+ AppResources appResources;
+-void FDECL((*input_func), (Widget, XEvent *, String *, Cardinal *));
++void (*input_func)(Widget, XEvent *, String *, Cardinal *);
+ int click_x, click_y, click_button; /* Click position on a map window
+                                      * (filled by set_button_values()). */
+ int updated_inventory;

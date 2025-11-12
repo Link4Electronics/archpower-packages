@@ -1,0 +1,25 @@
+pkgbase = ecwolf
+	pkgdesc = Advanced source port for Wolfenstein 3D engine games
+	pkgver = 1.4.2
+	pkgrel = 1
+	url = https://maniacsvault.net/ecwolf/
+	install = ecwolf.install
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL-2.0-or-later
+	makedepends = cmake
+	depends = gtk3
+	depends = libjpeg-turbo
+	depends = sdl2
+	depends = sdl2_mixer
+	depends = sdl2_net
+	options = !debug
+	options = strip
+	source = https://maniacsvault.net/ecwolf/files/ecwolf/1.x/ecwolf-1.4.2-src.tar.xz
+	source = net.maniacsvault.ecwolf.desktop
+	sha256sums = 2121fb3fc63e532423681dcddf5d3848e19e8c6b4e2e1bfa802b16a2d42f84f5
+	sha256sums = 97bbc02334b250b5ca9a7076d6761e9ae54c1259a37521449b2ecedcaebfdcc3
+
+pkgname = ecwolf

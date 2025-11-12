@@ -1,0 +1,46 @@
+# Maintainer: Balló György <ballogyor+arch at gmail dot com>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: tardo <tardo@nagi-fanboi.net>
+# Contributor: William Rea <sillywilly@gmail.com>
+
+pkgname=mod_dnssd
+pkgver=0.6
+pkgrel=9
+pkgdesc='Zeroconf module for Apache'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://0pointer.de/lennart/projects/mod_dnssd/'
+license=(Apache-2.0)
+depends=(
+  apache
+  apr
+  avahi
+  glibc
+)
+makedepends=(git)
+options=('!debug' 'strip')
+source=("git+https://git.0pointer.net/clone/mod_dnssd.git#tag=v$pkgver")
+b2sums=(c8c941091acdb9c514f687bca614209a9650d9a0e5b62d0073e5a8c827249a89efaba5817b81d626c44820db12ab3a2ee0bc4c552c660cefe3309672cd293d54)
+
+prepare() {
+  cd $pkgname
+
+  # Fix build
+  git cherry-pick -n be2fb9f6158f800685de7a1bc01c39b6cf1fa12c
+
+  autoreconf -fi
+}
+
+build() {
+  cd $pkgname
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-lynx
+  make
+}
+
+package() {
+  cd $pkgname
+  install -Dm755 src/.libs/mod_dnssd.so "$pkgdir/usr/lib/httpd/modules/mod_dnssd.so"
+}

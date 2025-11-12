@@ -1,0 +1,51 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Maintainer: Robin Candau <antiz@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=engrampa
+pkgver=1.28.2
+pkgrel=2
+pkgdesc="A file archiver for MATE"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later')
+depends=('gtk3' 'gzip' 'gettext' 'libarchive' 'tar' 'unzip' 'zip')
+makedepends=('autoconf-archive' 'caja' 'git' 'glib2-devel' 'itstool' 'mate-common' 'python' 'yelp-tools')
+optdepends=('caja: Caja support'
+            'p7zip: 7Z and ARJ archive support'
+            'unace: ACE archive support'
+            'unrar: RAR archive support'
+            'brotli: Brotli compression support'
+            'rpm-tools: RPM support'
+            'cpio: RPM support')
+groups=('mate-extra')
+conflicts=("engrampa-gtk3")
+replaces=("engrampa-gtk3")
+options=('!debug' 'strip')
+source=("git+https://github.com/mate-desktop/engrampa.git#tag=v${pkgver}"
+        git+https://github.com/mate-desktop/mate-submodules.git)
+sha256sums=('0b17b1bd00b1df0c3b60ded7570ea809aa7fb68934c8d9b823e161a90a752299'
+            'SKIP')
+
+prepare() {
+	cd "${pkgname}"
+	git submodule init
+	git config submodule.mate-submodules.url "${srcdir}/mate-submodules"
+	git -c protocol.file.allow=always submodule update
+	./autogen.sh
+}
+
+build() {
+	cd "${pkgname}"
+    	./configure \
+        	--prefix=/usr \
+		--libexecdir="/usr/lib/${pkgname}" \
+        	--disable-packagekit
+    	make
+}
+
+package() {
+	cd "${pkgname}"
+    	make DESTDIR="${pkgdir}" install
+}

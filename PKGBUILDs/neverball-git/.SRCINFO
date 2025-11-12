@@ -1,0 +1,24 @@
+pkgbase = neverball-git
+	pkgdesc = 3D game similar to Super Monkey Ball or Marble Madness
+	pkgver = 1.6.0.r433.g96c23af4
+	pkgrel = 1
+	url = https://neverball.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	makedepends = mesa
+	makedepends = git
+	depends = sdl2_ttf
+	depends = libgl
+	depends = libpng
+	depends = libjpeg
+	depends = libvorbis
+	depends = physfs
+	depends = hicolor-icon-theme
+	depends = xdg-utils
+	source = neverball-git::git+https://github.com/Neverball/neverball.git
+	sha256sums = SKIP
+
+pkgname = neverball-git

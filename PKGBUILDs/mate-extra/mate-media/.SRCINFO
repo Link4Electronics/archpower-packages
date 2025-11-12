@@ -1,0 +1,26 @@
+pkgbase = mate-media
+	pkgdesc = MATE Media Tools
+	pkgver = 1.28.1
+	pkgrel = 3
+	url = https://mate-desktop.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	groups = mate-extra
+	license = GPL-2.0-or-later
+	makedepends = autoconf-archive
+	makedepends = mate-common
+	depends = libcanberra
+	depends = libmatemixer
+	depends = mate-desktop
+	depends = mate-panel
+	depends = gettext
+	conflicts = mate-media-gtk3
+	replaces = mate-media-gtk3
+	options = !debug
+	options = strip
+	source = mate-media-1.28.1.tar.gz::https://github.com/mate-desktop/mate-media/archive/refs/tags/v1.28.1.tar.gz
+	sha256sums = 57f60a4685fc2b35a9edb4cf3d967fe5be83df5b716feacabeb9f11b324f8a9b
+
+pkgname = mate-media

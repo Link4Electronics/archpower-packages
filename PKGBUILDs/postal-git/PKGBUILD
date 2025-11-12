@@ -1,0 +1,42 @@
+# Maintainer: Donald Carr<sirspudd@gmail.com>
+
+#set -o nounset
+#set -o errexit
+#set -o xtrace
+
+pkgname=postal-git
+pkgver=314.f58b127b0202
+pkgrel=1
+pkgdesc='Postal: quirky FPS shooter'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://runningwithscissors.com/'
+license=('GPL')
+depends=('sdl2')
+makedepends=('git' 'gcc' 'patch')
+options=('!debug' 'strip')
+source=("git+https://github.com/Cowcat5150/postal1"
+        "fixes.patch")
+sha256sums=('SKIP'
+            'b7e9a9b47b918a8bd402ab84c21a765b18f3f4c97ce5cbee7de59a4f6b97b791')
+_repo_name="POSTAL-1-Open-Source"
+
+build() {
+  cd "$srcdir/postal1"
+  patch -Np1 -i "$srcdir/fixes.patch"
+  make
+}
+
+package() {
+  local _data_dir="$pkgdir/usr/share/postal-git"
+  local _bin_dir="$pkgdir/usr/bin"
+
+  cd "$srcdir/postal1"
+
+  mkdir -p $_data_dir
+  mkdir -p $_bin_dir
+
+  cp ${startdir}/postal-git $_bin_dir
+  cp bin/postal1-* $_data_dir
+  ls bin/postal1-* | sed 's,bin/,./,' >> ${_bin_dir}/postal-git
+  cp DefaultPostal.ini $_data_dir/POSTAL.INI
+}

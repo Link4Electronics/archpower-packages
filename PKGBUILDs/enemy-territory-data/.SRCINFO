@@ -1,0 +1,13 @@
+pkgbase = enemy-territory
+	pkgver = 2.60b
+	pkgrel = 14
+	url = http://www.splashdamage.com/wolfet
+	arch = any
+	license = custom
+	makedepends = unzip
+	source = http://filebase.trackbase.net/et/full/et260b.x86_full.zip
+	md5sums = 6db59b543d42ee096ce263f3df571c08
+
+pkgname = enemy-territory-data
+	pkgdesc = Wolfenstein: Enemy Territory is a completely free, standalone, team-based, multiplayer FPS (data)
+

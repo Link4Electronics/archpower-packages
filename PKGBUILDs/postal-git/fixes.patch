@@ -1,0 +1,43 @@
+diff --git a/RSPiX/Src/BLUE/unix/UnixBlue.h a/RSPiX/Src/BLUE/unix/UnixBlue.h
+index a71bd88..366d817 100644
+--- a/RSPiX/Src/BLUE/unix/UnixBlue.h
++++ a/RSPiX/Src/BLUE/unix/UnixBlue.h
+@@ -253,8 +253,8 @@ extern int32_t rspGetToggleKeyStates(void);	// Returns toggle key state flags
+ #define RSP_JOY_BUT_13			0x00001000
+ #define RSP_JOY_BUT_14			0x00002000 
+ #define RSP_JOY_BUT_15			0x00004000
+-#define RSP_JOY_BUT_16			0x00008000
+-#define RSP_JOY_BUT_17			0x00010000
++#define RSP_JOY_BUT_16			0//0x00008000
++#define RSP_JOY_BUT_17			0//0x00010000
+ #define RSP_JOY_BUT_18			0x00020000
+ #define RSP_JOY_BUT_19			0x00040000
+ #define RSP_JOY_BUT_20			0x00080000
+
+diff --git a/RSPiX/Src/BLUE/unix/Bdisp.cpp a/RSPiX/Src/BLUE/unix/Bdisp.cpp
+index 48a8d2b..e09b237 100644
+--- a/RSPiX/Src/BLUE/unix/Bdisp.cpp
++++ a/RSPiX/Src/BLUE/unix/Bdisp.cpp
+@@ -749,7 +749,7 @@ extern int16_t rspSetVideoMode(	// Returns 0 if successfull, non-zero otherwise
+         #if defined(MORPHOS)
+         sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_BGRA8888, SDL_TEXTUREACCESS_STREAMING, FramebufferWidth, FramebufferHeight);
+         #else
+-        sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, FramebufferWidth, FramebufferHeight);
++        sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_BGRA8888, SDL_TEXTUREACCESS_STREAMING, FramebufferWidth, FramebufferHeight);
+         #endif
+         if (!sdlTexture)
+         {
+
+diff --git a/makefile a/makefile
+index 8cddcf6..75bdb71 100644
+--- a/makefile
++++ a/makefile
+@@ -36,7 +36,7 @@ else ifeq ($(macosx_x86),1)
+   CLIENTEXE := $(BINDIR)/postal1-x86
+ else
+   target := linux_x86_64
+-  CLIENTEXE := $(BINDIR)/postal1-x86_64
++  CLIENTEXE := $(BINDIR)/postal1-ppc64
+ endif
+ 
+ # ----------------------------------------------------- ... bleh.

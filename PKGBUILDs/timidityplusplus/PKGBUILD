@@ -1,0 +1,103 @@
+# Maintainer: David Runge <dvzrv@archlinux.org>
+# Contributor: Eric Bélanger <eric@archlinux.org>
+
+_name=timidity
+pkgname=timidity++
+pkgver=2.15.0
+pkgrel=12
+pkgdesc="A MIDI to WAVE converter and player"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="http://timidity.sourceforge.net"
+license=(GPL-2.0-or-later)
+groups=(pro-audio)
+depends=(
+  glibc
+)
+makedepends=(
+  alsa-lib
+  flac
+  git
+  jack
+  libao
+  libogg
+  libvorbis
+  libxaw
+  tk
+  xaw3d
+)
+optdepends=(
+  'ncurses: for the ncurses interface'
+  'tk: for the Tk interface'
+  'xaw3d: for the Xaw interface'
+)
+provides=(soundfont-synthesizer timidity)
+backup=(etc/timidity/timidity.cfg)
+# LTO breaks the application: https://bugs.archlinux.org/task/76576
+options=('!lto' '!debug' 'strip')
+source=(
+  $pkgname::git+https://git.code.sf.net/p/timidity/git#tag=v$pkgver
+  $pkgname-2.15.0-ldflags.patch
+  $pkgname-2.14.0-jack.patch
+  $_name.cfg
+  $_name.service
+)
+sha512sums=('32aaa4131242dbb46c363a9fb12f1f50c6d4cda161774a555097611df250bc52b4185a98a47713064b4089475597796ef8afc75f92fb8afbd91b995a6e4fd996'
+            'f640dd5d6394b554635f604f3d82a21a77bcbbe60246137970f6c010046852ce6b13ea1e93a43a448d9142fdd3f52b2b2da96daf59260b4f78988f4553c71347'
+            '51c075da04aeedca4edecb5a7f1926ccb80637b550f8fafca6d68be466cd4353a77bbb832878941919ec354c279a6014403e995b9152a47a3817c99890a4afeb'
+            '054cd39bef913314e9901171566398af6280236531ac13ece683eaeb642c52b3280116adaa6328054c94bd79b0ab88c253281e386012a2c6d67f4b85c38e4859'
+            'b77e460c9803300db67d571d5298edbf4c29a469593c41640057ff8d173ed6edf8b9c2d6cd9a35f6cf1cc32d5b92be38513105f927991fd451725802abb1108b')
+b2sums=('94377c0a5863c134e44ee18ffb695e9c85d5549bb6afb1057640acdbbf379a6b4d3416541289cc6b395a49277db9bae821be5e272db8470b90ce41a4f1d07a15'
+        '28af2b602ec63d6ffb32be4576d934d1e57fad85e27e864ae2bc3873df99e15329a013d0ca040fe4d271faad208f9cb905fb0230951c3990278b21ee637c0026'
+        '000beb021316b6402e7528514d6a28e8c940d9ce3f1cf8addf3adecf4328535419d4e9628317d5f096d2acc2850dae5df9aa91c83b90abf79c2f9a88547b42b4'
+        'dce12f6a507c8ee1aa4b42355e02fe54e4442e4814887c36e71899e24c1bab54bf612408cb0e6e2fd24d804f52991a6f05771b44df002ab8b64c2ed6ba65a544'
+        'f97ac534c6ce0829ccfdd2c05951dcee1d1f427c41b0a7f890296c16e525d221edc366365dd120c6a05e42b7dfcb20d747c87bf51a005e76b72df8cb9740da47')
+
+prepare() {
+  cd $pkgname
+  # interface Makefile doesn't make use of LDFLAGS
+  # this adds full RELRO
+  patch -Np1 -i ../$pkgname-2.15.0-ldflags.patch
+  # fix an issue when using alsa-sequencer devices with jack:
+  # https://bugs.archlinux.org/task/40906
+  patch -Np1 -i ../$pkgname-2.14.0-jack.patch
+  # create useless changelog file because autotools...
+  touch ChangeLog
+  autoreconf -fiv
+}
+
+build() {
+  local configure_options=(
+    --prefix=/usr
+    --mandir=/usr/share/man
+    # NOTE: for backwards compatibility the default config path is /etc/timidity/
+    --with-default-path=/etc/timidity/
+    --enable-server
+    --enable-alsaseq
+    --enable-spectrogram
+    --enable-network
+    --enable-xft
+    --enable-audio=alsa,ao,vorbis,flac,jack
+    --enable-dynamic=ncurses,tcltk,vt100,xaw
+  )
+
+  cd $pkgname
+  ./configure "${configure_options[@]}"
+  make CFLAGS=-std=gnu17
+}
+
+package() {
+  depends+=(
+    alsa-lib libasound.so
+    flac libFLAC.so
+    jack libjack.so
+    libao libao.so
+    libogg libogg.so
+    libvorbis libvorbis.so libvorbisenc.so
+  )
+
+  make DESTDIR="$pkgdir" install -C $pkgname
+  install -vDm 644 $pkgname/doc/C/{CHANGES.*,FAQ,README.*} -t "$pkgdir/usr/share/doc/$pkgname/"
+  install -vDm 644 $pkgname/{README,AUTHORS,ChangeLog,NEWS,TODO} -t "$pkgdir/usr/share/doc/$pkgname/"
+  install -vDm 644 $_name.cfg -t "$pkgdir/etc/$_name/"
+  install -vDm 644 $_name.service -t "$pkgdir/usr/lib/systemd/user/"
+}

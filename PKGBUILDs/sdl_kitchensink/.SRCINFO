@@ -1,0 +1,20 @@
+pkgbase = sdl_kitchensink
+	pkgdesc = SDL3 image loading library
+	pkgver = 1.0.13
+	pkgrel = 1
+	url = https://github.com/katajakasa/SDL_kitchensink
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = 0BSD
+	makedepends = cmake
+	depends = sdl2
+	depends = libass
+	depends = ffmpeg
+	options = !debug
+	options = strip
+	source = https://github.com/katajakasa/SDL_kitchensink/archive/refs/tags/${pkgver}.tar.gz
+	sha512sums = 344b4f55c1b49e3c1778ca40051eb4e066b94cc2e0859bdf38de33109bfed4d56d32be9dc378cb7178af40d003f925d9b0c331f342c13c68848a4c09bb5c5674
+
+pkgname = sdl_kitchensink

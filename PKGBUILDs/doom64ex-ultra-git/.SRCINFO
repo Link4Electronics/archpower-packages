@@ -1,0 +1,25 @@
+pkgbase = doom64ex-ultra-git
+	pkgdesc = Engine recreation of Doom 64, requires N64 ROM (not included).
+	pkgver = 0.r503.a3cafc1
+	pkgrel = 1
+	url = https://github.com/StevenSYS/DOOM64EXUltra
+	install = doom64ex.install
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL2
+	makedepends = cmake
+	makedepends = git
+	depends = fluidsynth
+	depends = libpng
+	depends = sdl3
+	depends = sdl3_mixer
+	depends = zlib
+	options = !debug
+	options = strip
+	source = doom64ex-git::git+https://github.com/StevenSYS/DOOM64EXUltra
+	sha512sums = SKIP
+
+pkgname = doom64ex-ultra-git
+

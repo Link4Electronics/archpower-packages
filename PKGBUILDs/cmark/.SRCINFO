@@ -1,0 +1,20 @@
+pkgbase = cmark
+	pkgdesc = CommonMark parsing and rendering library and program in C
+	pkgver = 0.31.1
+	pkgrel = 1
+	url = https://github.com/commonmark/cmark
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = BSD-2-Clause
+	makedepends = cmake
+	makedepends = git
+	makedepends = python
+	depends = glibc
+	options = !debug
+	options = strip
+	source = git+https://github.com/commonmark/cmark#tag=0.31.1
+	sha512sums = 7869348e7966095b1688691cef8d88ec8c3bc5dee0a44682057f4168c05496d2d9013e3e89cfc3ca7e7a37f67bf7fcb2dd55077649e342d2060944e414d355b9
+
+pkgname = cmark
