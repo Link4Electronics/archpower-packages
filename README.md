@@ -1,7 +1,7 @@
 # archpower-packages
 Packages for ArchPOWER
 
-For now only for powerpc64 (big-endian) platform
+For now only powerpc64 (big-endian) platform
 
 How to install:
 
