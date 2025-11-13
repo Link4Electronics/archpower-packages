@@ -1,0 +1,45 @@
+# Maintainer: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Eric Belanger <eric@archlinux.org>
+# Contributor: Jo Christian Bergskås <jcberg@gmail.com>
+
+pkgname=fceux
+pkgver=2.6.6
+pkgrel=7
+pkgdesc='Fast and ultra-compatible NES/Famicom emulator'
+arch=(powerpc powerpc64 powerpc64le espresso)
+url='https://github.com/TASEmulators/fceux'
+license=(GPL-2.0-or-later)
+depends=(gd libarchive lua minizip qt6-base sdl2)
+makedepends=(cmake git glu mesa-libgl setconf scons)
+optdepends=('ffmpeg: for recording')
+source=("git+$url#tag=v$pkgver"
+        d2ee6351c08518c866bb48d89f58a67bb36931fc.patch)
+b2sums=('df1b8706f3639c52ec5905a542052ee0eb7c5a727c9ee27af7c9f53b2b9f97b0445c6c6ff9f9504cef51a90cddc97b08b7f92ee7882de1bfb2baf879eac613c1'
+        '3e508df5021debadbf5f0c780d5ce475cf858d5b558553a99ea51206f497cb0f7ad24481c5a73cc5e23d48575b247222fcc4236ddb969f4322820a02a6bcd7dc')
+
+prepare() {
+  cd $pkgname
+  sed -i 's/-interim git//g' src/version.h
+  setconf scripts/genGitHdr.sh GIT_URL "'""${source:4:34}""'"
+  setconf scripts/genGitHdr.sh GIT_REV "${source#*=}"
+  patch -Np1 -i "${srcdir}/d2ee6351c08518c866bb48d89f58a67bb36931fc.patch" -d "${srcdir}/${pkgname}/"
+}
+
+build() {
+  cmake \
+    -B build \
+    -D CMAKE_C_FLAGS="$CFLAGS -fPIC -w" \
+    -D CMAKE_CXX_FLAGS="$CXXFLAGS -fPIC -w" \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -D QT6=ON \
+    -S $pkgname
+  make -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" make -C build install
+  install -d "$pkgdir/usr/share/doc/$pkgname"
+  cp -r $pkgname/documentation/* "$pkgdir/usr/share/doc/$pkgname/"
+  install -Dm644 $pkgname/changelog.txt \
+    "$pkgdir/usr/share/doc/$pkgname/changelog.txt"
+}
