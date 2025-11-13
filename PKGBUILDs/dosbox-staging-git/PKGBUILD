@@ -1,0 +1,51 @@
+# Maintainer: Malcolm Mallardi <mdmallardi at gmail dot com>
+# Contributor: Wouter Wijsman <wwijsman at live dot nl>
+
+pkgname=dosbox-staging-git
+_pkgname=dosbox-staging
+pkgver=0.82.0.alpha.2724.ga12f1ed62
+pkgrel=1
+pkgdesc="A modernized DOSBox project using current development practices and tools, fixing issues, adding features that better support today's systems"
+arch=('any')
+url="https://github.com/dosbox-staging/dosbox-staging"
+license=('GPL2')
+depends=('sdl2' 'sdl2_net' 'opusfile' 'libslirp' 'alsa-lib' 'iir1' 'fluidsynth' 'munt' 'libpng' 'zlib-ng')
+makedepends=('meson' 'gcc' 'gzip')
+provides=("dosbox" "dosbox-staging")
+conflicts=("${provides[@]}")
+source=("git+https://github.com/dosbox-staging/${_pkgname}.git"
+        powerpcsupport.patch)
+md5sums=('SKIP'
+         '436fa742266dbdf74c54dfc2b3f8e487')
+
+prepare() {
+  cd "${srcdir}/${_pkgname}"
+  patch -Np1 -i "${srcdir}/powerpcsupport.patch" -d "${srcdir}/${_pkgname}/"
+  meson setup --prefix=/usr build
+}
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  git describe | sed -e 's/-/./g' -e 's/^v//g'
+}
+
+build() {
+  cd "${srcdir}/${_pkgname}"
+  meson compile -C build
+
+  # Add current commit info to the README
+  sed -i "s|%GIT_COMMIT%|$(git rev-parse main)|" docs/README.template
+  sed -i "s|%GIT_BRANCH%|main|" docs/README.template
+  sed -i "s|%GITHUB_REPO%|${_pkgname}/${_pkgname}|" docs/README.template
+}
+
+package() {
+  # install all files
+  cd "${srcdir}/${_pkgname}"
+  meson install -C build --destdir "${pkgdir}"
+
+  # dosbox-staging documents
+  install -Dm 644 "${srcdir}/${_pkgname}/docs/README.template" "${pkgdir}/usr/share/doc/${_pkgname}/README"
+  install -Dm 644 "${srcdir}/${_pkgname}/docs/README.video" "${pkgdir}/usr/share/doc/${_pkgname}/video.txt"
+  install -Dm 644 "${srcdir}/${_pkgname}/README.md" "${pkgdir}/usr/share/doc/${_pkgname}/manual.txt"
+  }
