@@ -3,7 +3,7 @@ Packages for ArchPOWER
 
 For now only powerpc64 (big-endian) platform
 
-Adding to pacman.conf (I know it sucks without signature, but "It is what it is"):
+Adding to pacman.conf (I know it s*cks without signature, but "it is what it is")
 ```
 [extra-any]
 SigLevel = Never
