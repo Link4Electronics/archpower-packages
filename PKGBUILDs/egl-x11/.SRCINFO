@@ -1,0 +1,23 @@
+pkgbase = egl-x11
+	pkgdesc = NVIDIA XLib and XCB EGL Platform Library
+	pkgver = 1.0.3
+	pkgrel = 1
+	url = https://github.com/NVIDIA/egl-x11
+	arch = x86_64
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = Apache-2.0
+	makedepends = meson
+	makedepends = git
+	depends = eglexternalplatform
+	depends = glibc
+	depends = libdrm
+	depends = libx11
+	depends = libxcb
+	depends = mesa
+	source = git+https://github.com/NVIDIA/egl-x11#tag=v1.0.3
+	sha256sums = ebef20d89f8001df3b89488f1f968a5a8624fa42430a0b595672925cb210d656
+
+pkgname = egl-x11
