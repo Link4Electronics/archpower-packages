@@ -3,13 +3,15 @@ Packages for ArchPOWER
 
 For now only powerpc64 (big-endian) platform
 
-Adding to pacman.conf:
+Adding to pacman.conf (I know it sucks without signature, but "It is what it is"):
 ```
 [extra-any]
-Server = https://github.com/Link4Electronics/archpower-packages/tree/main/extra/any
+SigLevel = Never
+Server = https://raw.githubusercontent.com/Link4Electronics/archpower-packages/main/extra/any
 
 [extra]
-Server = https://github.com/Link4Electronics/archpower-packages/tree/main/extra/$arch
+SigLevel = Never
+Server = https://raw.githubusercontent.com/Link4Electronics/archpower-packages/main/extra/$arch
 ```
 
 `sudo pacman -Syu`
