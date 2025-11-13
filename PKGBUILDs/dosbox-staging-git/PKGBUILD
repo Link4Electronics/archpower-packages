@@ -16,7 +16,7 @@ conflicts=("${provides[@]}")
 source=("git+https://github.com/dosbox-staging/${_pkgname}.git"
         powerpcsupport.patch)
 md5sums=('SKIP'
-         '436fa742266dbdf74c54dfc2b3f8e487')
+         'f677285ef677ee72c38aea92479dfedb')
 
 prepare() {
   cd "${srcdir}/${_pkgname}"

@@ -25,6 +25,6 @@ pkgbase = dosbox-staging-git
 	source = git+https://github.com/dosbox-staging/dosbox-staging.git
 	source = powerpcsupport.patch
 	md5sums = SKIP
-	md5sums = 436fa742266dbdf74c54dfc2b3f8e487
+	md5sums = f677285ef677ee72c38aea92479dfedb
 
 pkgname = dosbox-staging-git
