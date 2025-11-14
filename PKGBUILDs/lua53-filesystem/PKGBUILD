@@ -18,6 +18,7 @@ arch=(powerpc powerpc64 powerpc64le espresso)
 url="https://lunarmodules.github.io/$_rockname"
 _url="https://github.com/lunarmodules/$_rockname"
 license=(MIT)
+options=('!debug' 'strip')
 makedepends=(
              lua53
              luarocks)

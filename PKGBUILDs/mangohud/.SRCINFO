@@ -3,7 +3,6 @@ pkgbase = mangohud
 	pkgver = 0.8.1
 	pkgrel = 1
 	url = https://github.com/flightlessmango/MangoHud
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

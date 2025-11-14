@@ -10,6 +10,7 @@ pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load a
 arch=(powerpc powerpc64 powerpc64le espresso)
 url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
+options=('!debug' 'strip')
 makedepends=('appstream' 'cmocka' 'git' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
 depends=('dbus' 'fmt' 'gcc-libs' 'glew' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcommon' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader' 'wayland')
 optdepends=('gamescope: Use MangoApp as an overlay within gamescope'

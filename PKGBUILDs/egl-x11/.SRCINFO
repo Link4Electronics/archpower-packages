@@ -3,7 +3,6 @@ pkgbase = egl-x11
 	pkgver = 1.0.3
 	pkgrel = 1
 	url = https://github.com/NVIDIA/egl-x11
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

@@ -11,6 +11,7 @@ pkgdesc='Just-in-time compiler for Lua, OpenResty fork'
 arch=(powerpc powerpc64 powerpc64le espresso)
 url="https://github.com/openresty/luajit2"
 license=(MIT)
+options=('!debug' 'strip')
 depends=(gcc-libs)
 conflicts=(luajit)
 provides=("luajit=$pkgver")

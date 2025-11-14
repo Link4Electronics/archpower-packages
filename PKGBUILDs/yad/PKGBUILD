@@ -13,6 +13,7 @@ arch=(powerpc powerpc64 powerpc64le espresso)
 license=('GPL3')
 depends=('gtk3' 'webkit2gtk-4.1' 'gtksourceview3' 'gspell')
 makedepends=('autoconf' 'automake' 'intltool')
+options=('!debug' 'strip')
 source=("https://github.com/v1cont/yad/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.xz")
 sha256sums=('dde047a915cd8d3892c32b6ba031876f5cda673e01882c99613f043867c88133')
 

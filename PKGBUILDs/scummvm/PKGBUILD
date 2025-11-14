@@ -8,6 +8,7 @@ pkgrel=2
 pkgdesc="A 'virtual machine' for several classic graphical point-and-click adventure games."
 arch=(powerpc powerpc64 powerpc64le espresso)
 license=('GPL-3.0-only')
+options=('!debug' 'strip')
 url="http://www.scummvm.org/"
 depends=('libpng' 'libtheora' 'sdl2' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'freetype2'
          'libgl' 'glu' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec' 'giflib' 'glew' 'libspeechd' 'gtk3' 'sndio')

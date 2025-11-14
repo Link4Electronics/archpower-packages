@@ -3,7 +3,6 @@ pkgbase = nestopia
 	pkgver = 1.53.2
 	pkgrel = 1
 	url = https://github.com/0ldsk00l/nestopia
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

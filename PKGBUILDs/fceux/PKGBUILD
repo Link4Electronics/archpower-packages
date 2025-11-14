@@ -12,6 +12,7 @@ license=(GPL-2.0-or-later)
 depends=(gd libarchive lua minizip qt6-base sdl2)
 makedepends=(cmake git glu mesa-libgl setconf scons)
 optdepends=('ffmpeg: for recording')
+options=('!debug' 'strip')
 source=("git+$url#tag=v$pkgver"
         d2ee6351c08518c866bb48d89f58a67bb36931fc.patch)
 b2sums=('df1b8706f3639c52ec5905a542052ee0eb7c5a727c9ee27af7c9f53b2b9f97b0445c6c6ff9f9504cef51a90cddc97b08b7f92ee7882de1bfb2baf879eac613c1'

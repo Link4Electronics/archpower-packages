@@ -3,7 +3,6 @@ pkgbase = scummvm
 	pkgver = 2.9.1
 	pkgrel = 2
 	url = http://www.scummvm.org/
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

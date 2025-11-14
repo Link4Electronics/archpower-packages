@@ -3,7 +3,6 @@ pkgbase = dosbox-staging-git
 	pkgver = 0.82.0.alpha.1847.gfb0804c9f
 	pkgrel = 1
 	url = https://github.com/dosbox-staging/dosbox-staging
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

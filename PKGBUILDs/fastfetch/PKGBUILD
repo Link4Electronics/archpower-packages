@@ -8,6 +8,7 @@ pkgdesc="A feature-rich and performance oriented neofetch like system informatio
 url="https://github.com/fastfetch-cli/fastfetch"
 arch=(powerpc powerpc64 powerpc64le espresso)
 license=('MIT')
+options=('!debug' 'strip')
 depends=('glibc' 'yyjson')
 makedepends=('chafa' 'cmake' 'dbus' 'dconf' 'ddcutil' 'directx-headers' 'imagemagick' 'libpulse' 'libxcb' 'libxrandr'
              'ocl-icd' 'opencl-headers' 'sqlite' 'vulkan-headers' 'vulkan-icd-loader' 'wayland' 'xfconf' 'zlib')

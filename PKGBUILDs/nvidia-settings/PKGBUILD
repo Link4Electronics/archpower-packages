@@ -12,7 +12,7 @@ url='https://github.com/NVIDIA/nvidia-settings'
 arch=(powerpc powerpc64 powerpc64le espresso)
 license=('GPL-2.0-only')
 makedepends=('jansson' 'gtk3' 'libxv' 'libvdpau' 'nvidia-utils' 'libxext' 'vulkan-headers')
-options=('staticlibs')
+options=('staticlibs' '!debug' 'strip')
 source=(${pkgbase}-${pkgver}.tar.gz::https://github.com/NVIDIA/nvidia-settings/archive/${pkgver}.tar.gz
         nvidia-settings-libxnvctrl_so.patch)
 sha512sums=('e8d22a61b2840df94b9001e2279d683129ea9a4f3c89a0bb856ed8dc3c002782b6b7a4899d03793ff20a5a8e67a0fe973943d118be4413b184254c9e98586a9a'

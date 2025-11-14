@@ -14,6 +14,7 @@ license=(MIT)
 depends=(glibc)
 makedepends=(lua lua53 luarocks)
 _archive="$pkgbase-$pkgver"
+options=('!debug' 'strip')
 source=("https://luarocks.org/manifests/gvvaughan/$_archive-$_rockrel.src.rock"
         LICENSE-upstream)
 sha256sums=('836d315b920a5cdd62e21786c6c9fad547c4faa131d5583ebca64f0b6595ee76'

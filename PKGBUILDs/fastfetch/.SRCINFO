@@ -3,7 +3,6 @@ pkgbase = fastfetch
 	pkgver = 2.55.0
 	pkgrel = 1
 	url = https://github.com/fastfetch-cli/fastfetch
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

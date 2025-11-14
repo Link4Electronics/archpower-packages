@@ -3,7 +3,6 @@ pkgbase = fceux
 	pkgver = 2.6.6
 	pkgrel = 7
 	url = https://github.com/TASEmulators/fceux
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

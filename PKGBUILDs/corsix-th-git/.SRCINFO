@@ -4,7 +4,6 @@ pkgbase = corsix-th-git
 	pkgrel = 1
 	url = https://github.com/CorsixTH/CorsixTH
 	install = corsix-th.install
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

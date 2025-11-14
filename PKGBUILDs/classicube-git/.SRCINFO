@@ -4,7 +4,6 @@ pkgbase = classicube-git
 	pkgrel = 1
 	epoch = 0
 	url = https://www.classicube.net/
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

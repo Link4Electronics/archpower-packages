@@ -9,6 +9,7 @@ url="https://github.com/libsdl-org/SDL_image"
 license=('0BSD')
 depends=('sdl3' 'libpng' 'libtiff' 'libjpeg' 'libwebp' 'libavif' 'libjxl')
 makedepends=('cmake')
+options=('!debug' 'strip')
 source=("https://github.com/libsdl-org/SDL_image/releases/download/release-${pkgver}/SDL3_image-${pkgver}.tar.gz")
 sha256sums=('a725bd6d04261fdda0dd8d950659e1dc15a8065d025275ef460d32ae7dcfc182')
 

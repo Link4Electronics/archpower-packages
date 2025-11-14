@@ -3,7 +3,6 @@ pkgbase = snes9x-git
 	pkgver = 1.63.r129.gabfc018c
 	pkgrel = 1
 	url = http://www.snes9x.com/
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

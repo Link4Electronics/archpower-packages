@@ -12,6 +12,7 @@ license=('MIT')
 depends=('glibc')
 makedepends=('cmake')
 provides=('libyyjson.so')
+options=('!debug' 'strip')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ibireme/yyjson/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('b16246f617b2a136c78d73e5e2647c6f1de1313e46678062985bdcf1f40bb75d')
 

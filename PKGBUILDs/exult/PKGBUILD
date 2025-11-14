@@ -9,6 +9,7 @@ url='https://exult.sourceforge.io'
 license=('GPL-2.0-only')
 depends=('fluidsynth' 'libogg' 'libvorbis' 'munt' 'sdl2_image')
 makedepends=('autoconf-archive')
+options=('!debug' 'strip')
 source=("https://github.com/exult/exult/archive/refs/tags/v${pkgver}.tar.gz"
         'http://prdownloads.sourceforge.net/exult/exult_audio.zip')
 b2sums=('f99957d277dcd60269742b54527434437a5d7db40e71a522390eeb3907c51e0567750210c351cfe787f1fbdb3b6819d190636b9bc1260f8b959ce14291df34fc'

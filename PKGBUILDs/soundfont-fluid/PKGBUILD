@@ -9,6 +9,7 @@ arch=('any')
 # Original hammersound.net site no longer exists
 url="https://tracker.debian.org/pkg/fluid-soundfont"
 license=('custom:MIT')
+options=('!debug' 'strip')
 source=("https://deb.debian.org/debian/pool/main/f/fluid-soundfont/fluid-soundfont_$pkgver.orig.tar.gz")
 sha256sums=('2621acaa1c78e4abdb24bdd163230cc577e61276936d6aa6e3180582142f0343')
 

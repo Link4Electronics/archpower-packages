@@ -3,7 +3,6 @@ pkgbase = nvidia-settings
 	pkgver = 580.105.08
 	pkgrel = 1
 	url = https://github.com/NVIDIA/nvidia-settings
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

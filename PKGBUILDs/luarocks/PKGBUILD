@@ -13,6 +13,7 @@ backup=(etc/luarocks/config-5.{3,4}.lua)
 arch=('any')
 url='https://luarocks.org/'
 license=('custom')
+options=('!debug' 'strip')
 depends=('coreutils' # need chmod, md5sum
          'curl' # need one of curl or wget
          'lua'

@@ -3,7 +3,6 @@ pkgbase = memtester
 	pkgver = 4.7.1
 	pkgrel = 1
 	url = https://pyropus.ca./software/memtester/
-	arch = x86_64
 	arch = powerpc64le
 	arch = powerpc64
 	arch = powerpc

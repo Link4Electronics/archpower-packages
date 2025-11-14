@@ -15,6 +15,7 @@ license=(
   BSD-3-Clause
   LicenseRef-Reshade
 )
+options=('!debug' 'strip')
 depends=(
   gcc-libs
   glibc
