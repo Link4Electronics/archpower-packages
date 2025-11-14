@@ -1,0 +1,39 @@
+pkgname=planetblupi
+pkgver=1.15.1
+pkgrel=1
+pkgdesc="Planet Blupi game"
+arch=(powerpc powerpc64 powerpc64le espresso)
+url="https://github.com/blupi-games/planetblupi/"
+license=('GPL3')
+depends=('sdl2' 'sdl2_image' 'sdl2_mixer' 'sdl2_ttf' 'libpng' 'libogg' 'ffmpeg' 'libvorbis')
+makedepends=('unzip' 'argagg')
+_pkgrel_powerpc64=1
+sha256sums=('176cc1107f67ae085e0d6b7ad93c0696c6b7680d6e3aea4cc73b7d3279271b9c')
+sha256sums_powerpc64=('SKIP')
+options=('!debug' 'strip')
+source=("planetblupi.desktop")                    
+source_powerpc64=("$pkgname::git+https://github.com/blupi-games/planetblupi.git#tag=v$pkgver")
+
+build() {
+  cmake -S "${pkgname}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    -DCPACK=ON \
+    -Bbuild
+
+  cmake --build build -j $(getconf _NPROCESSORS_ONLN)
+}
+
+package() {
+    install -dm755 "$pkgdir/usr/share/planetblupi"
+    install -dm755 "$pkgdir/usr/lib"
+    install -dm644 "$pkgdir/usr/share/icons"
+    install -dm755 "$pkgdir/usr/share/applications"
+    install -dm755 "$pkgdir/usr/bin"
+    
+    cp -r "$srcdir/build/share/planetblupi" "$pkgdir/usr/share"
+    cp -r "$srcdir/build/share/icons/hicolor" "$pkgdir/usr/share/icons"
+    install -Dm755 "planetblupi.desktop" "$pkgdir/usr/share/applications"
+    cp -r "$srcdir/build/planetblupi" "$pkgdir/usr/bin"
+}

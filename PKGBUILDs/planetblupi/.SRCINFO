@@ -1,0 +1,28 @@
+pkgbase = planetblupi
+	pkgdesc = Planet Blupi game
+	pkgver = 1.15.1
+	pkgrel = 1
+	url = https://github.com/blupi-games/planetblupi/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL3
+	makedepends = unzip
+	makedepends = argagg
+	depends = sdl2
+	depends = sdl2_image
+	depends = sdl2_mixer
+	depends = sdl2_ttf
+	depends = libpng
+	depends = libogg
+	depends = ffmpeg
+	depends = libvorbis
+	options = !debug
+	options = strip
+	source = planetblupi.desktop
+	sha256sums = 176cc1107f67ae085e0d6b7ad93c0696c6b7680d6e3aea4cc73b7d3279271b9c
+	source_powerpc64 = planetblupi::git+https://github.com/blupi-games/planetblupi.git#tag=v$pkgver
+	sha256sums_powerpc64 = SKIP
+
+pkgname = planetblupi

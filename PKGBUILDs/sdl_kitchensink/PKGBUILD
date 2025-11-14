@@ -1,0 +1,25 @@
+pkgname=sdl_kitchensink
+pkgver=1.0.13
+pkgrel=1
+pkgdesc="FFmpeg and SDL2 based library for audio and video playback"
+arch=(powerpc powerpc64 powerpc64le espresso)
+url="https://github.com/katajakasa/SDL_kitchensink"
+license=('GPL3')
+depends=('sdl2' 'libass' 'ffmpeg')
+options=('!debug' 'strip')
+source=("https://github.com/katajakasa/SDL_kitchensink/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('344b4f55c1b49e3c1778ca40051eb4e066b94cc2e0859bdf38de33109bfed4d56d32be9dc378cb7178af40d003f925d9b0c331f342c13c68848a4c09bb5c5674')
+
+build() {
+  cmake -S "SDL_kitchensink-${pkgver}/" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -Bbuild
+
+  cmake --build build -j $(getconf _NPROCESSORS_ONLN)
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    install -Dm644 "SDL_kitchensink-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
