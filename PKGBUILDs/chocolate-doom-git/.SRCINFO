@@ -1,0 +1,36 @@
+pkgbase = chocolate-doom-git
+	pkgdesc = Historically-accurate Doom, Heretic, Hexen, and Strife ports.
+	pkgver = 3.0.0.r1772.g92634bf3
+	pkgrel = 2
+	url = http://www.chocolate-doom.org/
+	install = chocolate-doom.install
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL2
+	makedepends = git
+	makedepends = python
+	depends = libpng
+	depends = libsamplerate
+	depends = sdl2_mixer
+	depends = sdl2_net
+	optdepends = freedm: Free deathmatch game
+	optdepends = freedoom1: Free Ultimate Doom-compatible game
+	optdepends = freedoom2: Free Doom II-compatible game
+	conflicts = chocolate-common
+	conflicts = chocolate-doom
+	conflicts = chocolate-heretic
+	conflicts = chocolate-hexen
+	conflicts = chocolate-strife
+	replaces = chocolate-common-git
+	replaces = chocolate-heretic-git
+	replaces = chocolate-hexen-git
+	replaces = chocolate-strife-git
+	options = !debug
+	options = strip
+	source = git+https://github.com/chocolate-doom/chocolate-doom.git
+	sha512sums = SKIP
+
+pkgname = chocolate-doom-git
+
