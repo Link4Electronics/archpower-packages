@@ -1,0 +1,34 @@
+pkgname=corsix-th-git
+pkgver=0.69.1.r200.g3004a43e
+pkgrel=1
+pkgdesc='Reimplementation of the game engine of Theme Hospital, git version'
+url='https://github.com/CorsixTH/CorsixTH'
+arch=(powerpc powerpc64 powerpc64le espresso)
+license=('MIT')
+makedepends=('cmake')
+provides=('corsix-th')
+conflicts=('corsix-th')
+depends=('lua53' 'lua53-lpeg' 'luarocks' 'sdl2_mixer' 'ffmpeg')
+install=corsix-th.install
+source=("git+https://github.com/CorsixTH/CorsixTH.git")
+
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "CorsixTH"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd CorsixTH
+
+  cmake -DCMAKE_BUILD_TYPE=Release -Wno-dev \
+        -DLUA_PROGRAM_PATH=/usr/bin/lua -DLUA_INCLUDE_DIR=/usr/include -DLUA_LIBRARY=/usr/lib/liblua5.3.so \
+        -DCMAKE_INSTALL_PREFIX=/usr .
+  cd CorsixTH
+  make
+}
+
+package() {
+  make -C CorsixTH/CorsixTH DESTDIR="$pkgdir/" install
+}

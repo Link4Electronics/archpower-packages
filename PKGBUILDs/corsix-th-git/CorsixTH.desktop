@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=CorsixTH
+Version=0.50
+Exec=/usr/share/CorsixTH/CorsixTH
+Comment=A Theme Hospital Clone
+Icon=/usr/share/CorsixTH/CorsixTH.ico
+Type=Application
+Terminal=false
+StartupNotify=true
+Encoding=UTF-8
+Categories=Game;StrategyGame;
