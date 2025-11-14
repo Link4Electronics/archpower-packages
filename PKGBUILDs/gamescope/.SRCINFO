@@ -52,6 +52,8 @@ pkgbase = gamescope
 	depends = xcb-util-errors
 	depends = xcb-util-wm
 	depends = xorg-server-xwayland
+	options = !debug
+	options = strip
 	source = git+https://github.com/ValveSoftware/gamescope.git#commit=3.16.17
 	source = git+https://gitlab.freedesktop.org/emersion/libdisplay-info.git
 	source = git+https://gitlab.freedesktop.org/emersion/libliftoff.git

@@ -8,6 +8,7 @@ pkgbase = nvidia-utils
 	arch = espresso
 	license = custom
 	makedepends = patchelf
+	options = !debug
 	options = strip
 	source = nvidia-drm-outputclass.conf
 	source = nvidia-utils.sysusers

@@ -46,6 +46,8 @@ pkgbase = mangohud
 	replaces = mangoapp
 	replaces = mangohud-x11
 	replaces = mangohud-wayland
+	options = !debug
+	options = strip
 	source = mangohud-0.8.1.tar.xz::https://github.com/flightlessmango/MangoHud/releases/download/v0.8.1/MangoHud-v0.8.1-Source.tar.xz
 	b2sums = d817531618d51638adef441c013c02ad0f9b6d5b45d97693e26ce518b3a16c0a096f87add32137b422645993bb0280047f24bec2d998ad4733383008f4f5426b
 

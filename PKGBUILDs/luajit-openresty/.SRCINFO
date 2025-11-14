@@ -12,6 +12,8 @@ pkgbase = luajit-openresty
 	depends = gcc-libs
 	provides = luajit=2.1.20251030
 	conflicts = luajit
+	options = !debug
+	options = strip
 	source = https://github.com/openresty/luajit2/archive/refs/tags/v2.1-20251030/luajit-openresty-2.1.20251030.tar.gz
 	sha256sums = b9a6de5c2253e120f5146ea375e3ad4224e777e6942e578acdb93038078fd5ae
 

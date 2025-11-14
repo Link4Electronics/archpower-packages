@@ -8,6 +8,8 @@ pkgbase = memtester
 	arch = powerpc
 	arch = espresso
 	license = GPL-2.0-only
+	options = !debug
+	options = strip
 	source = https://pyropus.ca./software/memtester/old-versions/memtester-4.7.1.tar.gz
 	sha512sums = afe630a36b617825b33485c0404deaa32586caa19a0a3f3d46dead164ad0b4fcdd766e8a92be5037f7fa547d79eb510689e7bd18f96db4a8a956f55cf9ead455
 

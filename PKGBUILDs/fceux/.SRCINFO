@@ -21,6 +21,8 @@ pkgbase = fceux
 	depends = qt6-base
 	depends = sdl2
 	optdepends = ffmpeg: for recording
+	options = !debug
+	options = strip
 	source = git+https://github.com/TASEmulators/fceux#tag=v2.6.6
 	b2sums = df1b8706f3639c52ec5905a542052ee0eb7c5a727c9ee27af7c9f53b2b9f97b0445c6c6ff9f9504cef51a90cddc97b08b7f92ee7882de1bfb2baf879eac613c1
 

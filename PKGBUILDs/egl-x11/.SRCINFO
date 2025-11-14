@@ -16,6 +16,8 @@ pkgbase = egl-x11
 	depends = libx11
 	depends = libxcb
 	depends = mesa
+	options = !debug
+	options = strip
 	source = git+https://github.com/NVIDIA/egl-x11#tag=v1.0.3
 	sha256sums = ebef20d89f8001df3b89488f1f968a5a8624fa42430a0b595672925cb210d656
 
