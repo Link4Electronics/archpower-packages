@@ -18,6 +18,8 @@ pkgbase = corsix-th-git
 	depends = ffmpeg
 	provides = corsix-th
 	conflicts = corsix-th
+	options = !debug
+	options = strip
 	source = git+https://github.com/CorsixTH/CorsixTH.git
 	sha256sums = SKIP
 

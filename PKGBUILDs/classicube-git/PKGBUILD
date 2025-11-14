@@ -12,6 +12,7 @@ depends=('openal' 'mesa' 'curl')
 makedepends=('git')
 provides=('classicube')
 conflicts=('classicube')
+options=('!debug' 'strip')
 source=("git+https://github.com/UnknownShadow200/ClassiCube.git" classicube.desktop classicube)
 sha256sums=('SKIP' 'f86ccd0bcba3a9aaf7e1e30c89ab316c0ba2f713715c2246ac06fe6de4feb246' 'dfe029a6fc601e671fb25e811102260bfcab6b31fa3fdd6a53760ea12023d356')
 

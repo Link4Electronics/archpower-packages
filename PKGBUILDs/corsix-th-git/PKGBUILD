@@ -10,6 +10,7 @@ provides=('corsix-th')
 conflicts=('corsix-th')
 depends=('lua53' 'lua53-lpeg' 'luarocks' 'sdl2_mixer' 'ffmpeg')
 install=corsix-th.install
+options=('!debug' 'strip')
 source=("git+https://github.com/CorsixTH/CorsixTH.git")
 
 sha256sums=('SKIP')

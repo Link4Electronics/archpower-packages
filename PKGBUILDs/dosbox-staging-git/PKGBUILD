@@ -13,6 +13,7 @@ depends=('sdl2' 'sdl2_net' 'opusfile' 'libslirp' 'alsa-lib' 'iir1' 'fluidsynth' 
 makedepends=('meson' 'gcc' 'gzip')
 provides=("dosbox" "dosbox-staging")
 conflicts=("${provides[@]}")
+options=('!debug' 'strip')
 source=("git+https://github.com/dosbox-staging/${_pkgname}.git"
         powerpcsupport.patch)
 md5sums=('SKIP'

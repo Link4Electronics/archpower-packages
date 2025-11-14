@@ -1,0 +1,39 @@
+# Maintainer: robertfoster
+# Contributor: LIN Rs <LinRs[d]users.noreply.github.com>
+# Contributor: yochananmarqos <mark.wagie at tutanota dot com>
+
+pkgbase=devilutionx
+pkgname="${pkgbase}"
+pkgver=1.5.5 # renovate: datasource=github-tags depName=diasurgical/devilutionX
+pkgrel=1
+pkgdesc="Diablo devolved for linux"
+arch=(powerpc powerpc64 powerpc64le espresso)
+url="https://github.com/diasurgical/devilutionX"
+license=('custom:unlicense')
+depends=('bzip2' 'fmt' 'libpng' 'libsodium' 'sdl2' 'sdl2_image' 'zlib')
+makedepends=('cmake' 'flac' 'git' 'lame' 'ninja')
+options=('!debug' 'strip')
+source=("${url}/releases/download/${pkgver}/devilutionx-src.tar.xz")
+
+build() {
+  cmake -S "${pkgbase}-src-${pkgver}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    -DBUILD_TESTING=off \
+    -DCPACK=ON \
+    -Bbuild
+
+  cmake --build build -j $(getconf _NPROCESSORS_ONLN)
+}
+
+package_devilutionx() {
+  pkgdesc="Diablo devolved for linux (main package)"
+  install="${pkgbase}".install
+
+  cd build
+  DESTDIR="${pkgdir}" \
+    cmake --install .
+}
+
+sha256sums=('dfe7894dd4dfa5fd2375d708aaa6837eef3986ccac248345a7988059a507de6a')

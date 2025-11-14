@@ -11,6 +11,7 @@ arch=(powerpc powerpc64 powerpc64le espresso)
 url=http://munt.sourceforge.net
 license=('GPL-2.0 OR LGPL-2.1')
 makedepends=(cmake qt6-multimedia portaudio)
+options=('!debug' 'strip')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/munt/munt/archive/refs/tags/$_tag.tar.gz"
         munt-daemon.service)
 b2sums=('af97564a099c8d38d31f1725dfcd7807a3e3fd64d0fe82dc45d783589ac11c694e6d45a3231b19e10ce2bba6325f343f836bc94b9696779366ca773e50dab88d'

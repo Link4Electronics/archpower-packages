@@ -34,6 +34,8 @@ pkgbase = snes9x-git
 	makedepends = zlib
 	makedepends = cmake
 	makedepends = qt6-base
+	options = !debug
+	options = strip
 	source = git+https://github.com/snes9xgit/snes9x.git
 	sha256sums = SKIP
 

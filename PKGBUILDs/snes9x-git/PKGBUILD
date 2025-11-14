@@ -16,6 +16,7 @@ makedepends=(alsa-lib cairo cmake gdk-pixbuf2 git glib2
     libxrandr libxv meson minizip nasm portaudio sdl2 zlib
     cmake qt6-base
 )
+options=('!debug' 'strip')
 source=(
     git+https://github.com/snes9xgit/snes9x.git
 )
