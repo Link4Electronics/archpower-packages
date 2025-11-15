@@ -1,0 +1,14 @@
+pkgbase = freepats-general-midi
+	pkgdesc = Free and Open general MIDI sound set
+	pkgver = 20221026
+	pkgrel = 2
+	url = https://freepats.zenvoid.org/
+	arch = any
+	groups = soundfonts
+	license = GPL3
+	license = CCPL
+	replaces = timidity-freepats
+	source = https://freepats.zenvoid.org/SoundSets/FreePats-GeneralMIDI/FreePatsGM-SF2-20221026.7z
+	sha512sums = 9672296dabf61a408d4b1bd3e899befe0cbd26a1e377dcae1fa45599a811be9318e2cb569efe14671cacd70d016966029c9cbf54a38928a195d2830803bc6321
+
+pkgname = freepats-general-midi
