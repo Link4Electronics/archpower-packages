@@ -1,0 +1,25 @@
+pkgbase = augustus
+	pkgdesc = An enhanced re-implementation of Caesar III
+	pkgver = 4.0.0
+	pkgrel = 2
+	url = https://github.com/Keriew/augustus
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = AGPL-3.0-only
+	makedepends = git
+	makedepends = cmake
+	depends = glibc
+	depends = hicolor-icon-theme
+	depends = expat
+	depends = zlib
+	depends = sdl2
+	depends = sdl2_mixer
+	options = !debug
+	options = strip
+	source = augustus::git+https://github.com/Keriew/augustus#tag=v4.0.0
+	sha512sums = c3bafe3d13d281530cc90bd4453a7837dc0b15f249e5bcff03df0001e938944433655a3dd197582905df59cbfcdc4b8273b026375ceabe7b60224ecf557b48fb
+	b2sums = bdb7805c60c11aae31f3e95df573f85af36576eabfec7245b41580f4bff5507ebf9d0b3c1be0cacfb23fe859f005fd91ab15a5507aaafcca86f50a4164d2b302
+
+pkgname = augustus
