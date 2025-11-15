@@ -1,0 +1,34 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Veeti Paananen <veeti.paananen@rojekti.fi>
+
+pkgname=cmark
+pkgver=0.31.1
+pkgrel=1
+pkgdesc='CommonMark parsing and rendering library and program in C'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://github.com/commonmark/cmark'
+license=(BSD-2-Clause)
+options=('!debug' 'strip')
+depends=(glibc)
+makedepends=(cmake
+             git
+             python)
+source=(git+https://github.com/commonmark/cmark#tag=$pkgver)
+sha512sums=('7869348e7966095b1688691cef8d88ec8c3bc5dee0a44682057f4168c05496d2d9013e3e89cfc3ca7e7a37f67bf7fcb2dd55077649e342d2060944e414d355b9')
+
+build() {
+  cmake -B build -S $pkgname \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMARK_STATIC=OFF
+  cmake --build build
+}
+
+check() {
+  cmake --build build --target test
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm 644 $pkgname/COPYING -t "$pkgdir"/usr/share/licenses/$pkgname
+}
