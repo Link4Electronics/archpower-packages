@@ -1,0 +1,23 @@
+pkgbase = nethack
+	pkgdesc = A single player dungeon exploration game
+	pkgver = 3.6.7
+	pkgrel = 6
+	url = https://www.nethack.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = custom
+	depends = filesystem
+	depends = ncurses
+	depends = gzip
+	options = !debug
+	options = strip
+	source = https://www.nethack.org/download/3.6.7/nethack-367-src.tgz
+	source = nethack.tmpfiles
+	source = gcc15-1.diff
+	sha256sums = 98cf67df6debf9668a61745aa84c09bcab362e5d33f5b944ec5155d44d2aacb2
+	sha256sums = SKIP
+	sha256sum = 927509d9b42de18670d7d259b48eb28364f930683b739deabfd59ee6066bcb38
+
+pkgname = nethack
