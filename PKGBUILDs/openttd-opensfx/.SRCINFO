@@ -1,0 +1,13 @@
+pkgbase = openttd-opensfx
+	pkgdesc = Free sound set for openttd
+	pkgver = 1.0.3
+	pkgrel = 2
+	url = https://www.openttd.org
+	arch = any
+	license = CCPL
+	license = GPL2
+	license = CDDL
+	source = https://cdn.openttd.org/opensfx-releases/1.0.3/opensfx-1.0.3-all.zip
+	sha256sums = e0a218b7dd9438e701503b0f84c25a97c1c11b7c2f025323fb19d6db16ef3759
+
+pkgname = openttd-opensfx

@@ -1,0 +1,11 @@
+pkgbase = openttd-opengfx
+	pkgdesc = A free graphics set for openttd
+	pkgver = 7.1
+	pkgrel = 3
+	url = https://wiki.openttd.org/en/Basesets/OpenGFX
+	arch = any
+	license = GPL-2.0-only
+	source = https://cdn.openttd.org/opengfx-releases/7.1/opengfx-7.1-all.zip
+	sha256sums = 928fcf34efd0719a3560cbab6821d71ce686b6315e8825360fba87a7a94d7846
+
+pkgname = openttd-opengfx

@@ -1,0 +1,49 @@
+# Maintainer: Laurent Carlier <lordheavym@gmail.com>
+# Maintainer: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Vesa Kaihlavirta <vegai@iki.fi>
+
+pkgname=openttd
+pkgver=14.1
+pkgrel=4
+pkgdesc='Engine for running Transport Tycoon Deluxe'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://www.openttd.org'
+# bundled squirrel is under Zlib license
+# bundled fmt is under MIT license
+license=('GPL-2.0-only' 'BSD-3-Clause' 'LGPL-2.1-or-later' 'MIT' 'Zlib')
+depends=(fluidsynth sdl2 fontconfig hicolor-icon-theme)
+makedepends=(cmake ninja)
+optdepends=('openttd-opengfx: free graphics'
+            'openttd-opensfx: free soundset')
+options=('!debug' 'strip')
+source=("https://cdn.$pkgname.org/$pkgname-releases/$pkgver/$pkgname-$pkgver-source.tar.xz"
+         https://github.com/OpenTTD/OpenTTD/commit/14fac2ad.patch
+         https://github.com/OpenTTD/OpenTTD/commit/db36e618.patch)
+b2sums=('d107cd41a04f1a0bcfd41730e57628787443e8fe6d90dd59b0211b115b462a8e57e68a30e4b1c72d5f9db2121650f1c4035303e64f7e2e71fdedb23665f445da'
+        'ea5fa5d19f3195bfcd2b279e153c4c17e61b6f57a189a3ab65e9450956c7ce720420ba7aed5df4c8944875ead8753a5699af2644c9d29639b3750b86e9b4ad6d'
+        '2c4a9b23a2715a7c740c751359bc5d9708849e038c01e2f79115b8b670c62f2c63af7ecdc0539e7e77c73eb36c4d08ade294868a2022cf84c74f93c9553b32dd')
+
+prepare() {
+  sed -i '/sse/d;/SSE/d' $pkgname-$pkgver/CMakeLists.txt
+  patch -d $pkgname-$pkgver -p1 < 14fac2ad.patch # Fix build with ICU 76
+  patch -d $pkgname-$pkgver -p1 < db36e618.patch # Fix build with gcc15
+}
+
+build() {
+  cmake \
+    -B build \
+    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_INSTALL_BINDIR=bin \
+    -D CMAKE_INSTALL_DATADIR=/usr/share \
+    -D CMAKE_INSTALL_PREFIX=/usr \
+    -G Ninja \
+    -S $pkgname-$pkgver
+  ninja -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" ninja -C build install
+
+  # license
+  install -D -m644 $pkgname-$pkgver/COPYING.md "${pkgdir}"/usr/share/licenses/${pkgname}/COPYING
+}
