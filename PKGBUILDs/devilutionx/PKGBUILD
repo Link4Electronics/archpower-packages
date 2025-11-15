@@ -7,7 +7,7 @@ pkgname="${pkgbase}"
 pkgver=1.5.5 # renovate: datasource=github-tags depName=diasurgical/devilutionX
 pkgrel=1
 pkgdesc="Diablo devolved for linux"
-arch=(powerpc powerpc64 powerpc64le espresso)
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 url="https://github.com/diasurgical/devilutionX"
 license=('custom:unlicense')
 depends=('bzip2' 'fmt' 'libpng' 'libsodium' 'sdl2' 'sdl2_image' 'zlib')

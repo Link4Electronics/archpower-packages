@@ -16,7 +16,7 @@ pkgrel=1
 pkgdesc="High-accuracy NES/Famicom emulator"
 url="https://github.com/0ldsk00l/nestopia"
 license=('GPL-2.0-only')
-arch=(powerpc powerpc64 powerpc64le espresso)
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 options=('!debug' 'strip')
 depends=(
   fltk
