@@ -1,0 +1,20 @@
+pkgbase = libmatemixer
+	pkgdesc = Mixer library for MATE Desktop
+	pkgver = 1.28.0
+	pkgrel = 1
+	url = https://mate-desktop.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = LGPL
+	depends = glib2
+	depends = gettext
+	depends = libpulse
+	depends = alsa-lib
+	options = !debug
+	options = strip
+	source = https://pub.mate-desktop.org/releases/1.28/libmatemixer-1.28.0.tar.xz
+	sha256sums = 5d73b922397f60688e3c9530eb532bce46c30e262db1b5352fa32c40d870a0c7
+
+pkgname = libmatemixer
