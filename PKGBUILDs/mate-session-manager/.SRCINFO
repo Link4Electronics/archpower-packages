@@ -1,0 +1,35 @@
+pkgbase = mate-session-manager
+	pkgdesc = The MATE Session Handler
+	pkgver = 1.28.0
+	pkgrel = 2
+	url = https://mate-desktop.org
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	groups = mate
+	license = GPL-2.0-or-later
+	makedepends = autoconf-archive
+	makedepends = git
+	makedepends = glib2-devel
+	makedepends = mate-common
+	makedepends = xtrans
+	makedepends = systemd
+	makedepends = python
+	depends = dbus-glib
+	depends = gettext
+	depends = gtk3
+	depends = libsm
+	depends = mate-desktop
+	optdepends = gnome-keyring: keyring support
+	optdepends = xdg-user-dirs-gtk: manage user directories
+	conflicts = mate-session-manager-gtk3
+	replaces = mate-session-manager-gtk3
+	options = !debug
+	options = strip
+	source = git+https://github.com/mate-desktop/mate-session-manager.git#tag=v1.28.0
+	source = git+https://github.com/mate-desktop/mate-submodules.git
+	sha256sums = 3e9d2aafdf0119f04187aa65ab2f7098441a31bf3d50c01f0e934bb30e74c108
+	sha256sums = SKIP
+
+pkgname = mate-session-manager

@@ -1,0 +1,43 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mate-settings-daemon
+pkgver=1.28.0
+pkgrel=2
+pkgdesc="The MATE Settings daemon"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later LGPL-2.1-or-later')
+depends=('dbus-glib' 'libcanberra' 'libmatekbd' 'libmatemixer' 'libnotify'
+         'mate-desktop' 'nss' 'polkit' 'gettext')
+makedepends=('autoconf-archive' 'glib2-devel' 'mate-common' 'python-packaging')
+optdepends=('libcanberra-pulse: PulseAudio support'
+            'pulseaudio-alsa: PulseAudio support')
+groups=('mate')
+conflicts=('mate-settings-daemon-gtk3')
+replaces=('mate-settings-daemon-gtk3')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/mate-settings-daemon/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('6870e2c314a6b91aa31d03e56238879fe3dfbda1eb9ed104404e0a5dab9e8dd9')
+
+prepare() {
+	cd "${pkgname}-${pkgver}"
+	./autogen.sh
+}
+
+build() {
+	cd "${pkgname}-${pkgver}"
+	./configure \
+	            --prefix=/usr \
+	            --libexecdir="/usr/lib/${pkgname}" \
+	            --sysconfdir=/etc \
+	            --enable-polkit \
+	            --enable-pulse
+	make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
