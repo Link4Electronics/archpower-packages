@@ -1,0 +1,77 @@
+diff --git a/RSDKv3/Drawing.cpp b/RSDKv3/Drawing.cpp
+index e3140c7..e9e751f 100644
+--- a/RSDKv3/Drawing.cpp
++++ b/RSDKv3/Drawing.cpp
+@@ -1,4 +1,7 @@
+ #include "RetroEngine.hpp"
++#if defined(__linux__) || defined(__FreeBSD__)
++#include <endian.h>
++#endif
+ 
+ // Workaround for a "bug" in Linux with AMD cards where the presented buffer
+ // isn't cleared and displays corrupted memory in the letter/pillar boxes.
+@@ -921,8 +924,11 @@ void RenderFromRetroBuffer()
+             }
+             framebufferPtr += 2 * (GFX_LINESIZE - SCREEN_XSIZE);
+         }
+-
++#if defined(__BYTE_ORDER__) && (__BYTE_ORDER == __BIG_ENDIAN)
++        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE * 2, SCREEN_YSIZE * 2, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, Engine.texBuffer2x);
++#else
+         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE * 2, SCREEN_YSIZE * 2, GL_RGBA, GL_UNSIGNED_BYTE, Engine.texBuffer2x);
++#endif
+     }
+ 
+     glLoadIdentity();
+@@ -1271,9 +1277,11 @@ void TransferRetroBuffer()
+         texBufferPtr += SCREEN_XSIZE;
+         frameBufferPtr += GFX_LINESIZE;
+     }
+-
++#if defined(__BYTE_ORDER__) && (__BYTE_ORDER == __BIG_ENDIAN)
++    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE, SCREEN_YSIZE, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, Engine.texBuffer);
++#else
+     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE, SCREEN_YSIZE, GL_RGBA, GL_UNSIGNED_BYTE, Engine.texBuffer);
+-
++#endif
+     glBindTexture(GL_TEXTURE_2D, 0);
+ #endif
+ }
+diff --git a/RSDKv3/Video.cpp b/RSDKv3/Video.cpp
+index d3574ad..d7bba77 100644
+--- a/RSDKv3/Video.cpp
++++ b/RSDKv3/Video.cpp
+@@ -1,5 +1,8 @@
+ #include "RetroEngine.hpp"
+ #include <string>
++#if defined(__linux__) || defined(__FreeBSD__)
++#include <endian.h>
++#endif
+ 
+ int currentVideoFrame = 0;
+ int videoFrameCount   = 0;
+@@ -257,7 +260,11 @@ int ProcessVideo()
+ 
+ #if RETRO_USING_OPENGL
+                 glBindTexture(GL_TEXTURE_2D, videoBuffer);
++#if defined(__BYTE_ORDER__) && (__BYTE_ORDER == __BIG_ENDIAN)
++                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoVidData->width, videoVidData->height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, videoVidData->pixels);
++#else
+                 glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoVidData->width, videoVidData->height, GL_RGBA, GL_UNSIGNED_BYTE, videoVidData->pixels);
++#endif
+                 glBindTexture(GL_TEXTURE_2D, 0);
+ #elif RETRO_USING_SDL2
+                 int half_w     = videoVidData->width / 2;
+@@ -318,7 +325,12 @@ void SetupVideoBuffer(int width, int height)
+     glGenTextures(1, &videoBuffer);
+     glBindTexture(GL_TEXTURE_2D, videoBuffer);
+ 
++#if defined(__BYTE_ORDER__) && (__BYTE_ORDER == __BIG_ENDIAN)
++    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
++    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoVidData->width, videoVidData->height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, videoVidData->pixels);
++#else
+     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
++#endif
+     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, videoVidData->width, videoVidData->height, GL_RGBA, GL_UNSIGNED_BYTE, videoVidData->pixels);
+ 
+     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
