@@ -1,0 +1,28 @@
+diff --git a/source/blood/src/resource.cpp b/source/blood/src/resource.cpp
+index de40bde7d..d65cde369 100644
+--- a/source/blood/src/resource.cpp
++++ b/source/blood/src/resource.cpp
+@@ -828,18 +828,18 @@ void Resource::Read(DICTNODE *n, void *p)
+                 swapFrame.yrepeat = bitReader.readUnsigned(8);
+                 swapFrame.shade = bitReader.readSigned(8);
+                 swapFrame.pal = bitReader.readUnsigned(5);
+-                swapFrame.at5_5 = bitReader.readBit();
++/*                swapFrame.at5_5 = bitReader.readBit();
+                 swapFrame.at5_6 = bitReader.readBit();
+                 swapFrame.at5_7 = bitReader.readBit();
+                 swapFrame.at6_0 = bitReader.readBit();
+-                swapFrame.at6_1 = bitReader.readBit();
++                swapFrame.at6_1 = bitReader.readBit(); */
+                 swapFrame.invisible = bitReader.readBit();
+-                swapFrame.at6_3 = bitReader.readBit();
+-                swapFrame.at6_4 = bitReader.readBit();
++//                swapFrame.at6_3 = bitReader.readBit();
++//                swapFrame.at6_4 = bitReader.readBit();
+                 swapFrame.tile2 = bitReader.readUnsigned(4);
+                 swapFrame.soundRange = bitReader.readUnsigned(4);
+                 swapFrame.surfaceSound = bitReader.readBit();
+-                swapFrame.reserved = bitReader.readUnsigned(2);
++//                swapFrame.reserved = bitReader.readUnsigned(2);
+                 *pFrame = swapFrame;
+             }
+         }
