@@ -1,0 +1,54 @@
+# Maintainer: Fabian Bornschein <fabiscafe@archlinux.org>
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+
+pkgname=dconf-editor
+pkgver=49.0
+pkgrel=1
+pkgdesc="GSettings editor for GNOME"
+url="https://apps.gnome.org/DconfEditor/"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=(GPL-3.0-or-later)
+options=('!debug' 'strip')
+depends=(
+  dconf
+  glib2
+  glibc
+  gtk3
+  hicolor-icon-theme
+  libhandy
+)
+makedepends=(
+  git
+  meson
+  vala
+)
+groups=(gnome-extra)
+source=(
+  "git+https://gitlab.gnome.org/GNOME/dconf-editor.git#tag=${pkgver/[a-z]/.&}"
+  0001-main-Set-prgname-to-application-id.patch
+)
+b2sums=('d504e593070c593e4ad545170a220712020e2b9c21e5ea2a1b77c8a78fd79a20498ea17129ad7f5909e182b5747e9ede126517a4e8f72b87b602d671eb96e13d'
+        '8f909fee39da9e0e38ec4611cce6a3a94949a87e96b08f8ff6e04b78b87cb0f31ff680b793f98a7d59932a18e49b64d171c79dd6101e57e6e9254a243acefe1a')
+
+prepare() {
+  cd $pkgname
+
+  # Set prgname to application ID
+  # https://gitlab.gnome.org/GNOME/dconf-editor/-/merge_requests/38
+  git apply -3 ../0001-main-Set-prgname-to-application-id.patch
+}
+
+build() {
+  arch-meson $pkgname build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
+
+# vim:set sw=2 sts=-1 et:

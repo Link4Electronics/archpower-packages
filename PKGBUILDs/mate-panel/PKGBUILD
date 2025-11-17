@@ -1,0 +1,44 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mate-panel
+pkgver=1.28.7
+pkgrel=2
+pkgdesc="The MATE Panel"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later AND LGPL-2.0-or-later')
+depends=('dbus-glib' 'libwnck3' 'libcanberra' 'libmateweather' 'libsm' 'mate-menus' 'mate-desktop' 'gettext' 'gtk-layer-shell' 'dconf-editor')
+makedepends=('itstool' 'git' 'glib2-devel' 'gobject-introspection' 'mate-common' 'yelp-tools' 'autoconf-archive')
+groups=('mate')
+conflicts=('mate-panel-gtk3')
+replaces=('mate-panel-gtk3')
+options=('!debug' 'strip')
+source=("git+https://github.com/mate-desktop/mate-panel.git#tag=v${pkgver}"
+        git+https://github.com/mate-desktop/mate-submodules.git)
+sha256sums=('030f76e59b0aa2880167968770a319e14bb91e38d77873f8ceab9718873da5ce'
+            'SKIP')
+prepare() {
+    cd "${pkgname}"
+    git submodule init
+    git config submodule.mate-submodules.url "${srcdir}/mate-submodules"
+    git -c protocol.file.allow=always submodule update
+    ./autogen.sh
+}
+
+build() {
+    cd "${pkgname}" 
+    ./configure \
+                --prefix=/usr \
+                --libexecdir="/usr/lib/${pkgname}" \
+                --sysconfdir=/etc \
+                --localstatedir=/var \
+                --enable-introspection
+    make
+}
+
+package() {
+    cd "${pkgname}"
+    make DESTDIR="${pkgdir}" install
+}

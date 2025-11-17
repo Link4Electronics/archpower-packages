@@ -1,0 +1,76 @@
+# Maintainer: Carl Smedstad <carsme@archlinux.org>
+# Contributor: Jonathan Steel <jsteel at archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Duck Hunt <vaporeon@tfwno.gf>
+
+pkgbase=mgba
+pkgname=(
+  'libmgba'
+  'mgba-qt'
+)
+pkgver=0.10.5
+pkgrel=2
+pkgdesc='A Nintendo Gameboy Advance Emulator focusing on speed and accuracy'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://mgba.io'
+license=('MPL-2.0')
+makedepends=(
+  'cmake'
+  'desktop-file-utils'
+  'ffmpeg'
+  'libedit'
+  'libpng'
+  'libzip'
+  'lua'
+  'qt5-multimedia'
+  'qt5-tools'
+  'sdl2'
+  'zlib'
+)
+optdepends=('lua: scripting support')
+options=('!debug' 'strip')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/mgba-emu/mgba/archive/$pkgver.tar.gz")
+sha256sums=('91d6fbd32abcbdf030d58d3f562de25ebbc9d56040d513ff8e5c19bee9dacf14')
+
+build() {
+  cmake -B build -S mgba-$pkgver \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    -Wno-dev
+  cmake --build build
+}
+
+package_libmgba() {
+  pkgdesc+=' (shared library)'
+  depends=(
+    'ffmpeg'
+    'glibc'
+    'libedit'
+    'libelf'
+    'libglvnd'
+    'libpng'
+    'libzip'
+    'sqlite'
+    'zlib'
+  )
+  DESTDIR="$pkgdir" cmake --install build --component libmgba
+  DESTDIR="$pkgdir" cmake --install build --component mgba-dev
+}
+
+package_mgba-qt() {
+  pkgdesc+=' (Qt5 UI)'
+  depends=(
+    'ffmpeg'
+    'gcc-libs'
+    'glibc'
+    'libglvnd'
+    'libmgba'
+    'qt5-base'
+    'qt5-multimedia'
+    'sdl2'
+  )
+  DESTDIR="$pkgdir" cmake --install build --component mgba-qt
+  install -vDm644 mgba-$pkgver/res/mgba-256.png \
+    "$pkgdir/usr/share/pixmaps/io.mgba.mGBA.png"
+}

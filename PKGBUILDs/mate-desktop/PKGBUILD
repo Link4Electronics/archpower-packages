@@ -1,0 +1,37 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mate-desktop
+pkgver=1.28.2
+pkgrel=2
+pkgdesc="Library with common API for various MATE modules"
+url="http://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later AND LGPL-2.0-or-later')
+depends=('gtk3' 'startup-notification' 'iso-codes')
+makedepends=('autoconf-archive' 'gobject-introspection' 'mate-common' 'intltool')
+groups=('mate')
+conflicts=('mate-desktop-gtk3' 'mate-desktop-schemas')
+replaces=('mate-desktop-gtk3' 'mate-desktop-schemas')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/mate-desktop/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('5c235208ab391a74003a38584a2001c722e4b603a7d0d0b0f45da48972e2e6e4')
+
+prepare() {
+	cd "${pkgname}-${pkgver}"
+	./autogen.sh
+}
+
+build() {
+	cd "${pkgname}-${pkgver}"
+    	./configure \
+        	--prefix=/usr \
+        	--disable-schemas-compile
+    	make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}"
+    	make DESTDIR="${pkgdir}" install
+}

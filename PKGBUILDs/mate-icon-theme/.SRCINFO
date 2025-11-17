@@ -1,0 +1,15 @@
+pkgbase = mate-icon-theme
+	pkgdesc = MATE icon theme
+	pkgver = 1.28.0
+	pkgrel = 2
+	url = https://mate-desktop.org
+	arch = any
+	groups = mate
+	license = LGPL-3.0-only
+	makedepends = mate-common
+	makedepends = icon-naming-utils
+	options = !emptydirs
+	source = mate-icon-theme-1.28.0.tar.gz::https://github.com/mate-desktop/mate-icon-theme/archive/refs/tags/v1.28.0.tar.gz
+	sha256sums = 6cd3e848131f3ab995bc7c6f8445157d79fcc6b172c0ad2bc0bc8d81bdc8ae0d
+
+pkgname = mate-icon-theme

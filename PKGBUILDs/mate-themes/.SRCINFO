@@ -1,0 +1,17 @@
+pkgbase = mate-themes
+	pkgdesc = Official themes for the MATE desktop
+	pkgver = 3.22.26
+	pkgrel = 3
+	url = http://mate-desktop.org
+	arch = any
+	groups = mate
+	license = LGPL-2.1-or-later
+	makedepends = autoconf-archive
+	makedepends = mate-common
+	makedepends = intltool
+	optdepends = mate-icon-theme: default icon theme
+	options = !emptydirs
+	source = mate-themes-3.22.26.tar.gz::https://github.com/mate-desktop/mate-themes/archive/refs/tags/v3.22.26.tar.gz
+	sha256sums = 7aa022a120b02ee14bcbb35c4e33f4f675c0eb6f33bb0ec7b9595b00bd9b14b7
+
+pkgname = mate-themes

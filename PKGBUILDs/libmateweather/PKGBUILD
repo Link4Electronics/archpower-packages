@@ -1,0 +1,46 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=libmateweather
+pkgver=1.28.0
+pkgrel=3
+pkgdesc="Provides access to weather information from the Internet."
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('LGPL')
+depends=('gtk3' 'libsoup3' 'gettext')
+makedepends=('git' 'glib2-devel' 'gtk-doc')
+conflicts=('libmateweather-gtk3')
+replaces=('libmateweather-gtk3')
+options=('!debug' 'strip')
+source=(git+https://github.com/mate-desktop/libmateweather#tag=v$pkgver)
+sha256sums=('5914bbaf84fcb578933cf48772c9cf0d0009ff75bb3c38448036ba591548b021')
+
+prepare() {
+    	cd "${pkgname}"
+
+    	# Port to libsoup-3.0
+    	git cherry-pick -n c1c54a15545f13f3dabd2bcd303533d818905c7b
+
+    	autoreconf -fiv
+}
+
+build() {
+    	cd "${pkgname}"
+    	./configure \
+        	--prefix=/usr \
+        	--sysconfdir=/etc \
+        	--localstatedir=/var \
+        	--enable-locations-compression
+
+    	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+    	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
+    	make
+}
+
+package() {
+    	cd "${pkgname}"
+    	make DESTDIR="${pkgdir}" install
+}

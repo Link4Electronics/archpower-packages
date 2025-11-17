@@ -1,0 +1,37 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=mate-menus
+pkgver=1.28.0
+pkgrel=3
+pkgdesc="MATE menu specifications"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later AND LGPL-2.0-or-later')
+depends=('glib2')
+makedepends=('autoconf-archive' 'mate-common' 'gobject-introspection')
+groups=('mate')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/mate-menus/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('3495fd3f5e0a9a88e207c2e863410d874fc9348807e68ace740c4798bc76b4d8')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    ./autogen.sh
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    ./configure \
+                --prefix=/usr \
+                --sysconfdir=/etc \
+                --localstatedir=/var \
+                --enable-python
+    make
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}

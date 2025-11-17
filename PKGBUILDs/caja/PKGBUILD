@@ -1,0 +1,56 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=caja
+pkgver=1.28.0
+pkgrel=4
+pkgdesc="File manager for the MATE desktop"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later AND LGPL-2.0-or-later')
+depends=('exempi' 'gvfs' 'libexif' 'libsm' 'mate-desktop' 'libnotify' 'gtk-layer-shell')
+makedepends=('autoconf-archive' 'git' 'glib2-devel' 'gobject-introspection' 'intltool' 'mate-common' 'python-packaging')
+optdepends=('gstreamer: automatic media playback when mouseover')
+groups=('mate')
+conflicts=('caja-gtk3')
+replaces=('caja-gtk3')
+options=('!debug' 'strip')
+source=("git+https://github.com/mate-desktop/caja.git#tag=v${pkgver}"
+        git+https://github.com/mate-desktop/mate-submodules.git)
+sha256sums=('1d3387cdf0acc9d7c01a563143ab91e097e8201a183a0fcece37beb03e0009f6'
+            'SKIP')
+
+
+prepare() {
+	cd "${pkgname}"
+	git submodule init
+	git config submodule.mate-submodules.url "${srcdir}/mate-submodules"
+	git -c protocol.file.allow=always submodule update
+	./autogen.sh --prefix=/usr
+}
+
+
+build() {
+	cd "${pkgname}"
+    	./configure \
+        	--prefix=/usr \
+		--libexecdir="/usr/lib/${pkgname}" \
+        	--enable-introspection \
+		--disable-update-mimedb \
+		--disable-self-check # self-check only checks for eel in make check, requires Xorg server
+    	make
+}
+
+check() {
+	cd "${pkgname}"
+	make check
+}
+
+package() {
+	cd "${pkgname}"
+    	make DESTDIR="${pkgdir}" install
+
+    	# Remove D-Bus activation file to avoid conflict with nautilus-desktop
+	rm -r "${pkgdir}/usr/share/dbus-1/"
+}

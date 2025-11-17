@@ -1,0 +1,39 @@
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Brad Fanella <cesura@archlinux.org>
+# Contributor: Martin Wimpress <code@flexion.org>
+
+pkgname=marco
+pkgver=1.29.0
+pkgrel=1
+pkgdesc="MATE default window manager"
+url="https://mate-desktop.org"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL-2.0-or-later')
+depends=('libcanberra' 'libgtop' 'mate-desktop' 'zenity' 'libxpresent' 'gettext' 'libxres' 'libsm')
+makedepends=('autoconf-archive' 'mate-common' 'itstool' 'yelp-tools')
+groups=('mate')
+conflicts=('marco-gtk3')
+replaces=('marco-gtk3')
+options=('!debug' 'strip')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mate-desktop/marco/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('fe2c317ceaf2b17f2cf5785cadb6b6534cf3330aad9be5e5449b3fdb4d3160be')
+
+prepare() {
+	cd "${pkgname}-${pkgver}"
+	./autogen.sh
+}
+
+build() {
+	cd "${pkgname}-${pkgver}"
+    	./configure \
+        	--prefix=/usr \
+        	--sysconfdir=/etc \
+        	--localstatedir=/var \
+        	--enable-startup-notification
+    	make
+}
+
+package() {
+    	cd "${pkgname}-${pkgver}"
+    	make DESTDIR="${pkgdir}" install
+}
