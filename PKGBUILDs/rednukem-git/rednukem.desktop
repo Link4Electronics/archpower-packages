@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Rednukem
+GenericName=Port of serveral BUILD Engine games based on EDuke32
+Icon=rednukem
+Exec=rednukem %F
+Terminal=false
+Categories=Game;ActionGame;

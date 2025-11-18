@@ -1,0 +1,50 @@
+# Maintainer: Sid <sidpranjale127@protonmail.com>
+# Continuing the work of:
+# Maintainer: Jan Cholasta <jan at cholasta net>
+
+pkgname=rednukem-git
+pkgver=r14326.6351794a0
+pkgrel=1
+pkgdesc='A port of serveral BUILD Engine games based on EDuke32 (git version)'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://nukeykt.retrohost.net/'
+license=('GPL' 'custom:BUILD')
+depends=('flac'
+         'libogg'
+         'libvorbis'
+         'libvpx'
+         'sdl2'
+)
+makedepends=('git' 'glu' 'imagemagick')
+provides=('rednukem')
+conflicts=('rednukem')
+options=('!debug' 'strip')
+source=('git+https://github.com/nukeykt/NBlood.git'
+        'rednukem.png'
+        'rednukem.desktop'
+        'big-endian-fix.patch')
+sha256sums=('SKIP'
+            '0d6b890a91187d1e4a46e18e61d455a2d41e197696e4c282614b19c63346556d'
+            'eff6496692f2810ab9f56a7e6bf9b81ab092afeb0c0b2087c572c83737f130e0'
+            'bc028f6bafaf255ab412749072cdee9b60dc3c37338910dc7d882f9a1b96710f')
+
+pkgver() {
+    cd $srcdir/NBlood
+    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+    patch -Np1 -i "$srcdir"/big-endian-fix.patch -d "$srcdir/NBlood"
+    cd NBlood
+    make rednukem
+}
+
+package() {
+    cd NBlood
+    install -D -t "$pkgdir"/usr/bin rednukem
+    install -D -t "$pkgdir"/usr/share/games/rednukem -m 644 dn64widescreen.pk3
+    install -D -t "$pkgdir"/usr/share/licenses/$pkgname -m 644 package/common/buildlic.txt
+    install -Dm644 "$srcdir"/rednukem.png "$pkgdir"/usr/share/pixmaps/rednukem.png
+    install -D -t "$pkgdir"/usr/share/applications -m 644 "$srcdir"/rednukem.desktop
+    echo "Place your game files in ~/.config/rednukem"
+}
