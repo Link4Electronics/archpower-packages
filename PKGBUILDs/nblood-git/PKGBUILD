@@ -20,7 +20,7 @@ optdepends=('blood-demo')
 provides=('nblood')
 conflicts=('nblood')
 options=('!debug' 'strip')
-source=('git+https://github.com/nukeykt/NBlood.git'
+source=('git+https://github.com/NBlood/NBlood.git'
         'nblood.png'
         'nblood.desktop'
         'big-endian-fix.patch')

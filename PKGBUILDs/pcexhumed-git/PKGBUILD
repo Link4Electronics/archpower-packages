@@ -19,12 +19,12 @@ makedepends=('git' 'glu' 'imagemagick')
 provides=('pcexhumed')
 conflicts=('pcexhumed')
 options=('!debug' 'strip')
-source=('git+https://github.com/nukeykt/NBlood.git'
+source=('git+https://github.com/NBlood/NBlood.git'
         'pcexhumed.png'
         'pcexhumed.desktop'
         'big-endian-fix.patch')
 sha256sums=('SKIP'
-            'a9252aa3dfe464e4fdc299a6b12f4348626df33632812f59bb354b257c802244'
+            'b55a264b4682afabd49587d700d4c85ce6c2e7af7ce2764dd217ebe167549863'
             '670306bd9099d342689623adc386fcf60add04d9404a6c3d0fa96059a31f7a79'
             'bc028f6bafaf255ab412749072cdee9b60dc3c37338910dc7d882f9a1b96710f')
 

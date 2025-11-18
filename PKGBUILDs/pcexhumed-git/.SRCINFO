@@ -21,12 +21,12 @@ pkgbase = pcexhumed-git
 	conflicts = pcexhumed
 	options = !debug
 	options = strip
-	source = git+https://github.com/nukeykt/NBlood.git
+	source = git+https://github.com/NBlood/NBlood.git
 	source = pcexhumed.png
 	source = pcexhumed.desktop
 	source = big-endian-fix.patch
 	sha256sums = SKIP
-	sha256sums = a9252aa3dfe464e4fdc299a6b12f4348626df33632812f59bb354b257c802244
+	sha256sums = b55a264b4682afabd49587d700d4c85ce6c2e7af7ce2764dd217ebe167549863
 	sha256sums = 670306bd9099d342689623adc386fcf60add04d9404a6c3d0fa96059a31f7a79
 	sha256sums = bc028f6bafaf255ab412749072cdee9b60dc3c37338910dc7d882f9a1b96710f
 
