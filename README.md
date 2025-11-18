@@ -1,7 +1,7 @@
 # archpower-packages
 Packages for ArchPOWER
 
-For now only powerpc64 (big-endian) platform
+For now only powerpc64 (big-endian) and powerpc 32-bit (compiled with linux-g4 kernel) platform
 
 Adding to pacman.conf (I know it s*cks without signature, but "it is what it is")
 ```
