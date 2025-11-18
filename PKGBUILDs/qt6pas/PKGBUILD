@@ -1,0 +1,26 @@
+# Maintainer: BlackIkeEagle <ike DOT devolder AT gmail DOT com>
+
+pkgname=qt6pas
+_lazarus_tag=4_4
+_lazarus_version=4.4.0
+pkgver=6.2.10
+pkgrel=2
+pkgdesc='Free Pascal Qt6 binding library updated by lazarus IDE'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='https://gitlab.com/freepascal.org/lazarus/lazarus/-/tree/main/lcl/interfaces/qt6/cbindings'
+license=('LGPL3')
+depends=('qt6-base')
+options=('libtool' 'staticlibs' '!debug' 'strip')
+source=("https://gitlab.com/freepascal.org/lazarus/lazarus/-/archive/lazarus_${_lazarus_tag}/lazarus-lazarus_${_lazarus_tag}.tar.bz2")
+sha512sums=('2c01b489b747b34e4da6e872ceed7be359567ba85d4b00d3ac99239071e54156b0e5a065f3d5757c4bc1e8ba745304adda789364259bc9d2f2b39986d81fcf56')
+
+build() {
+    cd "lazarus-lazarus_${_lazarus_tag}/lcl/interfaces/qt6/cbindings"
+    qmake6
+    make
+}
+
+package() {
+    cd "lazarus-lazarus_${_lazarus_tag}/lcl/interfaces/qt6/cbindings"
+    make INSTALL_ROOT="$pkgdir" install
+}
