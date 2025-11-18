@@ -1,0 +1,50 @@
+# Maintainer: Sid <sidpranjale127@protonmail.com>
+# Continuing the work of:
+# Maintainer: Jan Cholasta <jan at cholasta net>
+
+pkgname=pcexhumed-git
+pkgver=r14326.6351794a0
+pkgrel=1
+pkgdesc='Port of the PC version of Exhumed based on EDuke32 (git version)'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url='http://nukeykt.retrohost.net/'
+license=('GPL' 'custom:BUILD')
+depends=('flac'
+         'libogg'
+         'libvorbis'
+         'libvpx'
+         'sdl2'
+)
+makedepends=('git' 'glu' 'imagemagick')
+provides=('pcexhumed')
+conflicts=('pcexhumed')
+options=('!debug' 'strip')
+source=('git+https://github.com/nukeykt/NBlood.git'
+        'pcexhumed.png'
+        'pcexhumed.desktop'
+        'big-endian-fix.patch')
+sha256sums=('SKIP'
+            'a9252aa3dfe464e4fdc299a6b12f4348626df33632812f59bb354b257c802244'
+            '670306bd9099d342689623adc386fcf60add04d9404a6c3d0fa96059a31f7a79'
+            'bc028f6bafaf255ab412749072cdee9b60dc3c37338910dc7d882f9a1b96710f')
+
+pkgver() {
+    cd $srcdir/NBlood
+    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+    patch -Np1 -i "$srcdir"/big-endian-fix.patch -d "$srcdir/NBlood"
+    cd NBlood
+    make pcexhumed
+}
+
+package() {
+    cd NBlood
+    install -D -t "$pkgdir"/usr/bin pcexhumed
+    install -D -t "$pkgdir"/usr/share/games/pcexhumed -m 644 pcexhumed.pk3
+    install -D -t "$pkgdir"/usr/share/licenses/$pkgname -m 644 package/common/buildlic.txt
+    install -Dm644 "$srcdir"/pcexhumed.png "$pkgdir"/usr/share/pixmaps/pcexhumed.png
+    install -D -t "$pkgdir"/usr/share/applications -m 644 "$srcdir"/pcexhumed.desktop
+    echo "Place your game files in ~/.config/pcexhumed"
+}

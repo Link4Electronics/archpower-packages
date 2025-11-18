@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=PCExhumed
+GenericName=Exhumed port based on EDuke32
+Icon=pcexhumed
+Exec=pcexhumed %F
+Terminal=false
+Categories=Game;ActionGame;
