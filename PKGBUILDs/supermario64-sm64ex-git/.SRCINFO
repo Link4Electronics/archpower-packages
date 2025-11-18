@@ -1,0 +1,28 @@
+pkgbase = supermario64-sm64ex-git
+	pkgdesc = PC port of Super Mario 64.
+	pkgver = d7ca2c0
+	pkgrel = 2
+	url = https://github.com/sm64pc/sm64ex
+	arch = x86_64
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = GPL
+	makedepends = unzip
+	depends = unzip
+	depends = yad
+	depends = zenity
+	depends = gcc
+	depends = make
+	depends = python
+	options = !debug
+	options = strip
+	source = git+https://github.com/sm64pc/sm64ex.git#commit=20bb444
+	source = https://gitlab.com/linuxbombay/supermario64/-/archive/1.0.2/supermario64-1.0.2.tar.bz2
+	source = bigendian-fix.patch
+	sha256sums = SKIP
+	sha256sums = 5fb557fa69070490b737efde294ecaa9a04bd9fca66290ee638c63f15a3a2ace
+	sha256sums = a6d1beccf021fea020d8a5bb7decf8169f91cfcb2f1adebded8597da479c74ce
+
+pkgname = supermario64-sm64ex-git
