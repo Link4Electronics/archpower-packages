@@ -45,5 +45,5 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * [spaghettikart] - Mario Kart 64 has no sound
 * [sm64ex and forks] - DynOS doesn't work
 
-## PowerPC32
+ PowerPC32
 * [kernel] there's issue with `io_uring` that makes cmake unstable
