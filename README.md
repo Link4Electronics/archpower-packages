@@ -43,7 +43,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * [2s2h] - Zelda Majora's Mask has no sound
 * [starship] - Starfox 64 has no sound
 * [spaghettikart] - Mario Kart 64 has no sound
-* [sm64ex and forks] - DynOS doesn't work
+* [sm64ex and forks] - DynOS doesn't work and can't provide package since requires ROM during building
 
  PowerPC32
 * [kernel] there's issue with `io_uring` that makes cmake unstable
