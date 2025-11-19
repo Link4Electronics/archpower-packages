@@ -32,5 +32,5 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 ## Caveats
 
 * I make no commitment to update these in the future
-* [ecwolf] - need all '*.WL6' assets and 'ecwolf.pk3' on same folder `~/.config/ecwolf,` open console in this folder and type 'ecwolf'
-* [soh] - Zelda Ocarina of Time, generate  'oot.o2r' 'oot-mq.o2r' assets (need 'soh.o2r' too) from a x86_64 PC, move them to `~/.local/share/soh/`
+* [ecwolf] - need all `*.WL6` assets and `ecwolf.pk3` on same folder `~/.config/ecwolf,` open console in this folder and type 'ecwolf'
+* [soh] - Zelda Ocarina of Time, generate  `oot.o2r` `oot-mq.o2r` assets (need `soh.o2r` too) from a x86_64 PC, move them to `~/.local/share/soh/`
