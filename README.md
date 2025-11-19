@@ -2,7 +2,8 @@
 
 Packages for ArchPOWER
 
-For now only powerpc64 (big-endian) and powerpc 32-bit (compiled running linux-g4 kernel) platform
+* PowerPC64 big-endian platform
+* PowerPC32 platform (compiled running linux-g4 kernel, no clue if makes difference due to AltiVec on G4 and apps will run on eg. G3, Wii)
 
 ## Usage
 
