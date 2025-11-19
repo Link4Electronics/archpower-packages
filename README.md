@@ -1,7 +1,10 @@
-# archpower-packages
+## archpower-packages
+
 Packages for ArchPOWER
 
 For now only powerpc64 (big-endian) and powerpc 32-bit (compiled with linux-g4 kernel) platform
+
+## Usage
 
 Adding to pacman.conf (I know it s*cks without signature, but "it is what it is")
 ```
@@ -25,3 +28,7 @@ lua-filesystem requires to use luarocks to install
 `sudo luarocks install <package-name>.rock`
 
 Mirror and containing large packages (soon): https://archive.org/details/linuxppc64compiled
+
+## Caveats
+
+I make no commitment to update these in the future
