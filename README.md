@@ -36,7 +36,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
 * [ecwolf] - need all `*.WL6` assets and `ecwolf.pk3` on same folder `~/.config/ecwolf,` open console in this folder and type `ecwolf`
 * [eduke32, nblood, pcexhumed, rednukem] requires `gtk2` to have a launcher (it's not considered as a dependency when making the project)
-* [2s2h] - Zemda Majora's Mask, generate `mm.o2r` asset from a x86_64 PC using `2s2h 1.0.1`, move to `~/.local/share/2ship/`
+* [2s2h] - Zemda Majora's Mask, generate `mm.o2r` and `2ship.o2r` assets from a x86_64 PC using `2s2h 1.0.1`, move `mm.o2r`to `~/.local/share/2ship/` and with `sudo` replace `2ship.o2r` in `/opt/2s2h/`
 * [soh] - Zelda Ocarina of Time, generate  `oot.o2r` `oot-mq.o2r` assets (need `soh.o2r` too) from a x86_64 PC using `SoH 9.1.1`, move them to `~/.local/share/soh/` (only had lucky with european gamecube)
 * [spaghettikart] - Mario Kart 64, generate `mk64.o2r` asset from a x86_64 PC using `SK 0.9.9.1`, move to `~/.local/share/spaghettify/`
 
