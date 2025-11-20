@@ -70,7 +70,7 @@ Only tested on `PPC64` and will assume this arch for guide, don't know about `PP
 * `sudo cp ~/Downloads/liblwjgl.so /usr/lib/jvm/java-8-openjdk/jre/lib/ppc64` (adapt for ppc32 here)
 * Open MultiMC or Prism Launcher, Add Instance, chose version 1.12.2 or below, Edit Instance, LWJGL 2 Change version to `2.9.1` (last version that works)
 * Go to Settings, Custom commands, check Custom Commands and paste in Wrapper command: `sh -c "cp ~/Downloads/codecjorbis-1.0-SNAPSHOT.jar ../../../libraries/com/paulscode/codecjorbis/*/*.jar; exec $INST_JAVA \"$@\""` This library is used to fix audio in big-endian machines
-* Suggest to install a loader, go to Version, Install Loader, choose Forge and install `Relictium` to help a little bit with performance, but it swaps some colors ingame, I suspect this mod changes RGBA8888 32-bit textures to something 16-bit and causes the colors to change
+* Suggest to install a loader, go to Version, Install Loader, choose Forge and install `Relictium` to help a little bit with performance, but it swaps some colors ingame.
 * That's it, enjoy!
 
 # Credits (in alphabetical order)
@@ -79,6 +79,7 @@ Only tested on `PPC64` and will assume this arch for guide, don't know about `PP
 * [BSzili](https://github.com/BSzili) - For fixing lots of opensource games endianness like dethrace, dRally, ArxLibertatis etc
 * [DanielGibson](https://github.com/DanielGibson) - For fixing dhewm3 for PPC64
 * [deathkiller](https://github.com/deathkiller) - For bringing big-endian support for jazz2
+* [GaryOderNichts](https://github.com/GaryOderNichts) - For 2ship2harkinian WiiU port which works on Linux PPC big-endian
 * [IntriguingTiles](https://github.com/IntriguingTiles) - For xash3d-fwgs endianness fixes
 * [kth5](https://github.com/kth5) - For creating, supporting and maintain ArchPOWER
 * [Matias3149](https://github.com/Matias314) - For Minecraft guide and libraries
