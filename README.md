@@ -44,7 +44,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 # Issues
 * [dethrace] - Carmageddon has issues in PPC64, works fine in PPC32 (but can't compile in PPC32 due to `io_uring` causing issues with `cmake`)
 * [eduke32, rednukem] - Duke Nukem 3D has no MIDI music, rednukem Duke Nukem 64 sound is messed up, Ion Fury crashes when going to menu [issue](https://voidpoint.io/terminx/eduke32/-/issues/325)
-* [mesa] - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588)
+* [mesa] - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588) and maybe part of the issue relies on [LLVM](https://github.com/llvm/llvm-project/issues/167102)
 * [nestopia] Has inverted colors, already tried [this](https://github.com/0ldsk00l/nestopia/issues/25) solution but didn't work so removed from repo
 * [planetblupi] When try to run says can't find cdrom, probably byteswap issues with game data, Construction mode works
 * [SDLPop] - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
@@ -53,6 +53,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * [2s2h] - Zelda Majora's Mask has no sound [issue](https://github.com/HarbourMasters/2ship2harkinian/issues/802)
 * [spaghettikart] - Mario Kart 64 has no sound
 * [starship] - Starfox 64 has no sound
+* [xash3d-fwgs] - Half-Life port has physics models issues and crashes when LOADING new map, can explore using console `map c1a0` etc [issue](https://github.com/FWGS/xash3d-fwgs/pull/1466)
 
  PowerPC32
 * [kernel] there's issue with `io_uring` that makes cmake unstable
@@ -71,3 +72,17 @@ Only tested on `PPC64` and will assume this arch for guide, don't know about `PP
 * Go to Settings, Custom commands, check Custom Commands and paste in Wrapper command: `sh -c "cp ~/Downloads/codecjorbis-1.0-SNAPSHOT.jar ../../../libraries/com/paulscode/codecjorbis/*/*.jar; exec $INST_JAVA \"$@\""` This library is used to fix audio in big-endian machines
 * Suggest to install a loader, go to Version, Install Loader, choose Forge and install `Relictium` to help a little bit with performance, but it swaps some colors ingame, I suspect this mod changes RGBA8888 32-bit textures to something 16-bit and causes the colors to change
 * That's it, enjoy!
+
+# Credits (in alphabetical order)
+
+* @BeWorld2018 - For fixing endianness on fallout1-ce, OpenLara etc
+* @BSzili - For fixing lots of opensource games endianness like dethrace, dRally, ArxLibertatis etc
+* @DanielGibson - For fixing dhewm3 for PPC64
+* @deathkiller - For bringing big-endian support for jazz2
+* @IntriguingTiles - For xash3d-fwgs endianness fixes
+* @Matias314 - For Minecraft guide and libraries
+* @kth5 - For creating, supporting and maintain ArchPOWER
+* @ReDave - For PPC64 Minecraft libraries
+* @techflashYT - For package repository
+* @UnknownShadow200 - For fixing ClassiCube for PPC64
+* @vasi - For PowerPC linux kernel contributions, guide and packages repository
