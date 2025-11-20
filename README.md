@@ -32,7 +32,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
 ## Caveats
 
-* I make no commitment to update these in the future
+* **I make no commitment to update these in the future**
 * [ecwolf] - need all `*.WL6` assets and `ecwolf.pk3` on same folder `~/.config/ecwolf,` open console in this folder and type `ecwolf`
 * [eduke32, nblood, pcexhumed, rednukem] requires `gtk2` to have a launcher (it's not considered as a dependency when making the project)
 * [2s2h] - Zemda Majora's Mask, generate `mm.o2r` asset from a x86_64 PC using `2s2h 1.0.1`, move to `~/.local/share/2ship/`
