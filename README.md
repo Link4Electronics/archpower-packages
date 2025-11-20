@@ -53,6 +53,6 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
 # Minecraft
 
-Minecraft works up to 1.12.2, which is the last version that uses LWJGL2 and Java 8
+Minecraft works up to 1.12.2, which is last version that supports LWJGL2 and Java 8
 
 ## Steps
