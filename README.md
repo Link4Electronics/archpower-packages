@@ -75,14 +75,14 @@ Only tested on `PPC64` and will assume this arch for guide, don't know about `PP
 
 # Credits (in alphabetical order)
 
-* @BeWorld2018 - For fixing endianness on fallout1-ce, OpenLara etc
-* @BSzili - For fixing lots of opensource games endianness like dethrace, dRally, ArxLibertatis etc
-* @DanielGibson - For fixing dhewm3 for PPC64
-* @deathkiller - For bringing big-endian support for jazz2
-* @IntriguingTiles - For xash3d-fwgs endianness fixes
-* @kth5 - For creating, supporting and maintain ArchPOWER
-* @Matias314 - For Minecraft guide and libraries
-* @ReDave - For PPC64 Minecraft libraries
-* @techflashYT - For package repository
-* @UnknownShadow200 - For fixing ClassiCube for PPC64
-* @vasi - For PowerPC linux kernel contributions, guide and packages repository
+* [BeWorld2018](https://github.com/BeWorld2018) - For fixing endianness on fallout1-ce, OpenLara etc
+* [BSzili](https://github.com/BSzili) - For fixing lots of opensource games endianness like dethrace, dRally, ArxLibertatis etc
+* [DanielGibson](https://github.com/DanielGibson) - For fixing dhewm3 for PPC64
+* [deathkiller](https://github.com/deathkiller) - For bringing big-endian support for jazz2
+* [IntriguingTiles](https://github.com/IntriguingTiles) - For xash3d-fwgs endianness fixes
+* [kth5](https://github.com/kth5) - For creating, supporting and maintain ArchPOWER
+* [Matias3149](https://github.com/Matias314) - For Minecraft guide and libraries
+* ReDave - For PPC64 Minecraft libraries
+* [techflashYT](https://github.com/techflashYT) - For package repository
+* [UnknownShadow200](https://github.com/UnknownShadow200) - For fixing ClassiCube for PPC64
+* [vasi](https://github.com/vasi) - For PowerPC linux kernel contributions, guide and packages repository
