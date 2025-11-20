@@ -47,14 +47,14 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * `mesa` - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588) and maybe part of the issue relies on [LLVM](https://github.com/llvm/llvm-project/issues/167102)
 * `nestopia` Has inverted colors, already tried [this](https://github.com/0ldsk00l/nestopia/issues/25) solution but didn't work so removed from repo
 * `planetblupi` When try to run says can't find cdrom, probably byteswap issues with game data, Construction mode works
-* `SDLPop] - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
+* `SDLPop` - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
 * `sm64ex and forks` - DynOS doesn't work and can't provide package since requires ROM during building
 * `soh` - Zelda Ocarina of Time has only music, sound effects are muted [issue](https://github.com/HarbourMasters/Shipwright/issues/4513)
 * `2s2h` - Zelda Majora's Mask has no sound [issue](https://github.com/HarbourMasters/2ship2harkinian/issues/802)
 * `spaghettikart` - Mario Kart 64 has no sound
 * `starship-sf64` - Starfox 64 has no sound
 * `supertuxkart` - Swapped colors and crashes when goes to menu
-* `xash3d-fwgs] - Half-Life port has physics models issues and crashes when LOADING new map, can explore using console `map c1a0` etc [issue](https://github.com/FWGS/xash3d-fwgs/pull/1466)
+* `xash3d-fwgs` - Half-Life port has physics models issues and crashes when LOADING new map, can explore using console `map c1a0` etc [issue](https://github.com/FWGS/xash3d-fwgs/pull/1466)
 
  PowerPC32
 * [kernel] there's issue with `io_uring` that makes cmake unstable
