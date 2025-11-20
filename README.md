@@ -57,7 +57,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * `xash3d-fwgs` - Half-Life port has physics models issues and crashes when LOADING new map, can explore using console `map c1a0` etc [issue](https://github.com/FWGS/xash3d-fwgs/pull/1466)
 
  PowerPC32
-* [kernel] there's issue with `io_uring` that makes cmake unstable
+* `kernel` there's issue with `io_uring` that makes `cmake` unstable
 
 # Minecraft
 
