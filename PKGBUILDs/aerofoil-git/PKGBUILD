@@ -1,0 +1,41 @@
+# Maintainer: Bridget Williams <bridget6454 at google's email domain ending in dot com>
+
+pkgname=aerofoil-git
+pkgver=1.1.2.r81.g75e5cce
+pkgrel=1
+# the repo makes no mention of what architectures are supported, so i'll just play it safe for now
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+pkgdesc='Multiplatform port of Glider PRO, the Macintosh paper airplane game'
+url='https://github.com/elasota/Aerofoil'
+license=('GPL-2.0')
+# i'm probably missing some things here, let me know if that's the case
+depends=('sdl2>=2.0.12' 'sdl2_image' 'freetype2>=2.10.1')
+makedepends=('cmake>=3.10' 'git')
+provides=("aerofoil")
+conflicts=("aerofoil")
+options=('!debug' 'strip')
+source=("${pkgname}::git+https://github.com/elasota/Aerofoil.git"
+        "bigendian-fix.patch")
+sha512sums=('SKIP'
+            '50bf717303bd4b5e2aa1fe703ea0a4bd08645d46486d0446d16fb2a5507b8e1d3ce72b8b5542f1f06f7603791b37430f7c1a84ef6b20aba68d9826df09b6de18')
+
+pkgver() {
+    cd ${pkgname}
+    git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    patch -Np1 -i "$srcdir"/bigendian-fix.patch -d "$srcdir/${pkgname}"
+    cd "$srcdir/${pkgname}"
+    cmake -DCMAKE_INSTALL_PREFIX="/usr" -B build
+    cmake --build build
+}
+
+package() {
+    cd "$srcdir/${pkgname}"
+    DESTDIR="$pkgdir/" cmake --install build
+    mkdir -p "$pkgdir/usr/share/applications"
+    mkdir "$pkgdir/usr/share/pixmaps"
+    cp "$srcdir/${pkgname}/Resources/Linux/io.github.elasota.aerofoil.desktop" "$pkgdir/usr/share/applications"
+    cp "$srcdir/${pkgname}/Resources/Linux/io.github.elasota.aerofoil.svg" "$pkgdir/usr/share/pixmaps"
+}
