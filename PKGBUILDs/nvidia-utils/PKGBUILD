@@ -5,7 +5,7 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 pkgbase=nvidia-utils
-pkgname=('nvidia-utils' 'opencl-nvidia' 'nvidia-dkms' 'nvidia-open-dkms')
+pkgname=nvidia-utils
 pkgver=580.105.08
 pkgrel=2
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
@@ -96,37 +96,6 @@ BUILT_MODULE_LOCATION[2]="kernel-open"
 BUILT_MODULE_LOCATION[3]="kernel-open"
 BUILT_MODULE_LOCATION[4]="kernel-open"
 EOF
-}
-
-package_opencl-nvidia() {
-    pkgdesc="OpenCL implemention for NVIDIA"
-    depends=('zlib')
-    optdepends=('opencl-headers: headers necessary for OpenCL development')
-    provides=('opencl-driver')
-    cd "${_pkg}"
-
-    # OpenCL
-    install -Dm644 nvidia.icd "${pkgdir}/etc/OpenCL/vendors/nvidia.icd"
-    install -Dm755 "libnvidia-opencl.so.${pkgver}" "${pkgdir}/usr/lib/libnvidia-opencl.so.${pkgver}"
-
-    create_links
-
-    mkdir -p "${pkgdir}/usr/share/licenses"
-    ln -s nvidia-utils "${pkgdir}/usr/share/licenses/opencl-nvidia"
-}
-
-package_nvidia-dkms() {
-    pkgdesc="NVIDIA kernel modules - module sources"
-    depends=('dkms' "nvidia-utils=$pkgver" 'libglvnd')
-    provides=('NVIDIA-MODULE' 'nvidia')
-    conflicts=('NVIDIA-MODULE' 'nvidia')
-
-    cd ${_pkg}
-
-    install -dm 755 "${pkgdir}/usr/src"
-    cp -dr --no-preserve='ownership' kernel "${pkgdir}/usr/src/nvidia-${pkgver}"
-
-    install -Dm644 "${srcdir}/${_pkg}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 package_nvidia-utils() {
@@ -314,18 +283,4 @@ END
     install -Dm644 sandboxutils-filelist.json "${pkgdir}/usr/share/nvidia/files.d/sandboxutils-filelist.json"
 
     create_links
-}
-
-package_nvidia-open-dkms() {
-  pkgdesc="NVIDIA open kernel modules - module sources"
-  depends+=('dkms' "nvidia-utils=$pkgver")
-  license=('MIT AND GPL-2.0-only')
-  conflicts=('nvidia-open' 'NVIDIA-MODULE')
-  provides=('nvidia-open' 'NVIDIA-MODULE')
-
-  install -dm 755 "${pkgdir}/usr/src"
-  cp -dr --no-preserve='ownership' "${srcdir}/${_pkg_open}" "${pkgdir}/usr/src/nvidia-$pkgver"
-  mv "${pkgdir}/usr/src/nvidia-$pkgver/kernel-open/dkms.conf" "${pkgdir}/usr/src/nvidia-$pkgver/dkms.conf"
-
-  install -Dm644 "${srcdir}/${_pkg_open}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

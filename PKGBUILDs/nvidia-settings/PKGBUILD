@@ -4,7 +4,7 @@
 # Maintainer: Peter Jung <ptr1337@archlinux.org>
 
 pkgbase=nvidia-settings
-pkgname=('nvidia-settings' 'libxnvctrl')
+pkgname=libxnvctrl
 pkgver=580.105.08
 pkgrel=1
 pkgdesc='Tool for configuring the NVIDIA graphics driver'
@@ -33,22 +33,6 @@ build() {
   make
 }
 
-package_nvidia-settings() {
-  depends=('jansson' 'gtk3' 'libxv' 'libvdpau' 'nvidia-utils' 'libxnvctrl')
-
-  cd ${pkgbase}-${pkgver}
-  DESTDIR="${pkgdir}" make install
-
-  install -D -m644 doc/nvidia-settings.desktop "${pkgdir}/usr/share/applications/nvidia-settings.desktop"
-  install -D -m644 doc/nvidia-settings.png "${pkgdir}/usr/share/pixmaps/nvidia-settings.png"
-  sed \
-    -e 's:__UTILS_PATH__:/usr/bin:' \
-    -e 's:__PIXMAP_PATH__:/usr/share/pixmaps:' \
-    -e 's/__NVIDIA_SETTINGS_DESKTOP_CATEGORIES__/Settings;HardwareSettings;/' \
-    -e 's/Icon=.*/Icon=nvidia-settings/' \
-    -i "${pkgdir}/usr/share/applications/nvidia-settings.desktop"
-}
-
 package_libxnvctrl() {
   depends=('libxext')
   pkgdesc='NVIDIA NV-CONTROL X extension'
@@ -62,5 +46,3 @@ package_libxnvctrl() {
   install -d "${pkgdir}/usr/lib"
   cp -Pr src/out/libXNVCtrl.* -t "${pkgdir}/usr/lib"
 }
-
-# vim: ts=2 sw=2 et:
