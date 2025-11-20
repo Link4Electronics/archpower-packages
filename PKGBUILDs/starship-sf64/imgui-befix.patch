@@ -1,0 +1,13 @@
+diff --git a/imconfig.h b/imconfigpatcheado.h
+index ee64116..387a2bd 100644
+--- a/imconfig.h
++++ b/imconfigpatcheado.h
+@@ -142,3 +142,8 @@ namespace ImGui
+ 
+ // handle https://github.com/ocornut/imgui/issues/1641 the old way
+ #define ImTextureID void*
++#define IM_COL32_R_SHIFT    24
++#define IM_COL32_G_SHIFT    16
++#define IM_COL32_B_SHIFT    8
++#define IM_COL32_A_SHIFT    0
++#define IM_COL32_A_MASK     0x000000FF
