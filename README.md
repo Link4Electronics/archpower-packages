@@ -80,8 +80,8 @@ Only tested on `PPC64` and will assume this arch for guide, don't know about `PP
 * @DanielGibson - For fixing dhewm3 for PPC64
 * @deathkiller - For bringing big-endian support for jazz2
 * @IntriguingTiles - For xash3d-fwgs endianness fixes
-* @Matias314 - For Minecraft guide and libraries
 * @kth5 - For creating, supporting and maintain ArchPOWER
+* @Matias314 - For Minecraft guide and libraries
 * @ReDave - For PPC64 Minecraft libraries
 * @techflashYT - For package repository
 * @UnknownShadow200 - For fixing ClassiCube for PPC64
