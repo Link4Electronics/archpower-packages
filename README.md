@@ -39,6 +39,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * [2s2h] - Zelda Majora's Mask, generate `mm.o2r` and `2ship.o2r` assets from a x86_64 PC using `2s2h 1.0.1`, move `mm.o2r`to `~/.local/share/2ship/` and with `sudo` replace `2ship.o2r` in `/opt/2s2h/`
 * [soh] - Zelda Ocarina of Time, generate  `oot.o2r` `oot-mq.o2r` assets (need `soh.o2r` too) from a x86_64 PC using `SoH 9.1.1`, move them to `~/.local/share/soh/` (only had lucky with european gamecube)
 * [spaghettikart] - Mario Kart 64, generate `mk64.o2r` asset from a x86_64 PC using `SK 0.9.9.1`, move to `~/.local/share/spaghettify/`
+* [starship-sf64] - Star Fox 64, generate `sf64.o2r` asset from a x86_64 PC using `Starship 2.0.0`, mote to `~/.local/share/ship/`
 
 # Issues
 * [dethrace] - Carmageddon has issues in PPC64, works fine in PPC32 (but can't compile in PPC32 due to `io_uring` causing issues with `cmake`)
