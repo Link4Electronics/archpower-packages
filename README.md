@@ -41,7 +41,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 # Issues
 * [mesa] - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588)
 * [nestopia] Has inverted colors, already tried [this](https://github.com/0ldsk00l/nestopia/issues/25) solution but didn't work so removed from repo
-* [SDLPop] - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword, dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
+* [SDLPop] - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
 * [soh] - Zelda Ocarina of Time has only music, sound effects are muted
 * [2s2h] - Zelda Majora's Mask has no sound
 * [spaghettikart] - Mario Kart 64 has no sound
