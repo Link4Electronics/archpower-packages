@@ -41,15 +41,16 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * [spaghettikart] - Mario Kart 64, generate `mk64.o2r` asset from a x86_64 PC using `SK 0.9.9.1`, move to `~/.local/share/spaghettify/`
 
 # Issues
+* [dethrace] - Carmageddon has issues in PPC64, works fine in PPC32 (but can't compile in PPC32 due to `io_uring` causing issues with `cmake`)
 * [mesa] - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588)
 * [nestopia] Has inverted colors, already tried [this](https://github.com/0ldsk00l/nestopia/issues/25) solution but didn't work so removed from repo
 * [planetblupi] When try to run says can't find cdrom, probably byteswap issues with data game
 * [SDLPop] - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
+* [sm64ex and forks] - DynOS doesn't work and can't provide package since requires ROM during building
 * [soh] - Zelda Ocarina of Time has only music, sound effects are muted [issue](https://github.com/HarbourMasters/Shipwright/issues/4513)
 * [2s2h] - Zelda Majora's Mask has no sound [issue](https://github.com/HarbourMasters/2ship2harkinian/issues/802)
 * [spaghettikart] - Mario Kart 64 has no sound
 * [starship] - Starfox 64 has no sound
-* [sm64ex and forks] - DynOS doesn't work and can't provide package since requires ROM during building
 
  PowerPC32
 * [kernel] there's issue with `io_uring` that makes cmake unstable
