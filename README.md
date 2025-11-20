@@ -34,7 +34,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
 * I make no commitment to update these in the future
 * [ecwolf] - need all `*.WL6` assets and `ecwolf.pk3` on same folder `~/.config/ecwolf,` open console in this folder and type `ecwolf`
-* [blood, pcexhumed, rednukem] requires `gtk2` to open the launcher (it's not considered as a dependency when making the project)
+* [eduke32, nblood, pcexhumed, rednukem] requires `gtk2` to open the launcher (it's not considered as a dependency when making the project)
 * [soh] - Zelda Ocarina of Time, generate  `oot.o2r` `oot-mq.o2r` assets (need `soh.o2r` too) from a x86_64 PC using `SoH 9.1.1`, move them to `~/.local/share/soh/`
 * [spaghettikart] - Mario Kart 64, generate `mk64.o2r` asset from a x86_64 PC using `SK 0.9.9.1`, move to `~/.local/share/spaghettify/`
 
