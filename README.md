@@ -43,7 +43,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
 # Issues
 * [dethrace] - Carmageddon has issues in PPC64, works fine in PPC32 (but can't compile in PPC32 due to `io_uring` causing issues with `cmake`)
-* [eduke32, rednukem] - Duke Nukem 3D has no music, rednukem Duke Nukem 64 sound is messed up
+* [eduke32, rednukem] - Duke Nukem 3D has no MIDI music, rednukem Duke Nukem 64 sound is messed up, Ion Fury crashes when going to menu
 * [mesa] - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588)
 * [nestopia] Has inverted colors, already tried [this](https://github.com/0ldsk00l/nestopia/issues/25) solution but didn't work so removed from repo
 * [planetblupi] When try to run says can't find cdrom, probably byteswap issues with game data, Construction mode works
