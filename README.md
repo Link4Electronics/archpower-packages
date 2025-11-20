@@ -50,3 +50,9 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
  PowerPC32
 * [kernel] there's issue with `io_uring` that makes cmake unstable
+
+# Minecraft
+
+Minecraft works up to 1.12.2, which is the last version that uses LWJGL2 and Java 8
+
+## Steps
