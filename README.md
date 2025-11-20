@@ -43,9 +43,10 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 # Issues
 * [mesa] - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc and issues with float FP16 as concluded [here](https://gitlab.freedesktop.org/mesa/mesa/-/issues/13954), radeon r600g has no H.264 acceleration [issue](https://gitlab.freedesktop.org/mesa/mesa/-/issues/588)
 * [nestopia] Has inverted colors, already tried [this](https://github.com/0ldsk00l/nestopia/issues/25) solution but didn't work so removed from repo
+* [planetblupi] When try to run says can't find cdrom, probably byteswap issues with data game
 * [SDLPop] - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
-* [soh] - Zelda Ocarina of Time has only music, sound effects are muted
-* [2s2h] - Zelda Majora's Mask has no sound
+* [soh] - Zelda Ocarina of Time has only music, sound effects are muted [issue](https://github.com/HarbourMasters/Shipwright/issues/4513)
+* [2s2h] - Zelda Majora's Mask has no sound [issue](https://github.com/HarbourMasters/2ship2harkinian/issues/802)
 * [spaghettikart] - Mario Kart 64 has no sound
 * [starship] - Starfox 64 has no sound
 * [sm64ex and forks] - DynOS doesn't work and can't provide package since requires ROM during building
@@ -58,3 +59,12 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 Minecraft works up to `1.12.2`, which is last version that supports `LWJGL2` and `Java 8`
 
 ## Steps
+
+Only tested `PPC64` and will assume this arch for guide, don't know about `PPC32` but probably works
+* Install `jre8-openjdk`, one of these launchers `multimc-git` or `primslauncher-offline` and their dependecies
+* Download `Minecraft XX-bit libs.7z` according to your platform and extract it at `~/Downloads`, for this guide will use `~/Downloads` as folder for console commands
+* `sudo cp ~/Downloads/liblwjgl.so /usr/lib/jvm/java-8-openjdk/jre/lib/ppc64`
+* Open MultiMC or Prism Launcher, Add Instance, chose version 1.12.2 or below, Edit Instance, LWJGL 2 Change version to 2.9.1(maximum version that works)
+* Go to Settings, Custom commands, check Custom Commands and paste in Wrapper command: `sh -c "cp ~/Downloads/codecjorbis-1.0-SNAPSHOT.jar ../../../libraries/com/paulscode/codecjorbis/*/*.jar; exec $INST_JAVA \"$@\""` This library is used to fix audio in big-endian machines
+* Suggest to install a loader, go to Version, Install Loader, choose Force and install `Relictium` to help a little bit with performance, but it swaps some colors ingame, I suspect this mod changes RGBA8888 32-bit textures to something 16-bit and causes the colors to change
+* That's it, enjoy!
