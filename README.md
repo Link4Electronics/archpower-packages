@@ -67,8 +67,9 @@ Minecraft works up to `1.12.2`, which is last version that supports `LWJGL2` and
 ## Steps
 
 Only tested on `PPC64` and will assume this arch for guide, don't know about `PPC32` but probably works
+For this guide will use `~/Downloads` as folder for console commands
 * Install `jre8-openjdk`, one of these launchers `multimc-git` or `primslauncher-offline` and their dependecies
-* Download `Minecraft XX-bit libs.7z` according to your platform and extract it to `~/Downloads`, for this guide will use `~/Downloads` as folder for console commands
+* Download `Minecraft XX-bit libs.7z` according to your platform and extract it to `~/Downloads`
 * `sudo cp ~/Downloads/liblwjgl.so /usr/lib/jvm/java-8-openjdk/jre/lib/ppc64` (adapt for ppc32 here)
 * Open MultiMC or Prism Launcher, Add Instance, chose version 1.12.2 or below, Edit Instance, LWJGL 2 Change version to `2.9.1` (last version that works)
 * Go to Settings, Custom commands, check Custom Commands and paste in Wrapper command: `sh -c "cp ~/Downloads/codecjorbis-1.0-SNAPSHOT.jar ../../../libraries/com/paulscode/codecjorbis/*/*.jar; exec $INST_JAVA \"$@\""` This library is used to fix audio in big-endian machines
