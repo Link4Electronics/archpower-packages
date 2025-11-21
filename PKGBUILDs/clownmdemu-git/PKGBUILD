@@ -1,0 +1,82 @@
+# Contributor and POWER Maintainer: Link <link4electronics@gmail.com>
+
+pkgname=clownmdemu-git
+_imgui_commit=4f7e292cdbdfbf10c9687df154bba6f5265598f2
+_sdl_commit=a96677bdf6b4acb84af4ec294e5f60a4e8cbbe03
+pkgver=1.5.r11.gdb70b69
+pkgrel=1
+pkgdesc="ClownMDEmu, a Sega Mega Drive/Sega Genesis emulator."
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://clownacy.wordpress.com"
+license=('GPL')
+depends=('sdl3' 'freetype2')
+makedepends=("git" "cmake" "gcc")
+options=('!debug' 'strip')
+source=("git+https://github.com/Clownacy/clownmdemu-frontend.git"
+        "frontend-common-master.tar.gz::https://github.com/Clownacy/clownmdemu-frontend-common/archive/refs/heads/master.tar.gz"
+        "clowncd-master.tar.gz::https://github.com/Clownacy/clowncd/archive/refs/heads/master.tar.gz"
+        "clownmcommon-master.tar.gz::https://github.com/Clownacy/clowncommon/archive/refs/heads/master.tar.gz"
+        "clown68000-master.tar.gz::https://github.com/Clownacy/clown68000/archive/refs/heads/master.tar.gz"
+        "clownmdemu-core-master.tar.gz::https://github.com/Clownacy/clownmdemu-core/archive/refs/heads/master.tar.gz"
+        "clownresampler-master.tar.gz::https://github.com/Clownacy/clownresampler/archive/refs/heads/master.tar.gz"
+        "sdl-${_imgui_commit:0:8}.tar.gz::https://github.com/libsdl-org/SDL/archive/$_sdl_commit.tar.gz"
+        "emscripten-browser-file-master.tar.gz::https://github.com/Armchair-Software/emscripten-browser-file/archive/refs/heads/master.tar.gz"
+        "fmt-master.tar.gz::https://github.com/fmtlib/fmt/archive/refs/heads/master.tar.gz"
+        "imgui-${_imgui_commit:0:8}.tar.gz::https://github.com/Clownacy/imgui/archive/$_imgui_commit.tar.gz"
+        "imgui-befix.patch")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '235dff95f2bcd74940f62c5d308224997eba07e6d2f4c297d2c04063db7d6cb4')
+
+prepare() {
+    mv clownmdemu-frontend clownmdemu
+
+    #libraries
+    mv ${srcdir}/SDL-$_sdl_commit/* clownmdemu/libraries/SDL
+    mv ${srcdir}/emscripten-browser-file-main/* clownmdemu/libraries/emscripten-browser-file
+    mv ${srcdir}/fmt-master/* clownmdemu/libraries/fmt
+    mv ${srcdir}/imgui-$_imgui_commit/* clownmdemu/libraries/imgui
+    patch -Np1 -i "${srcdir}/imgui-befix.patch" -d "clownmdemu/libraries/imgui"
+
+    #common
+    mv ${srcdir}/clownmdemu-frontend-common-master/* clownmdemu/common
+    mv ${srcdir}/clowncd-master/* clownmdemu/common/clowncd
+    mv ${srcdir}/clownmdemu-core-master/* clownmdemu/common/core
+
+    #clowncd
+    cp -r ${srcdir}/clowncommon-master/* clownmdemu/common/clowncd/clowncommon
+    mv ${srcdir}/clownresampler-master/* clownmdemu/common/clowncd/audio/libraries/clownresampler
+
+    #core
+    mv ${srcdir}/clown68000-master/* clownmdemu/common/core/clown68000
+    cp -r ${srcdir}/clowncommon-master/* clownmdemu/common/core/clowncommon
+
+    #clown68000
+    cp -r -p ${srcdir}/clowncommon-master/* clownmdemu/common/core/clown68000/common/clowncommon
+}
+
+build() {
+    cd "${srcdir}/clownmdemu"
+    cmake -B build . \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DCMAKE_POLICY_DEFAULT_CMP0069=NEW \
+    -DCLOWNMDEMU_FRONTEND_FREETYPE=ON
+
+    cmake --build build
+}
+
+package() {
+    cd "${srcdir}/clownmdemu"
+    DESTDIR="$pkgdir/" cmake --install build
+}
