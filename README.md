@@ -64,6 +64,8 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 
 Minecraft works up to `1.12.2`, which is last version that supports `LWJGL2` and `Java 8`
 
+Version `1.8.1` is last version that renders main menu properly, `1.8.2 and up`  has graphical issues in main menu but in-game is fine, better than nothing
+
 ## Steps
 
 Only tested on `PPC64` and will assume this arch for guide, don't know about `PPC32` but probably works
