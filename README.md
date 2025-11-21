@@ -67,6 +67,7 @@ Minecraft works up to `1.12.2`, which is last version that supports `LWJGL2` and
 ## Steps
 
 Only tested on `PPC64` and will assume this arch for guide, don't know about `PPC32` but probably works
+
 For this guide will use `~/Downloads` as folder for console commands
 * Install `jre8-openjdk`, one of these launchers `multimc-git` or `primslauncher-offline` and their dependecies
 * Download `Minecraft XX-bit libs.7z` according to your platform and extract it to `~/Downloads`
