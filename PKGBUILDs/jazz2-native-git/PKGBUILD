@@ -1,0 +1,34 @@
+# Contributor and POWER Maintainer: Link <link4electronics@gmail.com>
+
+pkgname=jazz2-native-git
+_pkgname=jazz2-native
+pkgver=3.4.0.r53.g76b894d
+pkgrel=1
+pkgdesc="Jazz jackrabbit 2 Reimplimentation engine."
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://deat.tk/jazz2"
+license=('GPL')
+depends=('sdl2' 'curl' 'openal' 'glew' 'glfw' 'libopenmpt')
+options=('!debug' 'strip')
+source=("git+https://github.com/deathkiller/jazz2-native.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd ${_pkgname}
+    git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "$srcdir/${_pkgname}"
+    cmake -DCMAKE_INSTALL_PREFIX="/usr" -DCMAKE_BUILD_TYPE=Release -B build
+    cmake --build build
+}
+
+package() {
+    cd "$srcdir/${_pkgname}"
+    DESTDIR="$pkgdir/" cmake --install build
+    
+    mkdir -p "$pkgdir/usr/share/games/Jazz2"
+    cp -rf "$srcdir/${_pkgname}/Content" "$pkgdir/usr/share/games/Jazz2"
+    echo "Place your game files in ~/.local/Jazz2 Resurrection/Source"
+}
