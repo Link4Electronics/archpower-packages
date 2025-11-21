@@ -2,7 +2,7 @@
 
 pkgname=jazz2-native-git
 _pkgname=jazz2-native
-pkgver=3.4.0.r53.g76b894d
+pkgver=3.4.0.r55.g09123bd
 pkgrel=1
 pkgdesc="Jazz jackrabbit 2 Reimplimentation engine."
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')

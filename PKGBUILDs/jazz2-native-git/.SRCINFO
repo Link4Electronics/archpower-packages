@@ -1,6 +1,6 @@
 pkgbase = jazz2-native-git
 	pkgdesc = Jazz jackrabbit 2 Reimplimentation engine.
-	pkgver = 3.4.0.r53.g76b894d
+	pkgver = 3.4.0.r55.g09123bd
 	pkgrel = 2
 	url = https://deat.tk/jazz2
 	arch = powerpc64le
