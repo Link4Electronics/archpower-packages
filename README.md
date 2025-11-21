@@ -7,7 +7,7 @@ Packages for ArchPOWER
 
 ## Usage
 
-Adding to pacman.conf (I know it s*cks without signature, but "it is what it is")
+Adding to pacman.conf (will arrange signature later)
 ```
 [extra-any]
 SigLevel = Never
