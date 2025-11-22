@@ -57,7 +57,7 @@ Mirror and containing large compiled packages: https://archive.org/details/linux
 * `spaghettikart` - Mario Kart 64 has no sound
 * `starship-sf64` - Starfox 64 has no sound
 * `supertuxkart` - Swapped colors and crashes when goes to menu
-* `xash3d-fwgs` - Half-Life port has physics models issues and crashes when LOADING new map, can explore using console `map c1a0` etc [issue](https://github.com/FWGS/xash3d-fwgs/pull/1466)
+* `xash3d-fwgs` - Half-Life port on PPC64 has physics models issues and crashes when LOADING new map, can explore using console `map c1a0` etc [issue](https://github.com/FWGS/xash3d-fwgs/pull/1466) on PPC32 should be fine
 
  PowerPC32
 * `kernel` there's issue with `io_uring` that makes `cmake` unstable
