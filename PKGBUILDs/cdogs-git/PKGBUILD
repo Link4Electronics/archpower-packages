@@ -1,0 +1,68 @@
+# Contributor: carstene1ns <arch carsten-teibes de> - http://git.io/ctPKG
+
+pkgname=cdogs-git
+pkgver=2.3.2.r18.g086cd9e0
+sdl2_mixer_ver=2.8.1
+pkgrel=1
+pkgdesc='SDL port of DOS arcade game C-Dogs (aka "Cyberdogs 2", development version)'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="http://cxong.github.io/cdogs-sdl/"
+license=('GPL2')
+depends=('gtk3' 'sdl2_image')
+makedepends=('git' 'cmake')
+conflicts=('cdogs')
+provides=('cdogs')
+options=('!debug' 'strip')
+source=(cdogs::"git+https://github.com/cxong/cdogs-sdl.git"
+        "https://github.com/libsdl-org/SDL_mixer/releases/download/release-${sdl2_mixer_ver}/SDL2_mixer-${sdl2_mixer_ver}.tar.gz")
+sha256sums=('SKIP'
+            'cb760211b056bfe44f4a1e180cc7cb201137e4d1572f2002cc1be728efd22660')
+
+pkgver() {
+  cd cdogs
+  git describe --long --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd cdogs
+
+  # disable -Werror (aborts build on mere warnings)
+  sed 's| -Werror||' -i CMakeLists.txt
+
+  # Replace SDL2_mixer dynamic linking by static linking
+  sed "s|include_directories(src src/cdogs)|include_directories(src src/cdogs ${srcdir}/SDL2_mixer-${sdl2_mixer_ver}/include)|" -i "${srcdir}/cdogs/CMakeLists.txt"
+  sed "s|find_package(SDL2_mixer REQUIRED)||" -i "${srcdir}/cdogs/CMakeLists.txt"
+  sed "s|SDL2_mixer::SDL2_mixer|${srcdir}/SDL2_mixer-${sdl2_mixer_ver}/build/.libs/libSDL2_mixer.a|" -i "${srcdir}/cdogs/src/cdogs/CMakeLists.txt"
+  sed "s|SDL2_mixer::SDL2_mixer|${srcdir}/SDL2_mixer-${sdl2_mixer_ver}/build/.libs/libSDL2_mixer.a|" -i "${srcdir}/cdogs/src/cdogsed/CMakeLists.txt"
+}
+
+build() {
+  # Building SDL2_mixer for linking it staticly with ogg-stb features enabled.
+  # This is due to a bug with ogg-vorbis enabled causing the game to crash at boot.
+  # https://github.com/cxong/cdogs-sdl/issues/852#issuecomment-2067648775
+  cd "SDL2_mixer-${sdl2_mixer_ver}"
+
+  sed -i "s|/etc/timidity.cfg|/etc/timidity/timidity.cfg|g" src/codecs/music_timidity.c
+
+  ./configure \
+      --enable-music-ogg-stb \
+      --enable-music-flac-libflac \
+      --enable-music-mp3-mpg123 \
+      --disable-music-ogg-vorbis \
+      --disable-music-flac-drflac \
+      --disable-music-mp3-drmp3 \
+      --prefix=/usr
+  make
+
+  cd ../cdogs
+
+  cmake ./ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/share/cdogs \
+    -DCDOGS_DATA_DIR="/usr/share/cdogs/"
+  make
+}
+
+package() {
+  make DESTDIR="$pkgdir/" install -C cdogs
+  mv $pkgdir/usr/share/cdogs/bin/ $pkgdir/usr/bin/
+  mv $pkgdir/usr/share/cdogs/share/* $pkgdir/usr/share/
+}
