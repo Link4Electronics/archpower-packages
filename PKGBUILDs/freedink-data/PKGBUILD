@@ -1,0 +1,30 @@
+# Maintainer: David A. Redick <david.a.redick@gmail.com>
+# Contributor: Petteri Tolonen <petteri dot tolonen at gmail dot com>
+
+# Most of this is ripped from the project's own .spec file.
+# See http://git.savannah.gnu.org/cgit/freedink/freedink-data.git/tree/freedink-data.spec
+
+pkgname=freedink-data
+pkgver=1.08.20190120
+pkgrel=4
+pkgdesc='Humorous top-down adventure and role-playing game assets.'
+arch=('any')
+url='https://www.gnu.org/software/freedink/'
+# Multiple cross licenses allowed.
+license=('GPL3' 'custom')
+depends=()
+makedepends=('make')
+optdepends=()
+source=("ftp://ftp.gnu.org/gnu/freedink/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('715f44773b05b73a9ec9b62b0e152f3f281be1a1512fbaaa386176da94cffb9d')
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	# Multiple cross licenses allowed.
+	mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
+	cp licenses/* "${pkgdir}/usr/share/licenses/${pkgname}"
+
+	make DESTDIR="${pkgdir}" PREFIX=/usr install
+}
+

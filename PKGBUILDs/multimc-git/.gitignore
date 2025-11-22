@@ -1,7 +1,0 @@
-*.tar
-*.tar.*
-src
-pkg
-Launcher
-quazip
-libnbtplusplus
