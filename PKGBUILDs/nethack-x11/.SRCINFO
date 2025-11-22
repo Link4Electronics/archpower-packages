@@ -1,0 +1,36 @@
+pkgbase = nethack-x11
+	pkgdesc = Single-player roguelike dungeon exploration game (X11 version)
+	pkgver = 3.6.7
+	pkgrel = 1
+	url = http://nethack.org/
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = custom
+	options = !debug
+	options = strip
+	makedepends = setconf
+	makedepends = gendesk
+	depends = libxaw
+	conflicts = nethack
+	backup = etc/nethackrc
+	backup = var/games/nethack/logfile
+	backup = var/games/nethack/xlogfile
+	backup = var/games/nethack/perm
+	backup = var/games/nethack/record
+	backup = usr/games/nethack/sysconf
+	source = https://nethack.org/download/3.6.7/nethack-367-src.tgz
+	source = nethack-x11.patch
+	source = warn_unused.patch
+	source = nethack-x11.png::http://bugs.gentoo.org/attachment.cgi?id=86458
+	source = gcc15-1.diff
+	source = x11-fix.patch
+	sha256sums = 98cf67df6debf9668a61745aa84c09bcab362e5d33f5b944ec5155d44d2aacb2
+	sha256sums = 685d68cbbd2c9854b52d71e53ca2c73c95adef43b79e7d36b6c244dc86f796e5
+	sha256sums = 6bbfb4cba6baa3b112cf5ae98593210736946f5778e8c252a925e699c02bbf2b
+	sha256sums = e1e0b059c617af04ee88bed4b03b73c02f022663e001c5485fe9900ca2d76295
+	sha256sums = 927509d9b42de18670d7d259b48eb28364f930683b739deabfd59ee6066bcb38
+	sha256sums = c6e05ede2874f2f144d92355ee9efc5fde50df32f486f87dc7a67f7fcefa97a3
+
+pkgname = nethack-x11

@@ -34,10 +34,10 @@ pkgbase = clownmdemu-git
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = SKIP
+	sha256sums = 9f3a6dabc12c5f04894e0a70359ac448eb9cbe4065fde09e0ab4cf013ff39dd9
 	sha256sums = SKIP
 	sha256sums = SKIP
-	sha256sums = SKIP
-	sha256sums = SKIP
+	sha256sums = 374aaca1a571d2aca73d454899e7933b68dc8eb5866d9485762364d46af11c28
 	sha256sums = 235dff95f2bcd74940f62c5d308224997eba07e6d2f4c297d2c04063db7d6cb4
 
 pkgname = clownmdemu-git
