@@ -1,0 +1,30 @@
+pkgbase = spacecadetpinball-git
+	pkgdesc = Reverse engineered port of "3D Pinball for Windows – Space Cadet" to Linux
+	pkgver = 1.1.1.r51.g86cf13d
+	pkgrel = 1
+	url = https://github.com/k4zmu2a/SpaceCadetPinball
+	arch = powerpc64le
+	arch = powerpc64
+	arch = powerpc
+	arch = espresso
+	license = MIT
+	license = proprietary
+	options = !debug
+	options = strip
+	makedepends = p7zip
+	makedepends = cmake
+	makedepends = git
+	depends = sdl2
+	depends = sdl2_mixer
+	optdepends = freepats-general-midi: Soundfont for playing background music
+	provides = spacecadetpinball
+	conflicts = spacecadetpinball
+	noextract = Space_Cadet.rar
+	source = https://archive.org/download/SpaceCadet_Plus95/Space_Cadet.rar
+	source = spacecadetpinball-git::git+https://github.com/grepwood/SpaceCadetPinball#branch=big-endian-port
+	source = spacecadetpinball.desktop
+	sha256sums = 3cc5dfd914c2ac41b03f006c7ccbb59d6f9e4c32ecfd1906e718c8e47f130f4a
+	sha256sums = SKIP
+	sha256sums = 5c0bb2d747b5b94cf3e961219d1d556b27284ed7363190ef80550188db67c6c1
+
+pkgname = spacecadetpinball-git
