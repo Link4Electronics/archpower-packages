@@ -1,13 +1,13 @@
 # Maintainer: thephoenix <ezrakhuzadi@gmail.com>
 pkgname=prismlauncher-offline
-pkgver=10.0
+pkgver=11.0.2
 pkgrel=1
 pkgdesc="Prism Launcher fork with offline account support enabled (built from source)"
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 url="https://github.com/Diegiwg/PrismLauncher-Cracked"
 license=('GPL3')
-depends=('qt6-base' 'qt6-5compat' 'qt6-svg' 'qt6-imageformats' 'java-runtime' 'zlib' 'quazip-qt6' 'tomlplusplus' 'cmark')
-makedepends=('git' 'cmake' 'extra-cmake-modules' 'java-environment>=8')
+depends=('qt6-base' 'qt6-5compat' 'qt6-svg' 'qt6-networkauth' 'qt6-imageformats' 'java-runtime' 'zlib' 'quazip-qt6' 'tomlplusplus' 'cmark' 'gamemode' 'libarchive' 'qrencode')
+makedepends=('git' 'cmake' 'extra-cmake-modules' 'java-environment>=8' 'vulkan-headers')
 provides=('prismlauncher-offline')
 conflicts=('prismlauncher')
 options=('!debug' 'strip')
@@ -22,16 +22,22 @@ prepare() {
     cd "${srcdir}/prismlauncher-cracked"
 
     # Copy git submodules into place
+    mkdir -p libraries/libnbtplusplus libraries/filesystem
     cp -r "${srcdir}/libnbtplusplus/"* libraries/libnbtplusplus/
     cp -r "${srcdir}/filesystem/"* libraries/filesystem/
 
     # Fix Java 7 to Java 8 compatibility
     sed -i 's/-target 7 -source 7/-target 8 -source 8/g' libraries/javacheck/CMakeLists.txt
     sed -i 's/-target 7 -source 7/-target 8 -source 8/g' libraries/launcher/CMakeLists.txt
+
+    find . -name "CMakeLists.txt" -exec sed -i 's/COMPILE_WARNING_AS_ERROR ON/COMPILE_WARNING_AS_ERROR OFF/g' {} \;
+    find . -name "CMakeLists.txt" -exec sed -i 's/-Werror//g' {} \;
 }
 
 build() {
     cd "${srcdir}/prismlauncher-cracked"
+
+    export CXXFLAGS="${CXXFLAGS} -Wno-error -Wno-sfinae-incomplete"
 
     cmake -B build \
         -DCMAKE_BUILD_TYPE=Release \

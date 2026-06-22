@@ -56,12 +56,17 @@ sha256sums=('6720aceb6a478e35d00182ec22beb215e44c30a63ff93ec5c1358dae056d4880'
 prepare() {
   ln -sf "${pkgname}-${pkgver}" llama.cpp
   mkdir -p "${pkgname}/.git"
-  # POWER8: un-gate the VSX quant kernels (otherwise they fall back to scalar).
-  patch -Np1 -d "${pkgname}-${pkgver}" < "${srcdir}/power8-vsx.patch"
+  # POWER8: un-gate the VSX quant kernels (otherwise they fall back to scalar)
+  if [ "$CARCH" = "powerpc64le" ]; then
+    patch -Np1 -d "${pkgname}-${pkgver}" < "${srcdir}/power8-vsx.patch"
+  fi
 }
 build() {
-  export CFLAGS="-mcpu=power8 -mvsx -maltivec"
-  export CXXFLAGS="-mcpu=power8 -mvsx -maltivec"
+  # POWER8 VSX/AltiVec flags are only valid for powerpc64le
+  if [ "$CARCH" = "powerpc64le" ]; then
+    export CFLAGS="-mcpu=power8 -mvsx -maltivec"
+    export CXXFLAGS="-mcpu=power8 -mvsx -maltivec"
+  fi
 
   local _cmake_options=(
     -G Ninja

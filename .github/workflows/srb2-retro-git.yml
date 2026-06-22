@@ -1,0 +1,189 @@
+name: srb2-retro-git
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['PKGBUILDs/srb2-retro-git/**']
+
+jobs:
+  build:
+    name: build (${{ matrix.arch }})
+    strategy:
+      matrix:
+        include:
+          - arch: espresso
+            bootlin: powerpc-440fp
+            triple: powerpc-linux
+            repo_arch: espresso
+            pkg_arch: powerpc
+            cflags_extra: -mcpu=750 -O2 -pipe -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fno-omit-frame-pointer
+          - arch: powerpc32
+            bootlin: powerpc-440fp
+            triple: powerpc-linux
+            repo_arch: powerpc
+            cflags_extra: -O2 -pipe -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fno-omit-frame-pointer
+          - arch: powerpc64
+            bootlin: powerpc64-power8
+            triple: powerpc64-linux
+            repo_arch: powerpc64
+            cflags_extra: -O2 -pipe -mcpu=powerpc64 -mabi=altivec -maltivec -mabi=elfv2 -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fno-omit-frame-pointer
+          - arch: powerpc64le
+            bootlin: powerpc64le-power8
+            triple: powerpc64le-linux
+            repo_arch: powerpc64le
+            cflags_extra: -O2 -pipe -mcpu=power8 -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fno-omit-frame-pointer
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+
+    steps:
+      - name: Install base deps
+        run: |
+          rm -f /var/cache/pacman/pkg/*.pkg.tar.zst
+          pacman -Sy --noconfirm
+          pacman -S --noconfirm base-devel git wget sudo
+
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            PKGBUILDs/srb2-retro-git
+
+      - name: Download Bootlin toolchain
+        run: |
+          tc="https://toolchains.bootlin.com/downloads/releases/toolchains/${{ matrix.bootlin }}/tarballs/${{ matrix.bootlin }}--glibc--bleeding-edge-2025.08-1.tar.xz"
+          wget -q "$tc" -O /tc.tar.xz
+          tar -xf /tc.tar.xz -C /opt
+          dir=$(tar -tf /tc.tar.xz | head -1 | cut -d/ -f1)
+          mv "/opt/$dir" /opt/cross
+          echo "/opt/cross/bin" >> $GITHUB_PATH
+
+      - name: Create sysroot from ArchPOWER
+        run: |
+          arch="${{ matrix.repo_arch }}"
+          pkgarch="${{ matrix.pkg_arch || matrix.repo_arch }}"
+
+          {
+            echo '[options]'
+            echo "Architecture = $pkgarch"
+            echo '[testing]'
+            echo 'Server = https://repo.archlinuxpower.org/testing/$arch'
+            echo 'SigLevel = Never'
+            echo '[testing-any]'
+            echo 'Server = https://repo.archlinuxpower.org/testing/any'
+            echo 'SigLevel = Never'
+            echo '[base]'
+            echo 'Server = https://repo.archlinuxpower.org/base/$arch'
+            echo 'SigLevel = Never'
+            echo '[base-any]'
+            echo 'Server = https://repo.archlinuxpower.org/base/any'
+            echo 'SigLevel = Never'
+            echo '[extrappc-any]'
+            echo 'SigLevel = Never'
+            echo 'Server = https://raw.githubusercontent.com/Link4Electronics/archpower-packages/main/extrappc/any'
+            echo '[extrappc]'
+            echo 'SigLevel = Never'
+            echo "Server = https://raw.githubusercontent.com/Link4Electronics/archpower-packages/main/extrappc/$arch"
+          } > /tmp/pacman-cross.conf
+
+          rm -f /var/cache/pacman/pkg/*.pkg.tar.zst
+          mkdir -p /sysroot/var/lib/pacman
+
+          pacman --root /sysroot --config /tmp/pacman-cross.conf --noscriptlet -Sy
+
+          pacman --root /sysroot --config /tmp/pacman-cross.conf --noscriptlet --noconfirm -S \
+            glibc linux-api-headers gcc sdl2 sdl2_mixer curl libpng zlib mesa
+
+      - name: Cross-compile
+        run: |
+          useradd -m builder
+          chown -R builder PKGBUILDs/srb2-retro-git
+
+          # Replace Bootlin's ELFv1 CRT/libgcc with ArchPOWER's ELFv2 versions
+          ARCH_CRT="$(find /sysroot/usr/lib/gcc -name crtbegin.o -type f 2>/dev/null | head -1)"
+          BOOTLIN_CRT="$(find /opt/cross/lib/gcc -name crtbegin.o -type f 2>/dev/null | head -1)"
+          if [ -n "$ARCH_CRT" ] && [ -n "$BOOTLIN_CRT" ]; then
+            cp -v "$(dirname "$ARCH_CRT")"/*.o "$(dirname "$BOOTLIN_CRT")/" 2>/dev/null
+            cp -v "$(dirname "$ARCH_CRT")"/*.a "$(dirname "$BOOTLIN_CRT")/" 2>/dev/null
+            BOOTLIN_TUPLE="$(basename "$(dirname "$(dirname "$BOOTLIN_CRT")")")"
+            if [ -d "/opt/cross/$BOOTLIN_TUPLE/lib64" ]; then
+              BOOTLIN_LIBDIR="/opt/cross/$BOOTLIN_TUPLE/lib64"
+            elif [ -d "/opt/cross/$BOOTLIN_TUPLE/lib" ]; then
+              BOOTLIN_LIBDIR="/opt/cross/$BOOTLIN_TUPLE/lib"
+            fi
+            if [ -n "$BOOTLIN_LIBDIR" ]; then
+              for f in /sysroot/usr/lib/libgcc_s.so* /sysroot/usr/lib64/libgcc_s.so*; do
+                [ -f "$f" ] && cp -v "$f" "$BOOTLIN_LIBDIR/"
+              done 2>/dev/null
+              for f in /sysroot/usr/lib/libstdc++.so* /sysroot/usr/lib64/libstdc++.so* \
+                       /sysroot/usr/lib/libsupc++.a* /sysroot/usr/lib64/libsupc++.a*; do
+                [ -f "$f" ] && cp -v "$f" "$BOOTLIN_LIBDIR/"
+              done 2>/dev/null
+            fi
+          fi
+
+          # Create *-config wrappers that use pkg-config with sysroot paths
+          printf '#!/bin/bash\nargs=(); for a in "$@"; do [ "$a" = "--ldflags" ] && a="--libs"; args+=("$a"); done\nexec /usr/bin/pkg-config "${args[@]}" sdl2\n' > /opt/cross/bin/sdl2-config
+          printf '#!/bin/bash\nargs=(); for a in "$@"; do [ "$a" = "--ldflags" ] && a="--libs"; args+=("$a"); done\nexec /usr/bin/pkg-config "${args[@]}" libpng\n' > /opt/cross/bin/libpng-config
+          chmod +x /opt/cross/bin/sdl2-config /opt/cross/bin/libpng-config
+
+          cd PKGBUILDs/srb2-retro-git
+
+          # Inject cross-compiler into make command, NOHW=1 avoids unsafe /usr/X11R6 paths
+          sed -i 's|make LINUX64=1|make NOHW=1 LINUX64=1 CC=$CC CXX=$CXX OBJCOPY=${{ matrix.triple }}-objcopy|' PKGBUILD
+
+          # Override CARCH so package filename uses target arch
+          sed -i "s/^CARCH=.*/CARCH='${{ matrix.pkg_arch || matrix.repo_arch }}'/" /etc/makepkg.conf
+          # Append flags at end (last assignment wins over multi-line originals)
+          echo "CFLAGS=\"${{ matrix.cflags_extra }} --sysroot=/sysroot\"" >> /etc/makepkg.conf
+          echo "CXXFLAGS=\"${{ matrix.cflags_extra }} --sysroot=/sysroot\"" >> /etc/makepkg.conf
+          echo "LDFLAGS=\"-Wl,-O1 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now --sysroot=/sysroot\"" >> /etc/makepkg.conf
+          # Bootlin toolchain hardcodes ld64.so.1 for ppc64 (ELFv1); ArchPOWER uses ld64.so.2 (ELFv2)
+          if [[ "${{ matrix.arch }}" =~ ^powerpc64 ]]; then
+            echo "LDFLAGS+=\" -Wl,-dynamic-linker,/lib64/ld64.so.2\"" >> /etc/makepkg.conf
+          fi
+
+          export CC=${{ matrix.triple }}-gcc
+          export CXX=${{ matrix.triple }}-g++
+          export PATH="/opt/cross/bin:$PATH"
+          export PKG_CONFIG_LIBDIR="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig"
+          export PKG_CONFIG_SYSROOT_DIR="/sysroot"
+
+          sudo -u builder env \
+            PATH="$PATH" \
+            CC="$CC" \
+            CXX="$CXX" \
+            PKG_CONFIG_LIBDIR="$PKG_CONFIG_LIBDIR" \
+            PKG_CONFIG_SYSROOT_DIR="$PKG_CONFIG_SYSROOT_DIR" \
+            makepkg -c --noconfirm --ignorearch --nodeps --nocheck
+
+          if [ "${{ matrix.arch }}" = "espresso" ]; then
+            for f in srb2-retro-git-*-powerpc.pkg.tar.zst; do
+              [ -f "$f" ] && mv "$f" "${f/-powerpc/-espresso}"
+            done
+          fi
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: srb2-retro-git-${{ matrix.arch }}
+          path: PKGBUILDs/srb2-retro-git/srb2-retro-git-*.pkg.tar.zst
+
+  release:
+    needs: [build]
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: srb2-retro-git-*
+      - name: Upload to release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: srb2-retro-git-build-${{ github.run_number }}
+          name: "srb2-retro-git build #${{ github.run_number }}"
+          body: Automated cross-compiled build triggered by ${{ github.event_name }}
+          artifacts: "srb2-retro-git-*/*.pkg.tar.zst"
+          makeLatest: true

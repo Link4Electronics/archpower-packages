@@ -41,7 +41,8 @@ jobs:
     steps:
       - name: Install base deps (including git for sparse checkout)
         run: |
-          pacman -Syu --noconfirm
+          rm -f /var/cache/pacman/pkg/*.pkg.tar.zst
+          pacman -Sy --noconfirm
           pacman -S --noconfirm base-devel cmake python3 wget sudo
 
       - uses: actions/checkout@v4
@@ -78,8 +79,15 @@ jobs:
             echo '[base-any]'
             echo 'Server = https://repo.archlinuxpower.org/base/any'
             echo 'SigLevel = Never'
+            echo '[extrappc-any]'
+            echo 'SigLevel = Never'
+            echo 'Server = https://raw.githubusercontent.com/Link4Electronics/archpower-packages/main/extrappc/any'
+            echo '[extrappc]'
+            echo 'SigLevel = Never'
+            echo "Server = https://raw.githubusercontent.com/Link4Electronics/archpower-packages/main/extrappc/$arch"
           } > /tmp/pacman-cross.conf
 
+          rm -f /var/cache/pacman/pkg/*.pkg.tar.zst
           mkdir -p /sysroot/var/lib/pacman
 
           # Sync repo databases for target architecture

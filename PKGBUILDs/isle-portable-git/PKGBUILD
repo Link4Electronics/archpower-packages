@@ -1,0 +1,57 @@
+pkgname=isle-portable-git
+pkgver=r2160.ba14b482
+pkgrel=1
+pkgdesc="Portable version of LEGO Island based on decompilation effort"
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+url="https://github.com/Link4Electronics/isle-portable"
+license=('LGPL-3.0-or-later')
+depends=('iniparser' 'mesa' 'qt6-base' 'sdl3')
+makedepends=('cmake' 'git' 'python')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+options=('!debug' 'strip')
+source=(
+    'git+https://github.com/Link4Electronics/isle-portable.git'
+    'git+https://github.com/ocornut/imgui'
+    'git+https://github.com/mackron/miniaudio'
+    'foxtacles-libsmacker::git+https://github.com/foxtacles/libsmacker'
+)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+
+pkgver() {
+    cd "$srcdir/${pkgname%-git}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd "$srcdir/${pkgname%-git}"
+    git submodule init
+
+    git config submodule.imgui.url "$srcdir/imgui"
+    git config submodule.3rdparty/miniaudio.url "$srcdir/miniaudio"
+    git config submodule.3rdparty/libsmacker.url "$srcdir/foxtacles-libsmacker"
+
+    git -c protocol.file.allow=always submodule update
+
+    # -latomic needed for 8-byte atomic ops on 32-bit PowerPC
+    sed -i 's/target_link_libraries(lego1 PRIVATE SDL3::SDL3)/target_link_libraries(lego1 PRIVATE SDL3::SDL3 atomic)/' CMakeLists.txt
+    # Also add globally so anything linking lego1 inherits it
+    sed -i '1i link_libraries(atomic)' CMakeLists.txt
+}
+
+build() {
+    local cmake_options=(
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_INSTALL_PREFIX=/usr
+        -DCMAKE_INSTALL_LIBDIR=lib
+    )
+    cmake -B build -S "${pkgname%-git}" "${cmake_options[@]}"
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}

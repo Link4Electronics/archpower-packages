@@ -1,0 +1,64 @@
+pkgname=maniadrive-git
+_pkgname=ManiaDrive
+pkgver=1.3.0
+pkgrel=1
+pkgdesc='Open-source racing game built on the Raydium 3D engine'
+arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
+license=('GPL2')
+url='https://github.com/Link4Electronics/ManiaDrive'
+depends=('glew' 'glu' 'openal' 'freealut' 'libjpeg-turbo' 'libpng' 'zlib'
+         'curl' 'libxml2' 'libvorbis' 'libogg' 'libx11' 'libxinerama'
+         'v4l-utils' 'mesa')
+makedepends=('cmake' 'git' 'bison')
+provides=('maniadrive')
+conflicts=('maniadrive')
+options=('!debug' 'strip')
+source=("git+https://github.com/Link4Electronics/ManiaDrive.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$_pkgname"
+  local desc
+  desc=$(git describe --long --tags 2>/dev/null) && echo "$desc" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' || echo "0.r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$_pkgname"
+
+  # PHP configure for cross-compilation (host triple set by workflow env)
+  if [ -n "${MANIADRIVE_PHP_HOST:-}" ]; then
+    # Copy libz into Bootlin sysroot for PHP configure's zlib detection
+    BOOTLIN_SYSROOT="$(${MANIADRIVE_PHP_HOST}-gcc --print-sysroot 2>/dev/null)"
+    if [ -n "$BOOTLIN_SYSROOT" ] && [ -d "$BOOTLIN_SYSROOT/usr/lib" ]; then
+      cp -a /sysroot/usr/lib/libz.so* "$BOOTLIN_SYSROOT/usr/lib/" 2>/dev/null || true
+    fi
+    sed -i 's|  --with-zlib|  --with-zlib=/sysroot/usr|' CMakeLists.txt
+    # Use --sysroot=/sysroot in CC so PHP configure uses ArchPOWER's glibc (system CRT, libc, headers).
+    # This avoids ABI mismatches from mixing Bootlin and ArchPOWER CRT/libc.
+    # Bootlin's own GCC CRT files (crtbegin.o etc.) are preserved — the workflow replaces
+    # them only for ppc64 (where ELFv1→ELFv2 correction is needed).
+    sed -i 's|"${PHP_SOURCE_DIR}/configure"|ac_cv_prog_cc_cross=yes CC="'"$MANIADRIVE_PHP_HOST"'-gcc --sysroot=/sysroot" CFLAGS="-std=gnu89 '"${MANIADRIVE_PHP_EXTRA_CFLAGS}"'" LDFLAGS="" "${PHP_SOURCE_DIR}/configure" "--host='"$MANIADRIVE_PHP_HOST"'" --build=x86_64-pc-linux-gnu|' CMakeLists.txt
+  fi
+  if [ "${MANIADRIVE_PHP_SIZEOF_LONG:-8}" = "4" ]; then
+    sed -i 's/ac_cv_sizeof_long=8/ac_cv_sizeof_long=4/' CMakeLists.txt
+  fi
+}
+
+build() {
+  cmake -B build -S "$_pkgname" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DKIDS_MODE=ON
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 "$_pkgname"/debian/maniadrive.desktop \
+    "$pkgdir"/usr/share/applications/maniadrive.desktop
+  install -Dm644 "$_pkgname"/debian/maniadrive_editor.desktop \
+    "$pkgdir"/usr/share/applications/maniadrive_editor.desktop
+  install -Dm644 "$_pkgname"/debian/icon.png \
+    "$pkgdir"/usr/share/icons/hicolor/256x256/apps/maniadrive.png
+}

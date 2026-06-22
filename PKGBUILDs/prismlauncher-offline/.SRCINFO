@@ -1,6 +1,6 @@
 pkgbase = prismlauncher-offline
 	pkgdesc = Prism Launcher fork with offline account support enabled (built from source)
-	pkgver = 10.0
+	pkgver = 11.0.2
 	pkgrel = 1
 	url = https://github.com/Diegiwg/PrismLauncher-Cracked
 	arch = powerpc64le
@@ -12,6 +12,7 @@ pkgbase = prismlauncher-offline
 	makedepends = cmake
 	makedepends = extra-cmake-modules
 	makedepends = java-environment>=8
+	makedepends = vulkan-headers
 	depends = qt6-base
 	depends = qt6-5compat
 	depends = qt6-svg
@@ -21,6 +22,9 @@ pkgbase = prismlauncher-offline
 	depends = quazip-qt6
 	depends = tomlplusplus
 	depends = cmark
+	depends = gamemode
+	depends = libarchive
+	depends = qrencode
 	provides = prismlauncher-offline
 	conflicts = prismlauncher
 	options = !debug
