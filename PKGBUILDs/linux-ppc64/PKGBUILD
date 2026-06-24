@@ -1,0 +1,267 @@
+# POWER Maintainer: Alexander Baldeck <alex.bldck@gmail.com>
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+
+pkgbase=linux-ppc64
+pkgver=7.1.1.arch1
+pkgrel=1
+pkgdesc='Linux (powerpc64/ 64K page size)'
+url='https://github.com/archlinux/linux'
+arch=(powerpc64 powerpc espresso)
+license=(GPL2)
+makedepends=(
+  bc
+  cpio
+  gettext
+  libelf
+  pahole
+  perl
+  python
+  tar
+  xz
+)
+# cross compiler
+makedepends_powerpc=(powerpc64-unknown-linux-gnu-gcc)
+makedepends_powerpc64le=(powerpc64-unknown-linux-gnu-gcc)
+makedepends_x86_64=(powerpc64-unknown-linux-gnu-gcc)
+
+options=('!ccache' '!debug' '!strip')
+_srcname=linux-${pkgver%.*}
+_srctag=v${pkgver%.*}-${pkgver##*.}
+source=(
+  https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  #$url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
+  config  # the main kernel config file
+  0003-ppc-radeon-qw-pm.patch
+  0004-pcmcia-iomega-clik.patch
+  0005-i915-diag.patch
+  0006-i915-page-64k.patch
+  0007-i915-ppc.patch
+  0008-radeon-amdgpu-firmware-is-required-for-drm-and-kms-on-r600-onward.patch
+  0666-hotfix-windfarm_rm31.patch
+  hotfix-aha152x-printk-cont.patch
+  hotfix-appledisplay.patch
+  xserve-frontpanel.patch
+  hotfix-powernv_rng.patch
+  hotfix-powernv-amdgpu.patch
+  hotfix-32bit-objtool.patch
+  dart_1st_pcie_slot.patch
+)
+validpgpkeys=(
+  ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
+  647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
+  83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
+)
+# https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
+sha256sums=('5215fa3541dc7e7f5bcd51bf7e57f169cec6fce508ca54e3dc85fdee14371d7d'
+            'SKIP'
+            'SKIP'
+            '07dbbf3e8f743e8d2ad90891a8b567392271db139e339529df1ab4387e0e6400'
+            'b8a5d1e9dbed702d23bda79af3ac6f3d61228e123f7d6e5717779f2e28c4b677'
+            '060a30a4148aa88701003fd56bb389971db8527fa376e3436094cddcdec76c24'
+            '5dc5eb5772dd79ea4c87a60c2bafbb0503f20a3e4ddbf2075c02ca69e159e21d'
+            '7d44df97c0e565cfec60b77c0ad582e7f0da54726cfedc149c0b49e45f3a5d8b'
+            '0ea72c198925c98d32c19ad5ed0ba8c69b3d15b2c7eb54f9b34c6d013fea2076'
+            '49186b0457740869214eafbda48d457d673106ec821a88cfb61d6129c4ac08ae'
+            'cf7de242e4ccd61e2594d272f066aca1d5e3df17ccbca20e75ff14d8a414c2f4'
+            'bf6c4bd24f55c17a1a22d96ff1c3acdf24fe48cf2835932a6885c7c97e15ffdf'
+            'dee86bce65f8bcc44ee56ca2a4a3c68699fdeaabe61eafa45baca1bfe24d6f07'
+            'f8f2a23dc33473e09ec1ffce972e73d656ebce5cc5ec0d7f09f89a91e6da9c69'
+            'df8b7aa3f583204401432fcaea91720595b7e74ed8bd4b1bf22d3ae3d5ec4c6e'
+            '7b81aa0a1703aa9b74651f155bba4c290f61bd67572704d7a438251eb6ffca55'
+            'f0d02df33f53ed53094194a7a515bac37f7a205997186333bdc3d6737df4c8b6')
+
+b2sums=('b0131b7a69bcf808322f4c48493faec7169fd8e3dbdb0974e61814d27c4af93ccf889af89d44e29463e416393b1bd36a8f5c0916f122d109a0a0c62b27038af8'
+        'SKIP'
+        'SKIP'
+        '9677bbe86e5bb846c1fef6065f854e72b97a6e2b3b0e547192159fd56fac8b879999c6d52a835ebf7566be00c1a78644112564a4f76ec1c912181474479ad0a0'
+        '7af37e02f6b8233a72c03be8586abeabc253dae70208e8169b208f49360c96c63edc5d68c1dbb51d6480d8b1bfdf8ba5f3303d1b18e9ab453c01ebebf3cf19a7'
+        'bae7c8f1b50b9a43c99b91496446e9e0eff9442e40c7501aa5c1f24587dd39bea5bc0c5b48e6439118dcc779e36fbfaf75b2d92617257ade5e30109df21ae102'
+        '6dc95da4e14b9c4dd8c62480560c061a5c1a29ce1af8d9ee1e73401f79339e1b6c4f8339568d57414a51341f382c1ee1a636bdaaf70bca72692d62c0a03670f8'
+        '45ca140885508e53bc779fe650e84702928980b7b3cedd63d68558a20a9504e93cb2e78ca20e613917d17732b6e18c3fb37b348cfdf5e1a5325b827986268a1e'
+        '874cbf9261ef4b2209f392e5bcd03c55151224e036c546877fb737dd292fec59a039331b90b1e37be9ffe68fca563cc144336eec56b8e4194ea72142e716369a'
+        '99656109ed282ba45066d0cdc3515d11e1e660b7eadac7d8dccadb2429e929f77280d57cf800fa3e7326465e3060695325fecac72c21fcec4cd356fe2801b60c'
+        '78adf3566e63f2cb56c6a3e988b7710db34ad7c923c93f9a391e7d3b41486487f17660900d0cdb531132ef444f94a1eba90f3ec02b76f6c3082ad9c73f5eefd9'
+        'f4706d9eb3a1daf38cca5694553a3c8ade323bff0e9d67bffa3ed8512873aec03ed4ced76dd3830595d115340d0bd35576ef71efeda400f2ccb99612119f7202'
+        'bb0400559f50f70aa19806f6b00abf3ad373f8444306a0232e3e200f04944684f4b0cbafd94943ce0418be13703e6c330eac0fc051e2eb5bd1cbb60e178036c0'
+        '0bc7c36c67ee714f653371ae41b21e66b7761c406fc152060db802944abf6786624f853d8dab55ac857fce403e6fff1173e7de4751bb7cab785ac42684831bc8'
+        '4cc25bd6ecdd66f7f14161eff9a62029463c9394622251ae27c635be25031c00498473a2af325853fe82b73f1c2555fd2626338eeba60af16dcad7719439fff6'
+        '320899d5dde1f1c4fff5f762e7947310e59c52f2f6320d494f8384cfad3cb005e58e0c2c5ab81b9c9f2ee6b37e87bbf8408da0e5c84684a9790579e34b409def'
+        '068f3a82eb36a54678fdfe0f2349ad795b4a2f19089fccc8da900212aa15fc299751a3da07427bbbdb80e9c6360516286f7b02fcfd666624a12b7468a0d34b18')
+
+export KBUILD_BUILD_HOST=archpower
+export KBUILD_BUILD_USER=$pkgbase
+export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
+
+prepare() {
+  cd $_srcname
+
+  echo "Setting version..."
+  echo "-$pkgrel" > localversion.10-pkgrel
+  echo "${pkgbase#linux}" > localversion.20-pkgname
+
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    src="${src%.zst}"
+    [[ $src = *.patch ]] || continue
+    echo "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
+
+  echo "Setting config..."
+  cp ../config .config
+  ARCH=powerpc CROSS_COMPILE=powerpc64-unknown-linux-gnu- make olddefconfig
+  diff -u ../config .config || :
+
+  ARCH=powerpc CROSS_COMPILE=powerpc64-unknown-linux-gnu- make -s kernelrelease > version
+  echo "Prepared $pkgbase version $(<version)"
+}
+
+build() {
+  cd $_srcname
+  ARCH=powerpc CROSS_COMPILE=powerpc64-unknown-linux-gnu- make all -j$(nproc)
+}
+
+_package() {
+  pkgdesc="The $pkgdesc kernel and modules"
+  depends=(
+    coreutils
+    initramfs
+    kmod
+  )
+  optdepends=(
+    'wireless-regdb: to set the correct wireless channels of your country'
+    'linux-firmware: firmware images needed for some devices'
+  )
+  provides=(
+    KSMBD-MODULE
+    VIRTUALBOX-GUEST-MODULES
+    WIREGUARD-MODULE
+    "linux-ppc64=${pkgver}"
+  )
+  replaces=(
+    virtualbox-guest-modules-arch
+    wireguard-arch
+    "linux-ppc64<=6.18.1"
+  )
+  conflicts=("linux-ppc64<=6.18.1")
+
+
+  cd $_srcname
+  local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
+
+  echo "Installing boot image..."
+  # systemd expects to find the kernel here to allow hibernation
+  # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
+  install -Dm644 "$(ARCH=powerpc CROSS_COMPILE=powerpc64-unknown-linux-gnu- make -s image_name)" "$modulesdir/vmlinuz"
+
+  # Used by mkinitcpio to name the kernel
+  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+
+  echo "Installing modules..."
+  ARCH=powerpc CROSS_COMPILE=powerpc64-unknown-linux-gnu- \
+  ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+    DEPMOD=/doesnt/exist modules_install 1>/dev/null # Suppress depmod
+
+  # remove build link
+  rm "$modulesdir"/build
+}
+
+_package-headers() {
+  pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
+  depends=(pahole)
+
+  provides=("linux-ppc64-headers=${pkgver}")
+  replaces=("linux-ppc64-headers<=6.18.1")
+  conflicts=("linux-ppc64-headers<=6.18.1")
+
+  cd $_srcname
+  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+
+  echo "Installing build files..."
+  install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
+    localversion.* version vmlinux
+  install -Dt "$builddir/kernel" -m644 kernel/Makefile
+  install -Dt "$builddir/arch/powerpc" -m644 arch/powerpc/Makefile
+  cp -t "$builddir" -a scripts
+
+  echo "Installing headers..."
+  cp -t "$builddir" -a include
+  cp -t "$builddir/arch/powerpc" -a arch/powerpc/include
+  install -Dt "$builddir/arch/powerpc/kernel" -m644 arch/powerpc/kernel/asm-offsets.s
+
+  install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
+  install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
+
+  # https://bugs.archlinux.org/task/13146
+  install -Dt "$builddir/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+  # https://bugs.archlinux.org/task/20402
+  install -Dt "$builddir/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+  install -Dt "$builddir/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+  install -Dt "$builddir/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+  # https://bugs.archlinux.org/task/71392
+  install -Dt "$builddir/drivers/iio/common/hid-sensors" -m644 drivers/iio/common/hid-sensors/*.h
+
+  echo "Installing KConfig files..."
+  find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  echo "Removing unneeded architectures..."
+  local arch
+  for arch in "$builddir"/arch/*/; do
+    [[ $arch = */powerpc/ ]] && continue
+    echo "Removing $(basename "$arch")"
+    rm -r "$arch"
+  done
+
+  echo "Removing documentation..."
+  rm -r "$builddir/Documentation"
+
+  echo "Removing broken symlinks..."
+  find -L "$builddir" -type l -printf 'Removing %P\n' -delete
+
+  echo "Removing loose objects..."
+  find "$builddir" -type f -name '*.o' -printf 'Removing %P\n' -delete
+
+  echo "Stripping build tools..."
+  local file
+  while read -rd '' file; do
+    # Try cross strip first (handles powerpc64); fall back to host strip
+    # (handles x86_64 host tools); skip if neither works.
+    case "$(file -Sib "$file")" in
+      application/x-sharedlib\;*)
+        powerpc64-unknown-linux-gnu-strip -v $STRIP_SHARED "$file" 2>/dev/null ||
+          strip -v $STRIP_SHARED "$file" 2>/dev/null || true ;;
+      application/x-archive\;*)
+        powerpc64-unknown-linux-gnu-strip -v $STRIP_STATIC "$file" 2>/dev/null ||
+          strip -v $STRIP_STATIC "$file" 2>/dev/null || true ;;
+      application/x-executable\;*)
+        powerpc64-unknown-linux-gnu-strip -v $STRIP_BINARIES "$file" 2>/dev/null ||
+          strip -v $STRIP_BINARIES "$file" 2>/dev/null || true ;;
+      application/x-pie-executable\;*)
+        powerpc64-unknown-linux-gnu-strip -v $STRIP_SHARED "$file" 2>/dev/null ||
+          strip -v $STRIP_SHARED "$file" 2>/dev/null || true ;;
+    esac
+  done < <(find "$builddir" -type f -perm -u+x ! -name vmlinux -print0)
+
+  echo "Stripping vmlinux..."
+  powerpc64-unknown-linux-gnu-strip -v $STRIP_STATIC "$builddir/vmlinux" 2>/dev/null ||
+    strip -v $STRIP_STATIC "$builddir/vmlinux" 2>/dev/null || true
+
+  echo "Adding symlink..."
+  mkdir -p "$pkgdir/usr/src"
+  ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
+}
+
+pkgname=(
+  "$pkgbase"
+  "$pkgbase-headers"
+)
+for _p in "${pkgname[@]}"; do
+  eval "package_$_p() {
+    $(declare -f "_package${_p#$pkgbase}")
+    _package${_p#$pkgbase}
+  }"
+done

@@ -1,0 +1,91 @@
+name: linux-ppc64
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['PKGBUILDs/linux-ppc64/**']
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+
+    steps:
+      - name: Install base deps
+        run: |
+          rm -f /var/cache/pacman/pkg/*.pkg.tar.zst
+          pacman -Sy --noconfirm
+          pacman -S --noconfirm base-devel wget sudo bc cpio gettext libelf pahole \
+            perl python tar xz bison flex openssl
+
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            PKGBUILDs/linux-ppc64
+
+      - name: Download Bootlin toolchain
+        run: |
+          tc='https://toolchains.bootlin.com/downloads/releases/toolchains/powerpc64-power8/tarballs/powerpc64-power8--glibc--bleeding-edge-2025.08-1.tar.xz'
+          wget -q "$tc" -O /tc.tar.xz
+          tar -xf /tc.tar.xz -C /opt
+          dir=$(tar -tf /tc.tar.xz | head -1 | cut -d/ -f1)
+          mv "/opt/$dir" /opt/cross
+          echo "/opt/cross/bin" >> $GITHUB_PATH
+
+      - name: Create cross compiler wrappers
+        run: |
+          # The kernel PKGBUILD expects powerpc64-unknown-linux-gnu- prefix;
+          # Bootlin provides powerpc64-linux- prefix.  Create symlinks so
+          # CROSS_COMPILE=powerpc64-unknown-linux-gnu- resolves correctly.
+          # Bootlin's gcc/g++/etc. are wrapper scripts that exec a .br_real
+          # binary based on $0; we must symlink both the wrapper and .br_real.
+          for tool in gcc g++ cpp gfortran ld ld.bfd ar as nm objcopy objdump \
+                      strip ranlib readelf size strings addr2line; do
+            if [ -x "/opt/cross/bin/powerpc64-linux-$tool" ]; then
+              ln -sv "powerpc64-linux-$tool" "/opt/cross/bin/powerpc64-unknown-linux-gnu-$tool"
+            fi
+            if [ -x "/opt/cross/bin/powerpc64-linux-${tool}.br_real" ]; then
+              ln -sv "powerpc64-linux-${tool}.br_real" "/opt/cross/bin/powerpc64-unknown-linux-gnu-${tool}.br_real"
+            fi
+          done
+
+      - name: Cross-compile
+        run: |
+          useradd -m builder
+          chown -R builder PKGBUILDs/linux-ppc64
+
+          cd PKGBUILDs/linux-ppc64
+
+          sed -i "s/^CARCH=.*/CARCH='powerpc64'/" /etc/makepkg.conf
+
+          export PATH="/opt/cross/bin:$PATH"
+
+          sudo -u builder env \
+            PATH="$PATH" \
+            makepkg -c --noconfirm --ignorearch --nodeps --skippgpcheck
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-ppc64
+          path: PKGBUILDs/linux-ppc64/linux-ppc64-*.pkg.tar.zst
+
+  release:
+    needs: [build]
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: linux-ppc64
+      - name: Upload to release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: linux-ppc64-build-${{ github.run_number }}
+          name: "linux-ppc64 build #${{ github.run_number }}"
+          body: Automated build triggered by ${{ github.event_name }}
+          artifacts: "linux-ppc64/*.pkg.tar.zst"
+          makeLatest: true
