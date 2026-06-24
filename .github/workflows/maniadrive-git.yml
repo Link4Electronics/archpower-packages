@@ -172,6 +172,15 @@ jobs:
           export PKG_CONFIG_LIBDIR="/sysroot/usr/lib/pkgconfig:/sysroot/usr/share/pkgconfig"
           export PKG_CONFIG_SYSROOT_DIR="/sysroot"
 
+          # Debug: test cross compiler link step directly
+          echo 'int main(void) { return 0; }' > /tmp/test.c
+          echo "--- test --sysroot -mabi=elfv2 (simulates PHP configure for ppc64 BE) ---"
+          $CC --sysroot=/sysroot -mabi=elfv2 /tmp/test.c -o /tmp/test 2>&1 || true
+          echo "--- test --sysroot ---"
+          $CC --sysroot=/sysroot /tmp/test.c -o /tmp/test 2>&1 || true
+          echo "--- test no --sysroot ---"
+          $CC /tmp/test.c -o /tmp/test 2>&1 || true
+
           sudo -u builder env \
             PATH="$PATH" \
             CC="$CC" \

@@ -33,11 +33,10 @@ prepare() {
       cp -a /sysroot/usr/lib/libz.so* "$BOOTLIN_SYSROOT/usr/lib/" 2>/dev/null || true
     fi
     sed -i 's|  --with-zlib|  --with-zlib=/sysroot/usr|' CMakeLists.txt
-    # Make PHP configure use ArchPOWER's libraries (via -L) while keeping Bootlin's
-    # own GCC CRT (crtbegin.o). -Wl,--sysroot resolves absolute paths in ArchPOWER's
-    # libc.so linker script. Bootlin's GCC CRT is preserved unless the workflow
-    # replaces it (ppc64 ELFv1→ELFv2).
-    sed -i 's|"${PHP_SOURCE_DIR}/configure"|ac_cv_prog_cc_cross=yes CFLAGS="-std=gnu89 -I/sysroot/usr/include '"${MANIADRIVE_PHP_EXTRA_CFLAGS}"'" LDFLAGS="-L/sysroot/usr/lib -Wl,-rpath-link,/sysroot/usr/lib -Wl,--sysroot=/sysroot" ac_cv_sizeof_long=8 "${PHP_SOURCE_DIR}/configure" "--host='"$MANIADRIVE_PHP_HOST"'" --build=x86_64-pc-linux-gnu|' CMakeLists.txt
+    # Use --sysroot=/sysroot so PHP configure uses ArchPOWER's CRT, libc, and headers.
+    # Bootlin's own GCC CRT (crtbegin.o) is preserved unless the workflow replaces
+    # it (ppc64 ELFv1→ELFv2).
+    sed -i 's|"${PHP_SOURCE_DIR}/configure"|ac_cv_prog_cc_cross=yes CFLAGS="-std=gnu89 --sysroot=/sysroot '"${MANIADRIVE_PHP_EXTRA_CFLAGS}"'" LDFLAGS="--sysroot=/sysroot" ac_cv_sizeof_long=8 "${PHP_SOURCE_DIR}/configure" "--host='"$MANIADRIVE_PHP_HOST"'" --build=x86_64-pc-linux-gnu|' CMakeLists.txt
   fi
   if [ "${MANIADRIVE_PHP_SIZEOF_LONG:-8}" = "4" ]; then
     sed -i 's/ac_cv_sizeof_long=8/ac_cv_sizeof_long=4/' CMakeLists.txt
