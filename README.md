@@ -56,9 +56,8 @@ Command to update repo: repo-add extrappc.db.tar.zst *.pkg.tar.zst
 * `yamagi-quake2` - Quake 2, edit `~/.yq2/baseq2/config.cfg` change `vid_renderer` to `gl1` and change sound backend to `SDL` from main menu
 
 # Issues
-* `dethrace` - Carmageddon has issues in PPC64, works fine in PPC32
 * `eduke32, rednukem` - Duke Nukem 3D has no MIDI music, `rednukem` Duke Nukem 64 sound is messed up, Ion Fury crashes when going to menu [issue](https://voidpoint.io/terminx/eduke32/-/issues/325)
-* `mesa` - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc
+* `mesa` - Mesa drivers has swapped colors for some pixelformats like RGBA5551 RGBA4444 etc, and AMD Radeon GPUS like CAICOS has ring 5 UVD3.1 issue so no hwaccel for videos and ring0 on U4 CPC945 pcie x16 slot
 * `planetblupi` When try to run says can't find cdrom, probably byteswap issues with game data, Construction mode works [issue](https://github.com/blupi-games/planetblupi/issues/119)
 * `SDLPop` - Prince of Persia flashes `blue` instead of `bright yellow` when grab the sword or dies. When get hit flashes `blue` too instead of `red` [issue](https://github.com/NagyD/SDLPoP/issues/185)
 * `sm64ex and forks` - DynOS doesn't work and can't provide package since requires ROM during building
