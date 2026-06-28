@@ -1,0 +1,44 @@
+From: archpower
+Date: 2026-06-28
+Subject: [PATCH] powerpc/dart_iommu: disable U4 DART bypass for display
+ devices
+
+The U4 CPC945 DART bypass on the PowerMac G5 x16 PCIe slot is incompatible
+with r600+ (TeraScale) AMD GPUs, including Caicos (HD 6450), Cedar (HD 5450),
+Turks (HD 6570), and Cayman (HD 6970). The ring buffer test (RING0) fails and
+GPU acceleration gets disabled.
+
+The bypass gives DMA addresses in the 0x8000000000+ range, and r600+ GPUs
+cannot handle the resulting PCIe transactions correctly.  The same cards work
+fine when:
+  - Placed in the x8 slot (behind the HT bridge, through the DART IOMMU)
+  - Used with DART bypass disabled via this patch (falls back to DART IOMMU)
+
+Fix by keeping display-class devices on the IOMMU path instead of allowing
+them to use the U4 DART bypass.
+
+Signed-off-by: archpower
+---
+ arch/powerpc/sysdev/dart_iommu.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/powerpc/sysdev/dart_iommu.c b/arch/powerpc/sysdev/dart_iommu.c
+index 2d87f9b3177e..30b457974a48 100644
+--- a/arch/powerpc/sysdev/dart_iommu.c
++++ b/arch/powerpc/sysdev/dart_iommu.c
+@@ -381,6 +381,13 @@ static void pci_dma_dev_setup_dart(struct pci_dev *dev)
+ 
+ static bool iommu_bypass_supported_dart(struct pci_dev *dev, u64 mask)
+ {
++	/* Display-class devices (r600+/TeraScale AMD GPUs) are known
++	 * to malfunction with the U4 DART bypass on the x16 PCIe slot.
++	 * Keep them on the IOMMU/DART path instead, which works correctly
++	 * (as proven by the same cards working in the x8 slot).
++	 */
++	if ((dev->class >> 16) == PCI_BASE_CLASS_DISPLAY)
++		return false;
+ 	return dart_is_u4 &&
+ 		dart_device_on_pcie(&dev->dev) &&
+ 		mask >= DMA_BIT_MASK(40);
+--
+2.49.0
