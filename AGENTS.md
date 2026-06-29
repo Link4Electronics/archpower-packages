@@ -9,7 +9,7 @@ Created patch 0009-u4-dart-bypass-fix.patch to raise the bypass DMA mask thresho
 # What user tried so far
 swiotlb=force pcie_aspm=off pci=pcie_bus_safe
 all of them gives ring 0 GPU hardware acceleration disabled
-user tried pcie_aspm=off pci=pcie_bus_safe beucase he compared lspci -vvv for the bios of a geforce 6600 with a mac vbios that works on that slot pci-e x16 and what differs when using the radeon with a PC vbios
+user tried pcie_aspm=off pci=pcie_bus_safe beucase he compared lspci -vvv -s for the bios of a geforce 6600 with a mac vbios that works on that slot pci-e x16 and what differs when using the radeon 0000:0a:00.0 with a PC vbios
 Critical difference:
 GeForce 6600: ASPM Disabled, MaxReadReq 128 bytes
 Radeon CAICOS: ASPM L0s L1 Enabled, MaxReadReq **512 bytes**

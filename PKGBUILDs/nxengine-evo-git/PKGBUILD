@@ -10,7 +10,7 @@ arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 url="https://github.com/nxengine/nxengine-evo"
 license=('GPL3')
 depends=(sdl2_mixer sdl2_image sdl2_ttf)
-makedepends=(cmake libpng libjpeg)
+makedepends=(cmake libpng libjpeg-turbo)
 options=('!debug' 'strip')
 source=("git+https://github.com/nxengine/nxengine-evo"
         "https://www.cavestory.org/downloads/cavestoryen.zip"

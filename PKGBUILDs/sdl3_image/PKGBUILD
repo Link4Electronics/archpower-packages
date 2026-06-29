@@ -1,29 +1,40 @@
 # Maintainer: Erik Kallen <info@erikkallen.nl>
 
 pkgname=sdl3_image
-pkgver=3.2.6
-pkgrel=1
+pkgver=3.4.4
+pkgrel=2
 pkgdesc="SDL3 image loading library"
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 url="https://github.com/libsdl-org/SDL_image"
-license=('0BSD')
-depends=('sdl3' 'libpng' 'libtiff' 'libjpeg' 'libwebp' 'libavif' 'libjxl')
-makedepends=('cmake')
+license=("Zlib")
+depends=(
+	"glibc"
+	"sdl3"
+	"libpng"
+	"libtiff"
+	"libjpeg-turbo"
+	"libwebp"
+	"libavif"
+	"libjxl"
+)
+makedepends=("cmake")
 options=('!debug' 'strip')
 source=("https://github.com/libsdl-org/SDL_image/releases/download/release-${pkgver}/SDL3_image-${pkgver}.tar.gz")
-sha256sums=('2daee16e6f8f9ea1c59ea243c0b089e2a2c7a2c402efa67f291a6359e5bd50d2')
+sha256sums=('29751304a13d25ac513f24305fa25b06a6edd9607718c90129b8350d35fc5573')
 
 build() {
-  cmake -B build -S "SDL3_image-${pkgver}" \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DSDLIMAGE_SAMPLES=OFF \
-    -DSDLIMAGE_TESTS=OFF
+	cmake \
+		-B build \
+		-S "SDL3_image-${pkgver}" \
+		-DSDLIMAGE_SAMPLES=OFF \
+		-DSDLIMAGE_TESTS=OFF \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr
 
-  cmake --build build
+	cmake --build build
 }
 
 package() {
-  DESTDIR="$pkgdir" cmake --install build
-  install -Dm644 "SDL3_image-${pkgver}/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "SDL3_image-${pkgver}/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

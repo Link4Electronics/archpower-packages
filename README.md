@@ -74,20 +74,27 @@ Command to update repo: repo-add extrappc.db.tar.zst *.pkg.tar.zst
 `dethrace` `dRally` `bermuda` `raptor` `stuntcarremake` `supermariowar` They're at [archive.org](https://archive.org/details/linuxppc64compiled) repo
 
 # Minecraft
-Minecraft works up to `1.12.2`, which is last version that supports `LWJGL2` and `Java 8`
+Minecraft works up to `1.16.5` with `LWJGL3` or `1.12.2` with `LWJGL2`, which are last versions that supports `Java 8`
 
-Version `1.8.1` is last version that renders main menu properly, `1.8.2 and up`  has graphical issues in main menu but in-game is fine, better than nothing
+Version `1.8.1` is last version that renders main menu properly, `1.8.2 and up to 1.12.2`  has graphical issues in main menu but in-game is fine, `1.15.6` render menu fine but grass/leaves are pink
 
 ## Steps
 Only tested on `PPC64` and will assume this arch for guide, don't know about `PPC32` but probably works
 
 For this guide will use `~/Downloads` as folder for console commands, you can change it to your liking
-* Install `jre8-openjdk`, one of these launchers `multimc` or `primslauncher` and their dependecies
+* Install `jre8-openjdk`, one of these launchers `multimc` or `polymc` and their dependecies
+
+## 1.12.2
 * Download `Minecraft XX-bit libs.7z` according to your platform and extract it to `~/Downloads`
 * `sudo cp ~/Downloads/liblwjgl.so /usr/lib/jvm/java-8-openjdk/jre/lib/ppc64` (adapt for ppc32 here)
 * Open MultiMC or Prism Launcher, Add Instance, chose version 1.12.2 or below, Edit Instance, LWJGL 2 Change version to `2.9.1` (last version that works)
 * Go to Settings, Custom commands, check Custom Commands and paste in Wrapper command: `sh -c "cp ~/Downloads/codecjorbis-1.0-SNAPSHOT.jar ../../../libraries/com/paulscode/codecjorbis/*/*.jar; exec $INST_JAVA \"$@\""` This library is used to fix audio in big-endian machines
 * Suggest to install a loader, go to Version, Install Loader, choose `Forge` and install `Relictium` to help a little bit with performance, but it swaps some colors ingame
+
+## 1.16.5 (only have 64-bit version of LWJGL3 compiled on this repo)
+* Download `lwjgl3-3.2.2 64-bit.7z` and extract to `~/Downloads/lwjgl3-3.2.2`
+* Edit Instance in Settings, Java, Java arguments add this: `-Dorg.lwjgl.librarypath=~/Downloads/lwjgl3-3.2.2`
+
 * Enjoy the game!
 
 # ANY repo

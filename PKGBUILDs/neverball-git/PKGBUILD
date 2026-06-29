@@ -4,13 +4,13 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=neverball-git
-pkgver=1.7.0.alpha.3.r241.g58fc1aaa
+pkgver=1.7.0.alpha.3.r684.g01ab984b
 pkgrel=1
 pkgdesc="3D game similar to Super Monkey Ball or Marble Madness"
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 url="https://neverball.org/"
 license=('GPL')
-depends=('sdl2_ttf' 'libgl' 'libpng' 'libjpeg' 'libvorbis' 'physfs' \
+depends=('sdl2_ttf' 'libgl' 'libpng' 'libjpeg-turbo' 'libvorbis' 'physfs' \
          'hicolor-icon-theme' 'xdg-utils')
 makedepends=('mesa' 'git')
 options=('!debug' 'strip')
