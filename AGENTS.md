@@ -22,3 +22,12 @@ radeon.agpmode=-1, radeon.msi=0, or pci=nomsi
 
 User has a CI build and compiles via github actions workflow with PKGBUILD
 There's linux 7.1.1 source clone located at /run/media/orestes/Guinea_pig/Projetos/linux/
+
+
+If 128 doesn't fix it, it's not a pure read-size problem. Next steps in order:
+
+Try 64 bytes — drop the limit further (pcie_set_readrq(rdev->pdev, 64))
+Try pci=nomsi — MSI from Caicos may not complete correctly on U4; forced INTx avoids that path
+Clear RlxdOrd (Relaxed Ordering) in DevCtl — GeForce 6600 may not set this; if the U4 reorders completions the CP can hang
+Add a U4-specific quirk in arch/powerpc/platforms/powermac/pci.c to rewrite DevCtl of any downstream device to conservative settings (MaxReadReq=128, RlxdOrd=0, NoSnoop=0, RCB=128)
+The x8 slot working strongly suggests the U4 can handle this GPU — just not with the x16 slot's bridge topology/configuration. If all software workarounds fail, it's likely a U4 hardware erratum specific to x16 electrical configuration, and the x8 slot is the practical fix.

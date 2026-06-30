@@ -1,0 +1,53 @@
+From: archpower
+Date: 2026-06-30
+Subject: [PATCH] radeon: force MaxReadReq=128 on PPC64 for U4 compatibility
+
+The PowerMac G5 U4 CPC945 x16 PCIe slot does not handle 512-byte
+MaxReadReq from TeraScale (r600+) AMD GPUs correctly.  The GPU's
+Command Processor issues PCIe Memory Read transactions at the
+MaxReadReq size to fetch ring buffer entries from system RAM, and
+these completions are mishandled by the U4 bridge, causing:
+
+  radeon: ring 0 test failed
+
+The known-working GeForce 6600 in the same slot uses MaxReadReq=128.
+Forcing 128 bytes on PPC64 resolves the ring test failure.
+
+Signed-off-by: archpower
+---
+ drivers/gpu/drm/radeon/evergreen.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/radeon/evergreen.c b/drivers/gpu/drm/radeon/evergreen.c
+index 2d87f9b3177e..605a7ded9927 100644
+--- a/drivers/gpu/drm/radeon/evergreen.c
++++ b/drivers/gpu/drm/radeon/evergreen.c
+@@ -1277,16 +1277,24 @@
+ 
+ void evergreen_fix_pci_max_read_req_size(struct radeon_device *rdev)
+ {
+-	int readrq;
++	int readrq = pcie_get_readrq(rdev->pdev);
+ 	u16 v;
+ 
+-	readrq = pcie_get_readrq(rdev->pdev);
++#ifdef CONFIG_PPC64
++	/* The PowerMac G5 U4 CPC945 x16 PCIe slot cannot handle 512-byte
++	 * MaxReadReq from r600+ GPUs.  PCIe Memory Read requests at that
++	 * size cause completion timeouts that manifest as ring test
++	 * failures.  Match the known-good GeForce 6600 config (128). */
++	if (readrq > 128)
++		pcie_set_readrq(rdev->pdev, 128);
++#else
+ 	v = ffs(readrq) - 8;
+ 	/* if bios or OS sets MAX_READ_REQUEST_SIZE to an invalid value, fix it
+ 	 * to avoid hangs or perfomance issues
+ 	 */
+ 	if ((v == 0) || (v == 6) || (v == 7))
+ 		pcie_set_readrq(rdev->pdev, 512);
++#endif
+ }
+ 
+ void dce4_program_fmt(struct drm_encoder *encoder)
+-- 
+2.49.0
