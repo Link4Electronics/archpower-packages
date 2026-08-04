@@ -20,7 +20,7 @@ options=('!debug' 'strip')
 source=("http://dukeworld.com/$pkgname/synthesis/$_pkgdate-$_pkgrev/eduke32_src_$_pkgdate-$_pkgrev.tar.xz"
         "$pkgname.desktop")
 sha256sums=('daa2ce53a79d1fff337da40b60f1bd13b21d03c1e22f73b2a95431ee3008c7f3'
-            'cf2ea2c6a0d85ab15e30171ed5b921f1fcf5644de7af9638c0ef60de21c44f24')
+            '66b52944f7602a5181a6bae4aa82e453ffc2e4f97d1fdb16ebe6b39598c64abe')
 
 build() {
   cd eduke32_$_pkgdate-$_pkgrev

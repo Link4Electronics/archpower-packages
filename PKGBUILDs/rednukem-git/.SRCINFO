@@ -24,6 +24,6 @@ pkgbase = rednukem-git
 	source = git+https://github.com/NBlood/NBlood.git
 	source = rednukem.desktop
 	sha256sums = SKIP
-	sha256sums = ca55da4c3b24be141cdd462c39a2a5b75ef18da8cbee461b7fa942fd3d97fb3e
+	sha256sums = 63575686b66cba7b2bce1624c9738bb1b60dbf8778f67a38d8bb88b1fe6ddd04
 
 pkgname = rednukem-git

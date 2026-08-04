@@ -2,7 +2,7 @@
 Type=Application
 Name=Rednukem
 GenericName=Port of serveral BUILD Engine games based on EDuke32
-Icon=rednukem
+Icon=rednukem.ico
 Exec=rednukem %F
 Terminal=false
 Categories=Game;ActionGame;

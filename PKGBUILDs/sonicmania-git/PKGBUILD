@@ -1,7 +1,7 @@
 # Maintainer: That One Seong <thatoneseong@protonmail.com>
 
 pkgname=sonicmania-git
-pkgver=r1240.3b7795b0
+pkgver=r1243.9dc69942
 pkgrel=1
 pkgdesc='A full decompilation of Sonic Mania.'
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
@@ -10,7 +10,7 @@ license=('custom:RSDKv5(U) DECOMPILATION SOURCE CODE LICENSE v2.1')
 options=('!debug' 'strip')
 makedepends=('git' 'cmake')
 depends=(
-	'sdl2'
+	'sdl2-compat'
 	'libtheora'
 	'glfw'
 	'glew'
@@ -25,7 +25,7 @@ sha256sums=(
 	'SKIP'
 	'ab10afed573e1f718b7731b0fb71589cd70a622e99b1cf90b6eec1cc54c75cba'
 	'391d407e421a610541056eaa3ce681f47eb55c2d06de38ca4f134a573ff370b9'
-	'42596f0b7d105d9773c5fd66d05889d4abc1b0f4942d2c75bec32014e8f6e1ac'
+	'67c04b44368b3d119f1ba3456d2a6b12952a6615b52e91f249a87272bf885652'
 )
 install=sonicmania.install
 
@@ -56,8 +56,8 @@ package() {
 	install -D shadersMod.ini mods/GLShaders/mod.ini
 	mkdir -p "$pkgdir"/usr/share/$pkgname
 	cp -R mods "$pkgdir"/usr/share/$pkgname
-	install -dm755 "$pkgdir/usr/share/icons"
-	cp -r "$srcdir/Sonic-Mania-Decompilation/dependencies/RSDKv5/RSDKv5U/RSDKv5U.ico" "$pkgdir/usr/share/icons"
+	install -dm755 "$pkgdir/usr/share/pixmaps"
+	cp -r "$srcdir/Sonic-Mania-Decompilation/dependencies/RSDKv5/RSDKv5U/RSDKv5U.ico" "$pkgdir/usr/share/pixmaps/"
 
 	cd "$srcdir/Sonic-Mania-Decompilation/build/dependencies/RSDKv5"
 	install -Dm755 RSDKv5U "$pkgdir/usr/bin/sonicmania"
