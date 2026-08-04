@@ -3,7 +3,7 @@
 # Maintainer: Jan Cholasta <jan at cholasta net>
 
 pkgname=nblood-git
-pkgver=r14330.970f59d10
+pkgver=r14358.d66806847
 pkgrel=1
 pkgdesc='Blood port based on EDuke32 (git version)'
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')

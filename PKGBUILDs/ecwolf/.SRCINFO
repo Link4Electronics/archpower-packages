@@ -12,7 +12,7 @@ pkgbase = ecwolf
 	makedepends = cmake
 	depends = gtk3
 	depends = libjpeg-turbo
-	depends = sdl2
+	depends = sdl2-compat
 	depends = sdl2_mixer
 	depends = sdl2_net
 	options = !debug
@@ -20,6 +20,6 @@ pkgbase = ecwolf
 	source = https://maniacsvault.net/ecwolf/files/ecwolf/1.x/ecwolf-1.4.2-src.tar.xz
 	source = net.maniacsvault.ecwolf.desktop
 	sha256sums = 2121fb3fc63e532423681dcddf5d3848e19e8c6b4e2e1bfa802b16a2d42f84f5
-	sha256sums = 97bbc02334b250b5ca9a7076d6761e9ae54c1259a37521449b2ecedcaebfdcc3
+	sha256sums = aeb0f12e6c83462bb172bef0c7d9fb5455d8ad5460de5bcc42eda1e14f1959a4
 
 pkgname = ecwolf

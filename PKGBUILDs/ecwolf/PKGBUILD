@@ -9,14 +9,14 @@ pkgdesc="Advanced source port for Wolfenstein 3D engine games"
 arch=('powerpc' 'powerpc64' 'powerpc64le' 'espresso')
 url="https://maniacsvault.net/ecwolf/"
 license=("GPL-2.0-or-later")
-depends=("gtk3" "libjpeg-turbo" "sdl2" "sdl2_mixer" "sdl2_net")
+depends=("gtk3" "libjpeg-turbo" "sdl2-compat" "sdl2_mixer" "sdl2_net")
 makedepends=("cmake")
 install=ecwolf.install
 options=('!debug' 'strip')
 source=("https://maniacsvault.net/${pkgname}/files/${pkgname}/1.x/${pkgname}-${pkgver}-src.tar.xz"
 	"net.maniacsvault.${pkgname}.desktop")
 sha256sums=('2121fb3fc63e532423681dcddf5d3848e19e8c6b4e2e1bfa802b16a2d42f84f5'
-            '97bbc02334b250b5ca9a7076d6761e9ae54c1259a37521449b2ecedcaebfdcc3')
+            'aeb0f12e6c83462bb172bef0c7d9fb5455d8ad5460de5bcc42eda1e14f1959a4')
            
 build() {
 	cmake \
@@ -25,7 +25,7 @@ build() {
 		-B build \
 		-DBUILD_PATCHUTIL=ON \
 		-DGPL=ON \
-		-Wno-dev
+		-DCMAKE_BUILD_TYPE=Release
 
 	make --directory build
 }

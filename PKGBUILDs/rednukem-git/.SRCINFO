@@ -1,6 +1,6 @@
 pkgbase = rednukem-git
 	pkgdesc = A port of serveral BUILD Engine games based on EDuke32 (git version)
-	pkgver = r14330.970f59d10
+	pkgver = r14358.d66806847
 	pkgrel = 1
 	url = http://nukeykt.retrohost.net/
 	arch = powerpc64le

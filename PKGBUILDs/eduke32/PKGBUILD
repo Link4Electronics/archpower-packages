@@ -26,7 +26,7 @@ build() {
   cd eduke32_$_pkgdate-$_pkgrev
 
   # add cxxflags, set revision
-  make PACKAGE_REPOSITORY=1 VC_REV=$_pkgrev #PRETTY_OUTPUT=0
+  make PACKAGE_REPOSITORY=1 VC_REV=$_pkgrev
 }
 
 package() {
