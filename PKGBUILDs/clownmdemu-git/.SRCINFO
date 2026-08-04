@@ -1,6 +1,6 @@
 pkgbase = clownmdemu-git
 	pkgdesc = ClownMDEmu, a Sega Mega Drive/Sega Genesis emulator.
-	pkgver = 1.6.7.r3.g07cf6d7
+	pkgver = 1.6.11.r68.ga820b31
 	pkgrel = 1
 	url = https://clownacy.wordpress.com
 	arch = powerpc64le
