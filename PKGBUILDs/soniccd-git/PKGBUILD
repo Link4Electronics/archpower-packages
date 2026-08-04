@@ -22,7 +22,7 @@ source=(
 sha256sums=(
 	'SKIP'
 	'b70b6526c137859385234a19d1935e089c3c6a71639f42f7d579135579e8243b'
-	'8f24c0150f426a693271317a017ffc11116e6710bbc7a7589542a913bd78adac'
+	'dcfa3fd77599986555df220650ee52bec7d74ebe54c6a9f922c2ba8208fc1e2b'
 	'518f48d89254d105ff03d6f6c164792e6e9355081b5387373e32793856d8746b'
 )
 install=soniccd.install
@@ -56,7 +56,7 @@ package() {
 	install -Dm755 soniccd-launcher "$pkgdir/usr/bin/soniccd-launcher"
 	install -Dm644 soniccd.desktop "$pkgdir/usr/share/applications/soniccd.desktop"
 	install -dm755 "$pkgdir/usr/share/icons"
-	cp -r "$srcdir/RSDKv3-Decompilation/flatpak/com.sega.SonicCD.svg" "$pkgdir/usr/share/icons"
+	cp -r "$srcdir/RSDKv3-Decompilation/RSDKv3/RSDKv3 Decomp Icon.ico" "$pkgdir/usr/share/icons/RSDKv3.ico"
 	_safe_cd "$srcdir/RSDKv3-Decompilation"
 	install -Dm755 ./build/RSDKv3 "$pkgdir/usr/bin/RSDKv3"
 	install -Dm644 ./LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

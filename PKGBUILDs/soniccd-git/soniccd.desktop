@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Sonic CD
 Exec=soniccd-launcher
-Icon=com.sega.SonicCD
+Icon=RSDKv3
 Type=Application
 Categories=Game

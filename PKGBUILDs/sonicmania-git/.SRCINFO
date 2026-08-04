@@ -24,6 +24,6 @@ pkgbase = sonicmania-git
 	sha256sums = SKIP
 	sha256sums = ab10afed573e1f718b7731b0fb71589cd70a622e99b1cf90b6eec1cc54c75cba
 	sha256sums = 391d407e421a610541056eaa3ce681f47eb55c2d06de38ca4f134a573ff370b9
-	sha256sums = 25dcdd2ad1b91312a654b705a11e5b005d5c2d94d0a0f6fbc5ad34ad09dce885
+	sha256sums = 42596f0b7d105d9773c5fd66d05889d4abc1b0f4942d2c75bec32014e8f6e1ac
 
 pkgname = sonicmania-git
