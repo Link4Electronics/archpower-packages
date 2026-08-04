@@ -23,7 +23,6 @@ build() {
 		-S "${pkgname}-${pkgver}-src" \
 		-DCMAKE_INSTALL_PREFIX="/usr/"  \
 		-B build \
-		-DBUILD_PATCHUTIL=ON \
 		-DGPL=ON \
 		-DCMAKE_BUILD_TYPE=Release
 
