@@ -24,6 +24,6 @@ pkgbase = pcexhumed-git
 	source = git+https://github.com/NBlood/NBlood.git
 	source = pcexhumed.desktop
 	sha256sums = SKIP
-	sha256sums = e96b49faaca828105416fe636a3196023ba016bde77b9973abaaeeb6ab26b6e2
+	sha256sums = 4f392f88b54217e2cdb3a94c0c87df7e718defcf943c698f6c1ffb105125bc76
 
 pkgname = pcexhumed-git

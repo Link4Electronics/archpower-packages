@@ -22,7 +22,7 @@ options=('!debug' 'strip')
 source=('git+https://github.com/NBlood/NBlood.git'
         'pcexhumed.desktop')
 sha256sums=('SKIP'
-            'e96b49faaca828105416fe636a3196023ba016bde77b9973abaaeeb6ab26b6e2')
+            '4f392f88b54217e2cdb3a94c0c87df7e718defcf943c698f6c1ffb105125bc76')
 
 pkgver() {
     cd $srcdir/NBlood

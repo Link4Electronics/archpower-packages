@@ -23,7 +23,7 @@ options=('!debug' 'strip')
 source=('git+https://github.com/NBlood/NBlood.git'
         'nblood.desktop')
 sha256sums=('SKIP'
-            'da48d9c53e35d6b9c7f5d9da891dfebea6751b9b5ea2505bc458e6b42f33f4ba')
+            '191ea4fb6262c80e327ec1e42b9b36ab1ea63a13fb99155158944d47bb3bb462')
 
 pkgver() {
     cd $srcdir/NBlood

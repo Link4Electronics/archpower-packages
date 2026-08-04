@@ -22,7 +22,7 @@ options=('!debug' 'strip')
 source=('git+https://github.com/NBlood/NBlood.git'
         'rednukem.desktop')
 sha256sums=('SKIP'
-            'b2875c877fdb34b9aa24c424892410a5e9d118568241dc4beba37f9ddbe10707')
+            'ca55da4c3b24be141cdd462c39a2a5b75ef18da8cbee461b7fa942fd3d97fb3e')
 
 pkgver() {
     cd $srcdir/NBlood
