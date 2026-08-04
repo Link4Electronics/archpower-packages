@@ -1,7 +1,7 @@
 pkgbase = cdogs-git
 	pkgdesc = SDL port of DOS arcade game C-Dogs (aka "Cyberdogs 2", development version)
-	pkgver = 2.3.2.r18.g086cd9e0
-	sdl2_mixer_ver = 2.8.1
+	pkgver = 2.4.0.r40.ga7f2e13b
+	sdl2_mixer_ver = 2.8.2
 	pkgrel = 1
 	url = http://cxong.github.io/cdogs-sdl/
 	arch = powerpc64le
@@ -20,7 +20,7 @@ pkgbase = cdogs-git
 	options = strip
 	source = cdogs::git+https://github.com/cxong/cdogs-sdl.git
 	source = https://github.com/libsdl-org/SDL_mixer/releases/download/release-${sdl2_mixer_ver}/SDL2_mixer-${sdl2_mixer_ver}.tar.gz
-	sha256sums = SKIP
-	sha256sums = cb760211b056bfe44f4a1e180cc7cb201137e4d1572f2002cc1be728efd22660
+	sha512sums = SKIP
+	sha512sums = 9ea190a3e5a0dc3fc9c5a1d0b8aef4af7243559060c8c6d10b0da0defdafd8e78d584ad5ffc88d2e841cdf6886781f77e86b5c95abce6468ed877b372a57747b
 
 pkgname = cdogs-git

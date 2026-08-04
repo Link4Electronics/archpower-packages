@@ -2,7 +2,7 @@
 Type=Application
 Name=PCExhumed
 GenericName=Exhumed port based on EDuke32
-Icon=/usr/share/pixmaps/pcexhumed.icns
+Icon=pcexhumed
 Exec=pcexhumed %F
 Terminal=false
 Categories=Game;ActionGame;

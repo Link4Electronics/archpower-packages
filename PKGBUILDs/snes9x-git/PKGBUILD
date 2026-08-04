@@ -13,7 +13,7 @@ url="http://www.snes9x.com/"
 license=('custom')
 makedepends=(alsa-lib cairo cmake gdk-pixbuf2 git glib2
     gtk3 gtkmm3 intltool libepoxy libpng libpulse libx11 libxext libxml2
-    libxrandr libxv meson minizip nasm portaudio sdl2 zlib
+    libxrandr libxv meson minizip nasm portaudio sdl2-compat zlib
     cmake qt6-base
 )
 options=('!debug' 'strip')
@@ -68,41 +68,54 @@ build() {
 
 package_snes9x-gtk-git() {
 
-    pkgdesc="Portable Emulator for the Super Nintendo Entertainment System - GTK version (git)"
-    depends=(alsa-lib cairo gdk-pixbuf2 glib2 gtk3 hicolor-icon-theme libepoxy libpng libpulse libxext libxml2 libxrandr libxv minizip portaudio sdl2 gtkmm3)
+  pkgdesc="Portable Emulator for the Super Nintendo Entertainment System - GTK version (git)"
+  depends=(alsa-lib cairo gdk-pixbuf2 glib2 gtk3 hicolor-icon-theme libepoxy libpng libpulse libxext libxml2 libxrandr libxv minizip portaudio sdl2-compat gtkmm3)
 
-    conflicts=('snes9x-gtk')
-    provides=('snes9x-gtk')
+  conflicts=('snes9x-gtk')
+  provides=('snes9x-gtk')
 
-    cd "${srcdir}"/build
-    DESTDIR="${pkgdir}" cmake --install . --prefix=/usr
+  cd "${srcdir}"/build
+  DESTDIR="${pkgdir}" cmake --install . --prefix=/usr
 
-    cd "${srcdir}/${_pkgbase}"
+  cd "${srcdir}/${_pkgbase}"
 
-    install -d "${pkgdir}/usr/share/doc/${pkgname}"
-    install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
-        "${pkgdir}/usr/share/doc/${pkgname}/"
-    install -vDm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
-    rm "${pkgdir}/usr/share/snes9x/cheats.bml"
-    #mv "${pkgdir}/usr/locale" "${pkgdir}/usr/share/locale"
+  # shellcheck disable=SC2128
+  install -d "${pkgdir}/usr/share/doc/${pkgname}"
+
+  # shellcheck disable=SC2128
+  install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
+    "${pkgdir}/usr/share/doc/${pkgname}/"
+  # shellcheck disable=SC2128
+
+  install -vDm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  rm "${pkgdir}/usr/share/snes9x/cheats.bml"
 
 }
 
 package_snes9x-qt-git() {
-    pkgdesc="Portable Emulator for the Super Nintendo Entertainment System - Qt version"
-    depends=(qt6-base libpng libpulse)
+  pkgdesc="Portable Emulator for the Super Nintendo Entertainment System - Qt version"
+  depends=(qt6-base libpng libpulse)
 
-    conflicts=('snes9x-qt')
-    provides=('snes9x-qt')
+  conflicts=('snes9x-qt')
+  provides=('snes9x-qt')
 
-    cd "${srcdir}"/build-qt
-    DESTDIR="${pkgdir}" cmake --install . --prefix=/usr
+  cd "${srcdir}"/build-qt
+  DESTDIR="${pkgdir}" cmake --install . --prefix=/usr
 
-    cd "${srcdir}/${_pkgbase}"
-    install -d "${pkgdir}/usr/share/${pkgname}" "${pkgdir}/usr/share/doc/${pkgname}"
-    install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
-	    "${pkgdir}/usr/share/doc/${pkgname}"
-    install -vDm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
-    rm "${pkgdir}/usr/share/snes9x/cheats.bml"
+  cd "${srcdir}/${_pkgbase}"
+
+  # shellcheck disable=SC2128
+  install -d "${pkgdir}/usr/share/${pkgname}" "${pkgdir}/usr/share/doc/${pkgname}"
+
+  # shellcheck disable=SC2128
+  install -Dm644 {unix/snes9x.conf.default,docs/{control-inputs,controls,snapshots}.txt} \
+    "${pkgdir}/usr/share/doc/${pkgname}"
+
+  # shellcheck disable=SC2128
+  install -vDm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  rm "${pkgdir}/usr/share/snes9x/cheats.bml"
+
+  # Install custom desktop file.
+  install -vDm644 "${srcdir}/snes9x-qt.desktop" -t "${pkgdir}/usr/share/applications/"
 
 }

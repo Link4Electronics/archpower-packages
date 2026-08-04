@@ -13,7 +13,7 @@ depends=('flac'
          'libogg'
          'libvorbis'
          'libvpx'
-         'sdl2'
+         'sdl2-compat'
 )
 makedepends=('git' 'glu' 'imagemagick')
 provides=('pcexhumed')
