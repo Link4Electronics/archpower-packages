@@ -12,7 +12,7 @@ makedepends=('gcc' 'gcc-libs' 'make' 'binutils' 'python')
 provides=('xash3d')
 conflicts=('xash3d-hlsdk' 'xash3d-git')
 options=('!debug' 'strip')
-source=("$pkgname::git+https://github.com/IntriguingTiles/xash3d-fwgs#branch=big-endian"
+source=("$pkgname::git+https://github.com/fwgs/xash3d-fwgs"
         "xash3d"
         "xash3d.desktop")
 sha256sums=('SKIP'
