@@ -1,0 +1,1 @@
+/run/media/orestes/Guinea_pig/Projetos/archpower-packages/PKGBUILDs/chrono-date/LICENSE
