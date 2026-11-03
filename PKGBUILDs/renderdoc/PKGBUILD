@@ -12,7 +12,7 @@ url="https://github.com/baldurk/renderdoc"
 license=("MIT")
 makedepends=("cmake" "git" "ninja" "pcre")
 depends=("harfbuzz" "hicolor-icon-theme" "libgl" "libx11" "libxcb" "mesa" "python" "qt5-base" "qt5-svg" "qt5-x11extras" "xcb-util-keysyms")
-options=("!lto !debug strip")
+options=('!lto' '!debug' 'strip')
 source=("${pkgname}::git+https://github.com/baldurk/${pkgname}.git#tag=v${pkgver}?signed"
         "https://github.com/baldurk/swig/archive/${pkgname}-modified-7.zip")
 validpgpkeys=('1B039DB9A4718A2D699DE031AC612C3120C34695')
